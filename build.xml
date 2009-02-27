@@ -1,0 +1,30 @@
+<?xml version ="1.0"?>
+<project name="catissue_container_cache" default="compile">
+
+	<property name="base.dir" value="." />
+	<property name="target.dir" value="WEB-INF/classes" />
+	<property name="src.dir" value="src" />
+	<property name="lib.dir" value="${base.dir}/WEB-INF/lib" />
+
+	<target name="compile">
+		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
+			<src path="${src.dir}" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="create_container_cache_jar" depends="compile">
+		<delete file="WEB-INF/ContainerCache.jar" />
+		<jar taskname="buildJar" jarfile="WEB-INF/ContainerCache.jar">
+			<fileset dir="${target.dir}">
+				<include name="**/cache/**/*.class" />
+
+			</fileset>
+		</jar>
+	</target>
+
+</project>
