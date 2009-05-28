@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
+
+  <info organisation="caGrid" module="sdkQuery32" revision="${project.version}">
+    <license name="caGrid" url="http://www.cagrid.org/wiki/CaGrid:LICENSE-1.2"/>
+    <description>The caCORE SDK 3.2(.1) Query Processor</description>
+  </info>
+
+  <configurations>
+    <conf name="authz" visibility="private"/>
+    <conf name="impl-test" visibility="private"/>
+
+    <!-- Public Configurations-->
+    <conf name="default" visibility="public"/>
+    <conf name="test" visibility="public" extends="default,impl-test"/>
+  </configurations>
+
+
+  <publications>
+    <artifact name="caGrid-${ivy.module}-core" conf="default" type="jar"/>
+    <artifact name="caGrid-${ivy.module}-tests" conf="test" type="jar"/>
+  </publications>
+
+  <dependencies>
+    <dependency rev="latest.integration" org="caGrid" name="core"
+      conf="default->default;impl-test->test"/>
+    <dependency rev="latest.integration" org="caGrid" name="data"
+      conf="default->service;impl-test->cql-examples"/>
+    <dependency rev="latest.integration" org="caGrid" name="grape" conf="default->default"/>
+
+    <!-- TODO: note, these currently aren't being copied into services correctly, but I'm maintaining the current behavior... might want to just change this to conf="default->default" -->
+    <dependency rev="latest.integration" org="caGrid" name="authz" conf="authz->default"/>
+
+    <dependency rev="3.1.3" org="hibernate" name="hibernate" conf="default->full"/>
+
+    <!--
+      NOTE: these are what the project used to compile against, but they aren't really used.
+      
+      <dependency rev="1.5.3" org="objectweb" name="asm" conf="default->default"/>
+      <dependency rev="2.1_3" org="cglib" name="cglib" conf="default->default"/>       
+      <dependency rev="3.1.3" org="hibernate" name="hibernate" conf="default->full"/>
+      <dependency rev="1.2.7" org="springframework" name="spring" conf="default->full"/>
+    -->
+
+  </dependencies>
+</ivy-module>
