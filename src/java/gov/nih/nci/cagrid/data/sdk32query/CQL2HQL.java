@@ -10,8 +10,10 @@ import gov.nih.nci.cagrid.cqlquery.Predicate;
 import gov.nih.nci.cagrid.cqlquery.QueryModifier;
 import gov.nih.nci.cagrid.data.QueryProcessingException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /** 
  *  CQL2HQL
@@ -26,6 +28,7 @@ public class CQL2HQL {
 	public static final String TARGET_ALIAS = "xxTargetAliasxx";
 	
 	private static Map predicateValues;
+	private static Properties caTissueModelProperties = null;
 
 	/**
 	 * Translates a CQL query into an HQL string.  This translation process assumes the
@@ -48,10 +51,11 @@ public class CQL2HQL {
 		throws QueryProcessingException {
 		StringBuilder hql = new StringBuilder();
 		if (query.getQueryModifier() != null) {
-			if (eliminateSubclasses) {
-				throw new QueryProcessingException("HQL cannot use the class property when processing projection queries.");
-			}
-			processModifiedQuery(hql, query.getQueryModifier(), query.getTarget(), caseInsensitive);
+			throw new QueryProcessingException("caTissue doenot support modifier queries");
+//			if (eliminateSubclasses) {
+//				throw new QueryProcessingException("HQL cannot use the class property when processing projection queries.");
+//			}
+//			processModifiedQuery(hql, query.getQueryModifier(), query.getTarget(), caseInsensitive);
 		} else {
 			processTarget(hql, query.getTarget(), eliminateSubclasses, caseInsensitive);
 		}
@@ -175,6 +179,19 @@ public class CQL2HQL {
 	private static void processTarget(StringBuilder hql, Object target, boolean eliminateSubclasses, boolean caseInsensitive) 
 		throws QueryProcessingException {
 		String objName = target.getName();
+		if(caTissueModelProperties==null)
+		{
+			try
+			{
+				caTissueModelProperties = new Properties();
+				caTissueModelProperties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("caTissueModel.properties"));
+			}
+			catch(IOException ioexp)
+			{
+				throw new QueryProcessingException("caTissueModel.properties file not not found");
+			}
+		}
+		hql.append("GridQuery:Select ").append(caTissueModelProperties.get(objName)+" ");
 		hql.append("From ").append(objName);
 		hql.append(" as ").append(TARGET_ALIAS);
 		if (eliminateSubclasses) {			

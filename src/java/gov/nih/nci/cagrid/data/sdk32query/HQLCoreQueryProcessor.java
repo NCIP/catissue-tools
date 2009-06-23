@@ -179,28 +179,31 @@ public class HQLCoreQueryProcessor extends LazyCQLQueryProcessor {
 		if (objectResults) {
 			try {
 				System.out.println("coreResultsList:"+coreResultsList.size());
+				long st = System.currentTimeMillis();
 				results = CQLResultsCreationUtil.createObjectResults(coreResultsList, targetName, mappings);
+				System.out.println("coreResultsList after conversion: "+(System.currentTimeMillis()-st)/1000);
 			} catch (ResultsCreationException ex) {
 				throw new QueryProcessingException(ex.getMessage(), ex);
 			}
 		} else {
-			QueryModifier mod = cqlQuery.getQueryModifier();
-			if (mod.isCountOnly()) {
-				// parse the value as a string to long.  This covers returning
-				// integers, shorts, and longs
-				Long val = Long.valueOf(coreResultsList.get(0).toString());
-				results = CQLResultsCreationUtil.createCountResults(val.longValue(), targetName);
-			} else {
-				// attributes distinct or otherwise
-				String[] names = null;
-				if (mod.getDistinctAttribute() != null) {
-					names = new String[] {mod.getDistinctAttribute()};
-				} else {
-					names = mod.getAttributeNames();
-				}
-				results = CQLResultsCreationUtil.createAttributeResults(
-					coreResultsList, targetName, names);
-			}
+			QueryModifier mod = cqlQuery.getQueryModifier();		
+			throw new QueryProcessingException("caTissue doesnot support queries which returns result list containing instances of classes other than caTissue domain model");
+//			if (mod.isCountOnly()) {
+//				// parse the value as a string to long.  This covers returning
+//				// integers, shorts, and longs
+//				Long val = Long.valueOf(coreResultsList.get(0).toString());
+//				results = CQLResultsCreationUtil.createCountResults(val.longValue(), targetName);
+//			} else {
+//				// attributes distinct or otherwise
+//				String[] names = null;
+//				if (mod.getDistinctAttribute() != null) {
+//					names = new String[] {mod.getDistinctAttribute()};
+//				} else {
+//					names = mod.getAttributeNames();
+//				}
+//				results = CQLResultsCreationUtil.createAttributeResults(
+//					coreResultsList, targetName, names);
+//			}
 		}
 		return results;
 	}
@@ -241,11 +244,12 @@ public class HQLCoreQueryProcessor extends LazyCQLQueryProcessor {
 		
 		// possibly post-process the query
 		if (subclassesDetected && query.getQueryModifier() != null) {
-			try {
-				targetObjects = applyQueryModifiers(targetObjects, query.getQueryModifier());
-			} catch (Exception ex) {
-				throw new QueryProcessingException("Error applying query modifiers: " + ex.getMessage(), ex);
-			}
+			throw new QueryProcessingException("caTissue doesnot support queries which returns result list containing instances of classes other than caTissue domain model");
+//			try {
+//				targetObjects = applyQueryModifiers(targetObjects, query.getQueryModifier());
+//			} catch (Exception ex) {
+//				throw new QueryProcessingException("Error applying query modifiers: " + ex.getMessage(), ex);
+//			}
 		}
 		return targetObjects;
 	}
