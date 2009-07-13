@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="dependencies" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property file="project.properties" />
+
+	<!-- OVERLOADED-->
+	<property name="ivy.resolve.configuations" value="impl,test" />
+	<property name="ivy.generated.artifacts.pattern" value="${ivy.generated.artifacts.dir}/lib/[artifact]-[revision].[ext]" />
+
+	<property name="ivy-shared-targets.file" location="${basedir}/../../antfiles/ivy/ivy-shared-targets.xml" />
+	<import file="${ivy-shared-targets.file}" />
+
+	<target name="do.resolve-dependencies" depends="pre.resolve-dependencies">
+		<ivy:retrieve conf="impl" pattern="${ivy.resolved.artifacts.dir}/dependencies/impl/[type]s/[originalname](.[ext])" sync="true" type="jar" />
+		<ivy:retrieve conf="impl-test" pattern="${ivy.resolved.artifacts.dir}/dependencies/test/[type]s/[originalname](.[ext])" sync="true" type="jar" />
+
+		<ivy:retrieve conf="sdk31" pattern="${ivy.resolved.artifacts.dir}/dependencies/sdk31/[type]s/[originalname](.[ext])" sync="true" type="jar" />
+		<ivy:retrieve conf="sdk32" pattern="${ivy.resolved.artifacts.dir}/dependencies/sdk32/[type]s/[originalname](.[ext])" sync="true" type="jar" />
+
+		<!-- authz for sdk32 data services -->
+		<ivy:retrieve conf="authz" pattern="${ivy.resolved.artifacts.dir}/dependencies/authz/[type]s/[originalname](.[ext])" sync="true" type="jar" />
+
+		<ivy:retrieve conf="impl" pattern="${ivy.resolved.artifacts.dir}/dependencies/xsd/[artifact](.[ext])" sync="true" type="xsd,wsdl" />
+	</target>
+
+	<target name="post.resolve-dependencies" depends="ivy-shared-targets.post.resolve-dependencies">
+		<!-- generate a list of properties detailing what is needed for the sdk31 conf -->
+		<ivy:artifactproperty conf="sdk31" name="sdk31.needs.[module].[artifact]" value="[originalname](.[ext])" />
+		<!-- just write out the ones that specifically come from the sdkQuery module -->
+		<echoproperties prefix="sdk31.needs.sdkQuery" destfile="${ivy.resolved.artifacts.dir}/sdk31-jars.properties" />
+
+		<!-- generate a list of properties detailing what is needed for the sdk32 conf -->
+		<ivy:artifactproperty conf="sdk32" name="sdk32.needs.[module].[artifact]" value="[originalname](.[ext])" />
+		<!-- just write out the ones that specifically come from the sdkQuery32 module -->
+		<echoproperties prefix="sdk32.needs.sdkQuery32" destfile="${ivy.resolved.artifacts.dir}/sdk32-jars.properties" />
+	</target>
+</project>
+
