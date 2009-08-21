@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Factory>
+<BizLogicFactory name ="bizLogicFactory" className = "edu.wustl.clinportal.bizlogic.BizLogicFactory"/>
+<ForwardToFactory name = "forwardToFactory" className = "edu.wustl.clinportal.util.ForwardToFactory"/>
+<DomainObjectFactory name = "domainObjectFactory" className = "edu.wustl.clinportal.domain.DomainObjectFactory"/>
+</Factory>

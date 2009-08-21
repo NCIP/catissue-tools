@@ -1,0 +1,42 @@
+/*
+ * $Name:  
+ * $Log: ApplicationVersionInfo.txt,v $
+ * Revision 1.1.2.9  2008/10/10 08:09:54  falguni_sachde
+ * added new version for 10 th oct
+ *
+ * Revision 1.1.2.9  2008/10/10 13:30:16  falguni_sachde
+ * new version
+ * Revision 1.1.2.8  2008/09/20 05:01:16  kunal_kamble
+ * *** empty log message ***
+ *
+ * Revision 1.1.2.7  2008/06/19 12:24:40  prashant_bandal
+ * new version
+ *
+ * Revision 1.1.2.6  2008/05/12 07:28:17  sachin_lale
+ * Change version to 19-June-2008
+ *
+ * Revision 1.1.2.5  2008/04/18 10:36:53  kunal_kamble
+ * *** empty log message ***
+ *
+ * Revision 1.1.2.4  2008/04/03 11:54:41  kunal_kamble
+ * *** empty log message ***
+ *
+ * Revision 1.1.2.3  2008/04/01 13:49:42  sachin_lale
+ * Change version
+ *
+ * Revision 1.1.2.2  2008/03/17 16:19:35  sachin_lale
+ * *** empty log message ***
+ *
+ * Revision 1.1.2.1  2008/03/12 15:19:40  sachin_lale
+ * Added release date
+ *
+ * Revision 1.1  2007/06/06 08:08:32  shital_lawhale
+ * First version
+ *
+ * Revision 1.2  2006/07/04 10:51:09  Kapil
+ * File to keep cvs tag information
+ *
+ * Revision 1.1  2006/06/28 14:02:17  Kapil
+ * Test cvs keywords
+ *	
+ */

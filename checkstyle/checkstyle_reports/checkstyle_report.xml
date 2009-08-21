@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="4.2">
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\ConceptHighLightingBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\ConsentBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\DefinedArrayDetailsBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\DefinedArrayRequestBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\ExistingArrayDetailsBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\OrderSpecimenBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\RequestDetailsBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bean\RequestViewBean.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\CollectionProtocolForm.java">
+<error line="375" column="9" severity="warning" message="Method length is 170 lines (max allowed is 150)." source="com.puppycrawl.tools.checkstyle.checks.sizes.MethodLengthCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\RequestDetailsForm.java">
+<error line="226" column="97" severity="error" message="Expected @param tag for &apos;request&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="252" column="32" severity="error" message="&apos;specimenId&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+<error line="349" column="55" severity="error" message="Expected @param tag for &apos;definedArrayMap&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="349" column="76" severity="error" message="Expected @param tag for &apos;totalSpecimenListInRequestForDropDown&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="379" column="63" severity="error" message="Expected @param tag for &apos;arrayRequestBeanCounter&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="379" column="113" severity="error" message="Expected @param tag for &apos;newSpecimenArrayOrderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="423" column="58" severity="error" message="Expected @param tag for &apos;arrayDetailsBeanCounter&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="423" column="100" severity="error" message="Expected @param tag for &apos;specimenOrderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="423" column="123" severity="error" message="Expected @param tag for &apos;totalSpecimenListInRequestForDropDown&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="436" column="24" severity="error" message="&apos;specimenId&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+<error line="457" column="59" severity="error" message="Expected @param tag for &apos;orderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="457" column="76" severity="error" message="Expected @param tag for &apos;assignStatus&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="457" column="96" severity="error" message="Expected @param tag for &apos;description&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="457" column="115" severity="error" message="Expected @param tag for &apos;requestedQty&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="457" column="135" severity="error" message="Expected @param tag for &apos;orderItemId&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="457" column="154" severity="error" message="Expected @param tag for &apos;distributedItemId&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="50" severity="error" message="Expected @param tag for &apos;orderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="67" severity="error" message="Expected @param tag for &apos;requestedItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="88" severity="error" message="Expected @param tag for &apos;availableQty&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="108" severity="error" message="Expected @param tag for &apos;specimenClass&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="129" severity="error" message="Expected @param tag for &apos;specimenType&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="149" severity="error" message="Expected @param tag for &apos;requestFor&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="167" severity="error" message="Expected @param tag for &apos;specimenId&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="185" severity="error" message="Expected @param tag for &apos;assignQty&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="202" severity="error" message="Expected @param tag for &apos;instanceOf&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="220" severity="error" message="Expected @param tag for &apos;specimenList&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="240" severity="error" message="Expected @param tag for &apos;specimenCollGrpId&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="263" severity="error" message="Expected @param tag for &apos;totalSpecimenListInRequestForDropDown&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="308" severity="error" message="Expected @param tag for &apos;actualSpecimenClass&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="482" column="335" severity="error" message="Expected @param tag for &apos;actualSpecimenType&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="575" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="748" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\RequestListFilterationForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\DefineArrayForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\OrderBiospecimenArrayForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\OrderForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\OrderPathologyCaseForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\actionForm\OrderSpecimenForm.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\OrderBiospecimenArrayAction.java">
+<error line="3" column="8" severity="error" message="Unused import - java.util.ArrayList." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="103" column="77" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\OrderPathologyCaseAction.java">
+<error line="228" column="77" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\OrderSpecimenInitAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\RequestToOrderAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\RequestToOrderSubmitAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\RequestDetailsAction.java">
+<error line="90" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="167" column="85" severity="error" message="Expression can be simplified." source="com.puppycrawl.tools.checkstyle.checks.coding.SimplifyBooleanExpressionCheck"/>
+<error line="216" column="63" severity="error" message="Expected @param tag for &apos;requestDetailsForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="216" column="89" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="315" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="315" column="44" severity="error" message="Expected @param tag for &apos;str&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="328" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="328" column="80" severity="error" message="Expected @param tag for &apos;orderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="328" column="109" severity="error" message="Expected @param tag for &apos;request&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="328" column="122" severity="error" message="Expected @param tag for &apos;requestDetailsList&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="365" column="12" severity="error" message="Unused @param tag for &apos;existingArrayDetailsBean&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="600" column="75" severity="error" message="Expression can be simplified." source="com.puppycrawl.tools.checkstyle.checks.coding.SimplifyBooleanExpressionCheck"/>
+<error line="617" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="617" column="48" severity="error" message="Expected @param tag for &apos;id&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="617" column="59" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="629" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="629" column="47" severity="error" message="Expected @param tag for &apos;id&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="629" column="58" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="640" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="640" column="54" severity="error" message="Expected @param tag for &apos;id&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="640" column="65" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="651" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="651" column="48" severity="error" message="Expected @param tag for &apos;id&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="651" column="59" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\RequestListAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\SubmitRequestDetailsAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\UpdateAvailableQuantity.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\AddToOrderListAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\ShowFramedPageAction.java">
+<error line="55" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="70" column="83" severity="error" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\TreeDataAction.java">
+<error line="84" column="168" severity="error" message="&apos;||&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\UpdateStatusAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\util\OrderingSystemUtil.java">
+<error line="17" column="8" severity="error" message="Unused import - edu.wustl.catissuecore.bean.DefinedArrayRequestBean." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="181" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="181" column="90" severity="error" message="Expected @param tag for &apos;specimenCollectionGroup&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="181" column="140" severity="error" message="Expected @param tag for &apos;pathologicalCaseOrderItem&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="220" column="12" severity="error" message="Unused @param tag for &apos;arrayRequestBean&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\BinaryContent.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ClinicalProcedureEventParameterSet.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\Concept.java">
+<error line="149" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ConceptReferent.java">
+<error line="216" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ConceptReferentClassification.java">
+<error line="106" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\DeidentifiedSurgicalPathologyReport.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\IdentifiedSurgicalPathologyReport.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\PathologyReportReviewParameter.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\QuarantineEventParameter.java">
+<error line="7" column="8" severity="error" message="Unused import - edu.wustl.catissuecore.bizlogic.BizLogicFactory." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="12" column="8" severity="error" message="Unused import - edu.wustl.common.bizlogic.IBizLogic." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ReportContent.java">
+<error line="71" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ReportLoaderQueue.java">
+<error line="128" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\ReportSection.java">
+<error line="168" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\SemanticType.java">
+<error line="12" column="8" severity="error" message="Unused import - java.io.Serializable." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="46" column="12" severity="error" message="Unused @param tag for &apos;identifier&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="48" column="32" severity="error" message="Expected @param tag for &apos;id&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="79" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\SurgicalPathologyReport.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\TextContent.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\pathology\XMLContent.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\CollectionProtocol.java">
+<error line="140" column="12" severity="error" message="Unused @param tag for &apos;userCollection&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="142" column="57" severity="error" message="Expected @param tag for &apos;coordinatorCollection&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="187" column="12" severity="error" message="Unused @param tag for &apos;protocolRegistrationCollection&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="190" column="76" severity="error" message="Expected @param tag for &apos;collectionProtocolRegistrationCollection&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\DerivedSpecimenOrderItem.java">
+<error line="86" column="12" severity="error" message="Unused @param tag for &apos;specimen&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="89" column="48" severity="error" message="Expected @param tag for &apos;parentSpecimen&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\ExistingSpecimenArrayOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\ExistingSpecimenOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\NewSpecimenOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\OrderDetails.java">
+<error line="343" column="76" severity="error" message="&apos;orderItemCollection&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+<error line="378" column="76" severity="error" message="&apos;orderItemCollection&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+<error line="805" column="38" severity="error" message="&apos;distributionProtocol&apos; hides a field." source="com.puppycrawl.tools.checkstyle.checks.coding.HiddenFieldCheck"/>
+<error line="1009" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="1011" severity="error" message="&apos;else&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\OrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\PathologicalCaseOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\SpecimenArrayOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\domain\SpecimenOrderItem.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\CSVLogger.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\FilePoller.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\HL7Parser.java">
+<error line="51" column="82" severity="error" message="Expected @param tag for &apos;scg&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="51" column="94" severity="error" message="Expected @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="135" column="102" severity="error" message="Expected @param tag for &apos;scg&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="332" column="89" severity="error" message="Expected @param tag for &apos;scg&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="534" column="66" severity="warning" message="&apos;4&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="535" column="64" severity="warning" message="&apos;4&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="535" column="67" severity="warning" message="&apos;6&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="536" column="62" severity="warning" message="&apos;6&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="536" column="65" severity="warning" message="&apos;8&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="769" column="12" severity="error" message="Unused @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="806" column="58" severity="warning" message="&apos;4&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="807" column="56" severity="warning" message="&apos;4&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="807" column="59" severity="warning" message="&apos;6&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="808" column="54" severity="warning" message="&apos;6&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="808" column="57" severity="warning" message="&apos;8&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="809" column="56" severity="warning" message="&apos;8&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="809" column="59" severity="warning" message="&apos;10&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="810" column="58" severity="warning" message="&apos;10&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="810" column="62" severity="warning" message="&apos;12&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\Observable.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\Observer.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\Parser.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\ParserManager.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\ReportLoader.java">
+<error line="3" column="8" severity="error" message="Unused import - java.util.Iterator." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="4" column="8" severity="error" message="Unused import - java.util.List." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="64" column="116" severity="error" message="Expected @param tag for &apos;scg&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="64" column="128" severity="error" message="Expected @param tag for &apos;surgicalPathologyNumber&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\ReportLoaderQueueProcessor.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\ReportLoaderUtil.java">
+<error line="8" column="8" severity="error" message="Unused import - java.util.HashMap." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="12" column="8" severity="error" message="Unused import - java.util.Map." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="15" column="8" severity="error" message="Unused import - java.util.Vector." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="19" column="8" severity="error" message="Unused import - net.sf.ehcache.CacheException." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="33" column="8" severity="error" message="Unused import - edu.wustl.catissuecore.util.CatissueCoreCacheManager." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="130" column="12" severity="error" message="Unused @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="132" column="88" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="185" column="53" severity="warning" message="&apos;3&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="187" column="52" severity="warning" message="&apos;3&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="187" column="54" severity="warning" message="&apos;5&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="189" column="52" severity="warning" message="&apos;5&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="189" column="54" severity="warning" message="&apos;9&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="237" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="237" column="55" severity="error" message="Expected @param tag for &apos;reportText&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="237" column="73" severity="error" message="Expected @param tag for &apos;lineToExtract&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="254" column="12" severity="error" message="Unused @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="304" column="162" severity="error" message="Expected @param tag for &apos;site&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="334" column="47" severity="warning" message="&apos;30&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="336" column="73" severity="warning" message="&apos;29&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="427" column="91" severity="error" message="Expected @param tag for &apos;participant&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="427" column="109" severity="error" message="Expected @param tag for &apos;site&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="427" column="122" severity="error" message="Expected @param tag for &apos;surgicalPathologyNumber&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\ReportProcessor.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\SiteInfoHandler.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\reportloader\StopReportLoaderServer.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\OrderBizLogic.java">
+<error line="52" column="27" severity="error" message="Variable &apos;numberItemsUpdated&apos; must be private and have accessor methods." source="com.puppycrawl.tools.checkstyle.checks.design.VisibilityModifierCheck"/>
+<error line="142" column="9" severity="warning" message="Method length is 157 lines (max allowed is 150)." source="com.puppycrawl.tools.checkstyle.checks.sizes.MethodLengthCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\CreateQueryObjectBizLogic.java">
+<error line="94" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\DefineAdvancedResultsView.java">
+<error line="54" column="100" severity="error" message="Expected @param tag for &apos;ListOfEntitiesInQuery&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="54" column="100" severity="error" message="Name &apos;ListOfEntitiesInQuery&apos; must match pattern &apos;^[a-z][a-zA-Z0-9]*$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ParameterNameCheck"/>
+<error line="55" column="16" severity="error" message="Expected @throws tag for &apos;DynamicExtensionsSystemException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="55" column="50" severity="error" message="Expected @throws tag for &apos;DynamicExtensionsApplicationException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="92" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="92" column="76" severity="error" message="Expected @param tag for &apos;parentEntityInterface&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="92" column="115" severity="error" message="Expected @param tag for &apos;entityInterface&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="93" column="51" severity="error" message="Expected @param tag for &apos;treeData&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="93" column="68" severity="error" message="Expected @throws tag for &apos;DynamicExtensionsSystemException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="93" column="102" severity="error" message="Expected @throws tag for &apos;DynamicExtensionsApplicationException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="157" severity="error" message="Line matches the illegal pattern &apos;printStackTrace&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="165" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="176" column="35" severity="warning" message="&apos;14&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\GenerateHTMLForBuildNewTree.java">
+<error line="13" column="42" severity="error" message="&apos;{&apos; should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="16" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\GenerateHtmlForAddLimitsBizLogic.java">
+<error line="61" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="62" severity="error" message="Line matches the illegal pattern &apos;printStackTrace&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="219" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="222" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="225" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="228" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="231" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="234" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="237" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="240" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="317" severity="error" message="&apos;if&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+<error line="330" column="106" severity="error" message="Expected @param tag for &apos;op&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="374" column="123" severity="error" message="Expected @param tag for &apos;values&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="374" column="137" severity="error" message="Expected @param tag for &apos;op&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="456" column="95" severity="error" message="Expected @param tag for &apos;isEditLimits&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="456" column="116" severity="error" message="Expected @param tag for &apos;isTopButton&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="486" column="12" severity="error" message="Unused @param tag for &apos;attributeName&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="491" column="67" severity="error" message="Expected @param tag for &apos;attribute&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="528" column="12" severity="error" message="Unused @param tag for &apos;enumeratedValuesList&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="529" column="12" severity="error" message="Unused @param tag for &apos;list&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="532" column="91" severity="error" message="Expected @param tag for &apos;permissibleValues&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="532" column="123" severity="error" message="Expected @param tag for &apos;editLimitPermissibleValues&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="569" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="569" column="47" severity="error" message="Expected @param tag for &apos;attributeCollection&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="586" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="593" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="614" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\QueryOutputSpreadsheetBizLogic.java">
+<error line="33" column="12" severity="error" message="Unused @param tag for &apos;isFirstLevel&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="39" column="118" severity="error" message="Expected @param tag for &apos;sessionData&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="40" column="25" severity="error" message="Expected @throws tag for &apos;ClassNotFoundException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="148" column="81" severity="error" message="Inner assignments should be avoided." source="com.puppycrawl.tools.checkstyle.checks.coding.InnerAssignmentCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\bizlogic\querysuite\QueryOutputTreeBizLogic.java">
+<error line="30" column="4" severity="error" message="Unused @param tag for &apos;String&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="32" column="4" severity="error" message="Unused @param tag for &apos;String&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="33" column="4" severity="error" message="Unused @throws tag for &apos;Exception&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="35" severity="error" message="Expected an @return tag." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="35" column="44" severity="error" message="Expected @param tag for &apos;selectSql&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="35" column="91" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="63" column="4" severity="error" message="Unused @param tag for &apos;tableName&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="64" column="4" severity="error" message="Unused @param tag for &apos;query&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="71" column="81" severity="error" message="Expected @param tag for &apos;root&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="109" column="45" severity="error" message="Expected @param tag for &apos;index&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="259" column="53" severity="error" message="Expected @throws tag for &apos;ClassNotFoundException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="259" column="77" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="317" column="4" severity="error" message="Unused @param tag for &apos;children&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="325" column="34" severity="error" message="Expected @param tag for &apos;index&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="325" column="75" severity="error" message="Expected @param tag for &apos;currentNode&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\AddToLimitSetAction.java">
+<error line="37" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="38" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="44" column="53" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="44" column="79" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="103" column="44" severity="error" message="Array brackets at illegal position." source="com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\BuildQueryOutputSpreadsheetAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\BuildQueryOutputTreeAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\CategorySearchAction.java">
+<error line="116" column="21" severity="error" message="&apos;(&apos; is followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.ParenPadCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\DefineSearchResultsViewAction.java">
+<error line="11" column="8" severity="error" message="Unused import - edu.wustl.catissuecore.applet.AppletConstants." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\GetDagViewDataAction.java">
+<error line="32" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="33" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="39" column="53" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="39" column="79" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="50" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="51" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="57" column="52" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="57" column="78" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="78" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="79" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="85" column="52" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="85" column="78" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="116" column="44" severity="error" message="Array brackets at illegal position." source="com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\LoadDefineSearchRulesAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\PathFinderAction.java">
+<error line="28" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="29" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="35" column="53" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="35" column="79" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="69" column="44" severity="error" message="Array brackets at illegal position." source="com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\QueryWizardAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\ViewSearchResultsAction.java">
+<error line="53" column="12" severity="error" message="Unused @param tag for &apos;mapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="54" column="12" severity="error" message="Unused @param tag for &apos;form&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="60" column="53" severity="error" message="Expected @param tag for &apos;actionMapping&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="60" column="79" severity="error" message="Expected @param tag for &apos;actionForm&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="92" column="148" severity="error" message="Empty statement." source="com.puppycrawl.tools.checkstyle.checks.coding.EmptyStatementCheck"/>
+<error line="144" column="44" severity="error" message="Array brackets at illegal position." source="com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck"/>
+<error line="147" severity="error" message="&apos;else&apos; construct must use &apos;{}&apos;s." source="com.puppycrawl.tools.checkstyle.checks.blocks.NeedBracesCheck"/>
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\action\querysuite\ViewSearchResultsJSPAction.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\util\querysuite\EntityCacheFactory.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\util\querysuite\EntityManagerFactory.java">
+</file>
+<file name="F:\caBIG\caBigworkspace\catissuecore\WEB-INF\src\edu\wustl\catissuecore\util\querysuite\QueryModuleUtil.java">
+<error line="32" column="16" severity="error" message="&apos;public&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+<error line="43" column="51" severity="warning" message="&apos;65&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="43" column="71" severity="warning" message="&apos;90&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="49" column="78" severity="warning" message="&apos;32&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="55" column="51" severity="warning" message="&apos;65&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="55" column="71" severity="warning" message="&apos;90&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="62" column="67" severity="warning" message="&apos;65&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="62" column="87" severity="warning" message="&apos;90&apos; is a magic number." source="com.puppycrawl.tools.checkstyle.checks.coding.MagicNumberCheck"/>
+<error line="100" column="109" severity="error" message="Expected @throws tag for &apos;ClassNotFoundException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="100" column="133" severity="error" message="Expected @throws tag for &apos;DAOException&apos;." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="136" severity="error" message="Line matches the illegal pattern &apos;printStackTrace&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+<error line="144" column="9" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="144" column="44" severity="error" message="Array brackets at illegal position." source="com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck"/>
+<error line="146" severity="error" message="Line matches the illegal pattern &apos;System\.out\.println&apos;." source="com.puppycrawl.tools.checkstyle.checks.GenericIllegalRegexpCheck"/>
+</file>
+</checkstyle>

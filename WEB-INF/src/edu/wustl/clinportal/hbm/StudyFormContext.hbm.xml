@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+    <class
+        name="edu.wustl.clinportal.domain.StudyFormContext"
+        table="CATISSUE_STUDY_FORM_CONTEXT"
+        dynamic-update="false"
+        dynamic-insert="false"
+    >
+
+        <id
+            name="id"
+            column="IDENTIFIER"
+            type="long"
+            length="30"
+            unsaved-value="null"
+        >
+            <generator class="native">
+                <param name="sequence">CATISSUE_STDY_FRM_CONTXT_SEQ</param>
+            </generator>
+        </id>
+
+        <many-to-one
+            name="clinicalStudyEvent"
+            class="edu.wustl.clinportal.domain.ClinicalStudyEvent"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="CLINICAL_STUDY_EVENT_ID"
+        />
+
+        <property
+            name="studyFormLabel"
+            type="string"
+            update="true"
+            insert="true"
+            column="STUDY_FORM_LABEL"
+            length="255"
+        />
+
+        <property
+            name="containerId"
+            type="long"
+            update="true"
+            insert="true"
+            column="CONTAINER_ID"
+            length="30"
+        />
+
+        <property
+            name="activityStatus"
+            type="string"
+            update="true"
+            insert="true"
+            column="ACTIVITY_STATUS"
+            length="10"
+        />
+        
+        <property
+            name="canHaveMultipleRecords"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="CAN_HAVE_MULTIPLE_RECORDS"
+            length="5"
+        />
+
+        <set
+            name="recordEntryCollection"
+            table="CATISUE_CLIN_STUDY_RECORD_NTRY"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="unsorted"
+        >
+
+              <key
+                  column="STUDY_FORM_CONTXT_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.clinportal.domain.RecordEntry"
+              />
+        </set>
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-StudyFormContext.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

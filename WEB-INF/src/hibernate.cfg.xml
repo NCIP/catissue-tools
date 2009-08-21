@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	
+    <session-factory>
+  
+    	<property name="show_sql">false</property>
+    	<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="connection.datasource">java:/catissuecore</property>
+        <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+        <property name="transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
+    	<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+		<property name="hibernate.jdbc.batch_size">0</property>
+  <!--
+     	<property name="show_sql">false</property>
+    	<property name="dialect">net.sf.hibernate.dialect.MySQLDialect</property>	
+    	<property name="hibernate.transaction.factory_class">net.sf.hibernate.transaction.JDBCTransactionFactory</property>
+        <property name="hibernate.cache.provider_class">net.sf.hibernate.cache.EhCacheProvider</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+	    <property name="connection.url">jdbc:mysql://localhost:3306/catissuecore</property>
+	    <property name="connection.username">root</property>
+	    <property name="connection.password">root</property>   
+	    <property name="hibernate.jdbc.batch_size">0</property>   
+  -->
+
+    	 
+    	<!-- List of all Mapping files -->
+        <mapping resource="edu/wustl/clinportal/hbm/Address.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/AuditEvent.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/AuditEventDetails.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/AuditEventLog.hbm.xml"/>		
+		<mapping resource="edu/wustl/clinportal/hbm/CancerResearchGroup.hbm.xml"/>		
+		<mapping resource="edu/wustl/clinportal/hbm/Department.hbm.xml"/>		
+		<mapping resource="edu/wustl/clinportal/hbm/Institution.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/Participant.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/ParticipantMedicalIdentifier.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/ReportedProblem.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/Site.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/SpecimenProtocol.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/Password.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/User.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/CDEImpl.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/PermissibleValueImpl.hbm.xml"/>
+		<mapping resource="edu/wustl/simplequery/hbm/QueryColumnData.hbm.xml"/>
+		<mapping resource="edu/wustl/simplequery/hbm/QueryTableData.hbm.xml"/>
+		
+		<!--List of classes required for Query module-->
+		<mapping resource="edu/wustl/common/hbm/AbstractCategorialAttribute.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/AbstractCategorialClass.hbm.xml"/>
+		<mapping resource="edu/wustl/common/hbm/AbstractCategory.hbm.xml"/>
+		
+		
+		<mapping resource="edu/wustl/common/hbm/BaseExpression.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Condition.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Connector.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Constraints.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Expression.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/ExpressionOperand.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/IOperand.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/JoinGraph.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/ModelAssociation.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/OutputAttribute.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Query.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/QueryEntity.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/QueryHQL.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Term.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/ArithmeticOperand.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/CustomFormula.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/OutputTerm.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/PersistentGraph.hbm.xml" />
+		<mapping resource="edu/wustl/common/hbm/Parameter.hbm.xml" />
+
+		<mapping resource="edu/wustl/clinportal/hbm/ClinicalStudyRegistration.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/ClinicalStudyEvent.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/StudyFormContext.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/EventEntry.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/RecordEntry.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/Race.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/ClinicalStudyConsentTier.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/hbm/ClinicalStudyConsentTierResponse.hbm.xml"/>
+    </session-factory>
+    
+</hibernate-configuration>

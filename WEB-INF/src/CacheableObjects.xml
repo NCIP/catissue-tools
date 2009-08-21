@@ -1,0 +1,60 @@
+<?xml version = "1.0" ?>
+<CacheableObjects>
+	<Classes>
+		<Class name="edu.wustl.clinportal.domain.Address"/>		
+		<Class name="edu.wustl.clinportal.domain.CancerResearchGroup"/>
+		<Class name="edu.wustl.clinportal.domain.Department"/>
+		<Class name="edu.wustl.clinportal.domain.ExternalIdentifier"/>	
+		<Class name="edu.wustl.clinportal.domain.Institution"/>	
+		<Class name="edu.wustl.clinportal.domain.Participant"/>	
+		<Class name="edu.wustl.clinportal.domain.ParticipantMedicalIdentifier"/>	
+		<Class name="edu.wustl.clinportal.domain.ReportedProblem"/>
+		<Class name="edu.wustl.clinportal.domain.SignUpUser"/>
+		<Class name="edu.wustl.clinportal.domain.Site"/>	
+		<Class name="edu.wustl.clinportal.domain.SpecimenProtocol"/>
+		<Class name="edu.wustl.clinportal.domain.User"/>
+		<Class name="edu.wustl.clinportal.action.annotations.LoadAnnotationDefinitionAction"/>	
+		<Class name="edu.wustl.clinportal.action.CancerResearchGroupAction"/>
+		<Class name="edu.wustl.clinportal.action.CPBasedSearchAction"/>
+		<Class name="edu.wustl.clinportal.action.DepartmentAction"/>	
+		<Class name="edu.wustl.clinportal.action.DomainObjectDetailsAction"/>	
+		<Class name="edu.wustl.clinportal.action.DomainObjectListAction"/>
+		<Class name="edu.wustl.clinportal.action.InstitutionAction"/>
+		<Class name="edu.wustl.clinportal.action.ParticipantAction"/>	
+		<Class name="edu.wustl.clinportal.action.querysuite.AddToLimitSetAction"/>
+		<Class name="edu.wustl.clinportal.action.querysuite.GetDagViewDataAction"/>	
+		<Class name="edu.wustl.clinportal.action.querysuite.PathFinderAction"/>
+		<Class name="edu.wustl.clinportal.action.querysuite.ViewSearchResultsAction"/>	
+		<Class name="edu.wustl.clinportal.action.SiteAction"/>
+		<Class name="edu.wustl.clinportal.action.UserAction"/>	
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction"/>
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_CancerResearchGroup"/>	
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_Department"/>	
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_Institution"/>
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_Participant"/>	
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_Site"/>	
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_User"/>				
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_ClinicalStudy"/>
+		<Class name="edu.wustl.common.action.SimpleQueryInterfaceAction_ClinicalStudyRegistration"/>
+		
+		<Class name="edu.wustl.clinportal.domain.EventEntry"/>
+		<Class name="edu.wustl.clinportal.domain.ClinicalStudyEvent"/>
+		<Class name="edu.wustl.clinportal.domain.ClinicalStudyRegistration"/>	
+		<Class name="edu.wustl.clinportal.domain.RecordEntry"/>
+		<Class name="edu.wustl.clinportal.domain.StudyFormContext"/>
+		
+		<Class name="edu.wustl.clinportal.action.ClinicalStudyAction"/>
+		<Class name="edu.wustl.clinportal.action.ClinicalStudyRegistrationAction"/>
+		<Class name="edu.wustl.clinportal.action.CSBasedSearchAction"/>
+
+			
+	</Classes>
+	
+	<Objects>
+		<ObjectType pattern="edu.wustl.clinportal.domain.User*"/>
+		<ObjectType pattern="edu.wustl.clinportal.domain.Site*"/>
+		<ObjectType pattern="edu.wustl.clinportal.domain.ClinicalStudy*"/>
+		<ObjectType pattern="edu.wustl.clinportal.domain.StudyFormContext*"/>
+	</Objects>
+</CacheableObjects>
+

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+<tiles-definitions>
+
+	<!-- Home tab pages definitions start -->
+	<definition name=".clinportal.mainTitlePageDef" path="/pages/Layout.jsp">
+		<put name="title" value="Clinportal" />
+		<put name="header" value="/pages/MainHeader.jsp" />
+		<put name="applicationheader" value="/pages/ApplicationHeader.jsp"/> 
+		<put name="mainmenu" value="/pages/mainMenu/Home.jsp" />
+		<put name="content" value="/pages/content/home/Home.jsp" />
+	</definition>
+
+	<definition name=".clinportal.mainTitlePageDefWOLogin" path="/pages/Layout.jsp">
+		<put name="title" value="Clinportal" />
+		<put name="header" value="/pages/MainHeaderLogin.jsp" />
+		<put name="applicationheader" value="/pages/ApplicationHeader.jsp"/> 
+		<put name="mainmenu" value="/pages/mainMenu/HomeLogo.jsp" />
+		<put name="content" value="/pages/content/home/Home.jsp" />
+	</definition>
+
+	<!-- Home tab pages definitions start -->
+	<definition name=".clinportal.homePageDef" path="/pages/Layout.jsp">
+		<put name="title" value="Clinportal" />
+		<put name="header" value="/pages/MainHeader.jsp" />
+		<put name="applicationheader" value="/pages/ApplicationHeader.jsp"/> 
+		<put name="mainmenu" value="/pages/mainMenu/Home.jsp" />
+		<put name="content" value="/pages/content/home/Home.jsp" />
+	</definition>
+
+	<!--P.G. - Start 24May07:Bug 4291-->
+	<definition name=".clinportal.bioBlankDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/blank.jsp" />
+	</definition>
+	<!--P.G. - End -->
+	<definition name=".clinportal.reportProblemDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ReportProblem.jsp" />
+	</definition>
+	<definition name=".clinportal.reportProblemSuccessDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.forgotPasswordDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ForgotPassword.jsp" />
+	</definition>
+	<definition name=".clinportal.forgotPasswordSuccessDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.userSignUpDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/User.jsp" />
+	</definition>
+	<definition name=".clinportal.errorPageDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/home/Error.jsp" />
+	</definition>
+	<definition name=".clinportal.error.details" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/home/ErrorDetails.jsp" />
+	</definition>
+	<definition name=".clinportal.userProfileDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/User.jsp" />
+	</definition>
+	<definition name=".clinportal.changePasswordDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/home/ChangePassword.jsp" />
+	</definition>
+	<definition name=".clinportal.userProfileSuccessDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.redirectToLoginPageDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/common/RedirectToLoginPage.jsp" />
+	</definition>
+	<definition name=".clinportal.contactUsDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ApplicationFooterTab.jsp" />
+	</definition>
+	<definition name=".clinportal.accessibilityDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ApplicationFooterTab.jsp" />
+	</definition>
+	<definition name=".clinportal.disclaimerDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ApplicationFooterTab.jsp" />
+	</definition>
+	<definition name=".clinportal.privacyNoticeDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/ApplicationFooterTab.jsp" />
+	</definition>
+	
+	<!-- Home tab pages definitions end -->
+
+	<!-- Manage Administrative Data tab pages definitions start -->
+	<definition name=".clinportal.manageAdminDataHomeDef"
+		extends=".clinportal.homePageDef">
+	<!--	<put name="submenu" value="/pages/subMenu/ManageAdminData.jsp" />
+		<put name="mainmenu" value="/pages/mainMenu/ManageAdminData.jsp" />
+		<put name="content" value="/pages/content/manageAdministrativeData/Home.jsp" />
+		-->
+	</definition>
+	<definition name=".clinportal.userDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/User.jsp" />
+	</definition>
+	<definition name=".clinportal.userAddSuccessDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.userEditSuccessDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.institutionDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/Institution.jsp" />
+	</definition>
+	<definition name=".clinportal.institutionAddSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.institutionEditSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.approveUserDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/ApproveUser.jsp" />
+	</definition>
+	<definition name=".clinportal.userDetailsDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/UserDetails.jsp" />
+	</definition>
+	<definition name=".clinportal.reportedProblemDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/ReportedProblem.jsp" />
+	</definition>
+	<definition name=".clinportal.problemDetailsDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/ProblemDetails.jsp" />
+	</definition>
+	<definition name=".clinportal.editBioSpecimenSearchPageDef"
+		extends=".clinportal.manageBioSpecimenHomeDef">
+		<put name="content" value="/pages/content/search/SimpleQueryInterface.jsp" />
+	</definition>
+	<definition name=".clinportal.editBioSpecimenSearchResultsDef"
+		extends=".clinportal.manageBioSpecimenHomeDef">
+		<put name="content" value="/pages/content/search/DataView.jsp" />
+	</definition>
+	<definition name=".clinportal.configurationSuccessDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/ConfigureResultView.jsp" />
+	</definition>	
+	
+	<!-- Site -->
+	<definition name=".clinportal.siteDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/Site.jsp" />
+	</definition>
+	<definition name=".clinportal.siteAddSuccessDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.siteEditSuccessDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<!-- Site -->
+	<definition name=".clinportal.departmentDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/Department.jsp" />
+	</definition>
+	<definition name=".clinportal.departmentAddSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.departmentEditSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.cancerResearchGroupDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/CancerResearchGroup.jsp" />
+	</definition>
+	<definition name=".clinportal.cancerResearchGroupAddSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.cancerResearchGroupEditSuccessDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.reportProblemEditDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/common/ReportProblem.jsp" />
+	</definition>
+	<definition name=".clinportal.editSearchPageDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/search/SimpleQueryInterface.jsp" />
+	</definition>
+	<definition name=".clinportal.editSearchResultsFrameDef"
+		extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/DataViewFrame.jsp" />
+	</definition>
+	<definition name=".clinportal.queryDataViewDef" path="/pages/content/search/ContentLayout.jsp">
+	</definition>
+	<definition name=".clinportal.queryHomeViewDef" path="/pages/content/search/ContentLayout.jsp">
+		<put name="content" value="/pages/content/manageBioSpecimen/CPQueryHome.jsp" />
+	</definition>
+	<definition name=".clinportal.commonErrorDetailsDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/common/ErrorDetails.jsp" />
+	</definition>
+	<definition name=".clinportal.editSearchResultsDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content" value="/pages/content/search/DataView.jsp" />
+	</definition>
+	
+	<!-- Manage Administrative Data tab pages definitions end -->
+	<!-- Manage BioSpecimen tab pages definitions start -->
+	<definition name=".clinportal.manageBioSpecimenHomeDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/manageBioSpecimen/Home.jsp" />
+	</definition>
+	<definition name=".clinportal.participantDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/manageBioSpecimen/Participant.jsp" />
+	</definition>
+	<definition name=".clinportal.participantAddSuccessDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.participantEditSuccessDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+		
+	<!-- Search tab pages definitions start -->
+	<definition name=".clinportal.queryResultsTreeViewDef" path="/pages/content/search/TreeView.jsp">
+	</definition>
+	<definition name=".clinportal.searchHomeDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/search/Home.jsp" />
+	</definition>
+	<definition name=".clinportal.searchAddSuccessDef" extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<definition name=".clinportal.simpleSearchResultsDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/SimpleSearchDataView.jsp" />
+	</definition>
+	<definition name=".clinportal.simpleSearchDepartmentDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/manageAdministrativeData/Department.jsp" />
+	</definition>
+	<definition name=".clinportal.simpleQueryInterfaceDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/SimpleQueryInterface.jsp" />
+	</definition>
+	<definition name=".clinportal.simpleSearchSpecimenArrayTypeDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/SpecimenArrayType.jsp" />
+	</definition>
+	<definition name=".clinportal.simpleSearchSpecimenArrayDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/manageBioSpecimen/SpecimenArray.jsp" />
+	</definition>
+	<definition name=".clinportal.advanceQueryDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/AdvanceQuery.jsp" />
+	</definition>
+	<definition name=".clinportal.queryResultsDef" extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/QueryResultsView.jsp" />
+	</definition>
+
+	<!-- Query edit pages definitions begin -->
+	<definition name=".clinportal.queryParticipantViewDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/manageBioSpecimen/Participant.jsp" />
+	</definition>
+	<definition name=".clinportal.queryResultsSpreadsheetViewDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/SimpleSearchDataView.jsp" />
+	</definition>
+	<definition name=".clinportal.participantEditDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/manageBioSpecimen/Participant.jsp" />
+	</definition>
+	
+	<!-- ASSIGN PRIVILEGES -->
+	<definition name=".clinportal.assignPrivilegesPageDef"
+		extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/search/AssignPrivileges.jsp" />
+	</definition>
+	<definition name=".clinportal.assignPrivilegesDef" extends=".clinportal.homePageDef">
+		<put name="content" value="/pages/content/common/success.jsp" />
+	</definition>
+	<!-- ASSIGN PRIVILEGES -->
+	
+	<!-- ADVANCE QUERY INTERFACE -->
+	<definition name=".clinportal.advanceQueryInterfaceDef"
+		extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/AdvanceQueryInterface.jsp" />
+	</definition>
+	<definition name=".clinportal.participantSearchDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/AdvanceSearchUI.jsp" />
+	</definition>
+
+	<definition name=".clinportal.advanceQueryViewDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/AdvanceQueryView.jsp" />
+	</definition>
+	<definition name=".clinportal.advanceQueryDef" extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/AdvanceQuery.jsp" />
+	</definition>
+	<definition name=".clinportal.advanceQueryRedirectDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/RedirectAdvancedSearch.jsp" />
+	</definition>
+	<definition name=".clinportal.advanceConfigurationSuccessDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content" value="/pages/content/search/ConfigureResultView.jsp" />
+	</definition>
+	
+	<!-- ADVANCE QUERY INTERFACE -->
+	
+	<!-- Query edit pages definitions end -->
+
+	<!-- Search tab pages definitions end -->
+	
+
+	<definition name=".clinportal.ViewAllConsentsDef"
+		path="/pages/content/ConsentTracking/ViewAllConsents.jsp">
+	</definition>
+	
+	 <!-- Definition code : Mandar Shidhore : 06/11/06 -->
+	<definition name=".clinportal.searchCategory" extends=".clinportal.mainTitlePageDef">
+		<put name="content" value="/pages/content/search/querysuite/AddLimits.jsp" />
+	</definition>
+	<definition name=".clinportal.viewSearchResults" extends=".clinportal.searchHomeDef">
+		<put name="content" value="/pages/content/search/querysuite/ViewResults.jsp" />
+	</definition>
+
+	<!--Annotation defs-->
+	<definition name=".clinportal.annotationDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/DefineAnnotations.jsp" />
+	</definition>
+	<definition name=".clinportal.dynamicFormDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/DynamicExtensionsHome.jsp" />
+	</definition>
+	
+	<!--Annotation defs End-->
+	<!-- actions of clinical study   -->
+	<definition name=".clinportal.clinicalStudyDef" extends=".clinportal.manageAdminDataHomeDef">
+		<put name="content"
+			value="/pages/content/manageAdministrativeData/ClinicalStudy.jsp" />
+	</definition>
+	<definition name=".clinportal.clinicalStudyRegistrationDef"
+		extends=".clinportal.manageBioSpecimenHomeDef">
+		<put name="content"
+			value="/pages/content/manageBioSpecimen/ClinicalStudyRegistration.jsp" />
+	</definition>
+	<definition name=".clinportal.csBasedSearchDef" extends=".clinportal.manageBioSpecimenHomeDef">
+		<put name="content"
+			value="/pages/content/manageBioSpecimen/CSBasedSearchResults.jsp" />
+	</definition>
+	<definition name=".clinportal.clinicalStudyRegistrationCPQueryDef"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content"
+			value="/pages/content/manageBioSpecimen/ClinicalStudyRegistration.jsp" />
+	</definition>
+	
+	<!-- End on actions of clinical study   -->
+	<!-- Search tab pages definitions start -->
+	<definition name=".clinportal.queryResultsTreeViewDef" path="/pages/content/search/TreeView.jsp">
+	</definition>
+	
+	<definition name=".clinportal.defineQueryResultsView"
+		extends=".clinportal.queryDataViewDef">
+		<put name="content"
+			value="/pages/content/search/querysuite/DefineGridResultsView.jsp" />
+	</definition>
+
+	<definition name=".clinportal.accessdenied" extends=".clinportal.manageBioSpecimenHomeDef">
+		<put name="content" value="/pages/content/common/ErrorDetails.jsp" />
+	</definition>
+	<definition name=".clinportal.participantConsentsDef"
+		path="/pages/content/ConsentTracking/ParticipantConsentTracking.jsp">
+	</definition>
+</tiles-definitions>

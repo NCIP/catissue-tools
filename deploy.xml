@@ -1,0 +1,3268 @@
+<?xml version ="1.0"?>
+<!--Ant Script for create Build for ClinPortal Core-->
+
+<project name="Clinportal NewModel Installation" default="deploy_app">
+
+	<!--define require dir and Properties -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="./lib/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+	<property file="ClinPortalInstall.properties" />
+
+	<property name="base.dir" value="." />
+	<property name="temp.dir" value="./tempClinPortal" />
+	<property name="csm.dir" value="${temp.dir}/tempcsm" />
+	<property name="lib.dir" value="${base.dir}/lib" />
+
+	<property name="mysql.sql.dir" value="${base.dir}/SQL/MySql/scripts" />
+	<property name="dbupgrade.sql.dir" value="${base.dir}/SQL/DBUpgrade" />
+	<property name="oracle.sql.dir" value="${base.dir}/SQL/Oracle" />
+	<property name="common.sql.dir" value="${base.dir}/SQL/Common" />
+	<property name="oracle.dialect.string" value="org.hibernate.dialect.Oracle9Dialect" />
+	<property name="mysql.dialect.string" value="org.hibernate.dialect.MySQLDialect" />
+
+	<property name="oracle.dialect.h3.string" value="org.hibernate.dialect.Oracle9Dialect" />
+	<property name="mysql.dialect.h3.string" value="org.hibernate.dialect.MySQLDialect" />
+
+	<property name="oracle.driver.string" value="oracle.jdbc.driver.OracleDriver" />
+	<property name="mysql.driver.string" value="com.mysql.jdbc.Driver" />
+
+	<property name="mysql.lib" value="mysql-connector-java-5.0.8-bin.jar" />
+	<property name="oracle.lib" value="oracleDriver.jar" />
+	<property name="ojdbc14.lib" value="ojdbc14.jar" />
+
+	<property name="hibernateConfigFile" value="${temp.dir}/clinportal/WEB-INF/classes/hibernate.cfg.xml" />
+	<property name="MetadataUploadingLogFile" value="${base.dir}/MetadataImportLog.txt" />
+	<property name="catissuehibernateConfigFile" value="${temp.dir}/clinportal/WEB-INF/classes/catissuehibernate.cfg.xml" />
+	<property name="catissueMetadataUploadingLogFile" value="${base.dir}/catissueMetadataImportLog.txt" />
+
+	<property name="datasource" value="java:/catissuecore" />
+	<property name="clinportal.struts.config.file" value="struts-config.xml" />
+	<property name="clinportal.hibernate.config.file" value="hibernate.cfg.xml" />
+	<property name="clinportal.tiles.def.file" value="tiles-defs.xml" />
+	<!-- Check for required properties -->
+	<target name="assert">
+		<if>
+			<equals arg1="" arg2="${jboss.home.dir}" />
+			<then>
+				<fail message="The property 'jboss.home.dir' can not be empty" />
+			</then>
+		</if>
+	</target>
+	<target name="assertfordb">
+		<if>
+			<or>
+				<equals arg1="mysql" arg2="${database.type}" />
+				<equals arg1="oracle" arg2="${database.type}" />
+			</or>
+			<then />
+			<else>
+				<fail message="The value of property 'database.type' must be oracle" />
+			</else>
+		</if>
+		<if>
+			<equals arg1="" arg2="${database.host}" />
+			<then>
+				<fail message="The property 'database.host' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${database.port}" />
+			<then>
+				<fail message="The property 'database.port' can not be empty. Default port for MySQL:3306 and for Oracle: 1521" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${database.name}" />
+			<then>
+				<fail message="The property 'database.name' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${database.username}" />
+			<then>
+				<fail message="The property 'database.username' can not be empty" />
+			</then>
+		</if>
+		<!-- Mandar 17May06 check for first user -->
+		<if>
+			<equals arg1="" arg2="${first.admin.department}" />
+			<then>
+				<fail message="The property 'first.admin.department' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${first.admin.institution}" />
+			<then>
+				<fail message="The property 'first.admin.institution' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${first.admin.cancerresearchgroup}" />
+			<then>
+				<fail message="The property 'first.admin.cancerresearchgroup' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${first.admin.emailAddress}" />
+			<then>
+				<fail message="The property 'first.admin.emailAddress' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${first.admin.password}" />
+			<then>
+				<fail message="The property 'first.admin.password' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${idp.enabled}" />
+			<then>
+				<fail message="The property 'idp.enabled' can not be empty" />
+			</then>
+		</if>
+
+		<if>
+			<equals arg1="" arg2="${integrate.catisssue.metadata}" />
+			<then>
+				<fail message="The property 'integrate.catisssue.metadata' can not be empty" />
+			</then>
+		</if>
+		<antcall target="validate_all_database_connection" />
+		<if>
+			<equals arg1="" arg2="${email.administrative.emailAddress}" />
+			<then>
+				<echo>email.adminstartive.emailaddress can be left blank.</echo>
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${email.sendEmailFrom.emailAddress}" />
+			<then>
+				<echo>email.sendEmailFrom.emailAddress can be left blank.</echo>
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${email.mailServer}" />
+			<then>
+				<echo>email.mailServer can be left blank.</echo>
+			</then>
+		</if>
+	</target>
+	<target name="validate_all_database_connection">
+		<antcall target="validate_clinportal_database_connection" />
+		<antcall target="validate_integrated_catissue_database_connection" />
+		<antcall target="validate_catissue_database_connection" />
+		<antcall target="validate_csm_database_connection" />
+	</target>
+	<!--Target for validation of ClinPortal connection parameters-->
+	<target name="validate_clinportal_database_connection">
+		<!-- validation for database connection -->
+		<trycatch>
+			<try>
+				<if>
+					<equals arg1="oracle" arg2="${database.type}" />
+					<then>
+						<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+							<transaction>select sysdate from dual;</transaction>
+							<transaction>commit;</transaction>
+							<classpath>
+								<fileset dir="${lib.dir}">
+									<include name="*.jar" />
+								</fileset>
+							</classpath>
+						</sql>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="Connection fails.Please check the database configuration parameters like database.host,database.port,database.name etc.  " />
+			</catch>
+		</trycatch>
+	</target>
+	<!--Target for validation of Catissue connection parameters-->
+	<target name="validate_catissue_database_connection">
+		<trycatch>
+			<try>
+				<if>
+					<equals arg1="${idp.enabled}" arg2="true" />
+					<then>
+						<if>
+							<equals arg1="oracle" arg2="${catissue.database.type}" />
+							<then>
+								<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${catissue.database.host}:${catissue.database.port}:${catissue.database.name}" userid="${catissue.database.username}" password="${catissue.database.password}" rdbms="oracle">
+									<transaction>select sysdate from dual;</transaction>
+									<transaction>commit;</transaction>
+									<classpath>
+										<fileset dir="${lib.dir}">
+											<include name="*.jar" />
+										</fileset>
+									</classpath>
+								</sql>
+							</then>
+						</if>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="Connection fails.Please check the database configuration parameters like catissue.database.host,catissue.database.port,catissue.database.name etc.  " />
+			</catch>
+		</trycatch>
+
+	</target>
+	<!--Target for validation of CSM connection parameters-->
+	<target name="validate_csm_database_connection">
+		<!-- validation for database connection -->
+		<trycatch>
+			<try>
+				<if>
+					<equals arg1="${idp.enabled}" arg2="true" />
+					<then>
+						<if>
+							<equals arg1="oracle" arg2="${csm.database.type}" />
+							<then>
+								<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" rdbms="oracle">
+									<transaction>select sysdate from dual;</transaction>
+									<transaction>commit;</transaction>
+									<classpath>
+										<fileset dir="${lib.dir}">
+											<include name="*.jar" />
+										</fileset>
+									</classpath>
+								</sql>
+							</then>
+						</if>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="Connection fails.Please check the database configuration parameters like csm.database.host,csm.database.port,csm.database.name etc.  " />
+			</catch>
+		</trycatch>
+	</target>
+
+	<!--Extrct WAR and copy Configuration files to temp directory-->
+	<target name="init">
+		<echo message="Initializing installation..." />
+
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<unjar src="${temp.dir}/clinportal/WEB-INF/lib/DynamicExtensions.jar" dest="${temp.dir}/dynamicExtensionsjar" />
+
+		<copy file="${base.dir}/log4j.properties.template" tofile="${temp.dir}/clinportal-properties/log4j.properties" overwrite="true" />
+		<antcall target="configure_log4j" />
+
+
+		<copy todir="${temp.dir}/clinportal-properties" overwrite="true">
+			<fileset dir="${base.dir}/clinportal-properties" />
+		</copy>
+		<!--<copy file="${base.dir}/CaTIES_conf/SectionHeaderConfig.txt" todir="${temp.dir}/clinportal-properties" overwrite="true" />-->
+		<copy file="catissuecore-ds.xml" todir="${temp.dir}" overwrite="true" />
+
+		<copy file="${temp.dir}/clinportal/WEB-INF/classes/DAOConfig.xml" todir="${temp.dir}" />
+		<!--Kapil V 1.0.1 Changes-->
+		<copy file="login-config.xml" todir="${temp.dir}" overwrite="true" />
+		<copy file="properties-service.xml" todir="${temp.dir}" overwrite="true" />
+		<!-- <copy file="log4j.xml" todir="${temp.dir}" overwrite="true"/> -->
+	</target>
+
+	<target name="configure_log4j">
+		<replace dir="${temp.dir}/clinportal-properties" propertyfile="ClinPortalInstall.properties">
+			<include name="log4j.properties" />
+			<replacefilter token="@@jbosshome@@" value="${jboss.home.dir}/server/default" />
+		</replace>
+	</target>
+
+	<!--Modify Configuration such as Session Timeout, Admin details and JBoss server port-->
+	<target name="configure_war">
+		<echo message="Modifying ClinPortal Configuration File..." />
+
+		<if>
+			<equals arg1="${session.timeout}" arg2="" />
+			<then>
+				<echo message="Session timeout not specified. Using default value of 30 minutes." />
+			</then>
+			<else>
+				<replace file="${temp.dir}/clinportal/WEB-INF/web.xml">
+					<replacefilter token="&lt;session-timeout>30&lt;/session-timeout>" value="&lt;session-timeout>${session.timeout}&lt;/session-timeout>" />
+				</replace>
+			</else>
+		</if>
+
+		<!--<replace file="${temp.dir}/dynamicExtensions/WEB-INF/web.xml">
+			<replacefilter token="&lt;session-timeout>10&lt;/session-timeout>" value="&lt;session-timeout>${session.timeout}&lt;/session-timeout>" />
+		</replace>-->
+
+		<!--<replace file="${temp.dir}/clinportal/WEB-INF/classes/remoteService.xml">
+			<replacefilter token="@@server.port@@" value="${jboss.server.port}"/>
+		</replace>-->
+	</target>
+
+
+	<!--Modify Adopter's Institution images, URL of Institution website and Contact Us, Privacy Notice, Disclaimer, Accessibility Text Files-->
+	<target name="adopter_configuration">
+		<echo message="Updating Site Images" />
+		<copy todir="${temp.dir}/clinportal/images" overwrite="true">
+			<fileset dir="${base.dir}/images" />
+		</copy>
+	</target>
+
+
+
+	<!--Modify Configuration For MySQL-->
+	<target name="mysql_config">
+		<echo message="Modifying ClinPortal MySQL specific Configuration File..." />
+
+		<replace dir="${temp.dir}/clinportal-properties" propertyfile="ClinPortalInstall.properties">
+			<include name="upt.hibernate.cfg.xml" />
+			<include name="clinportal.hibernate.cfg.xml" />
+			<replacefilter token="@@dialect@@" value="${mysql.dialect.string}" />
+		</replace>
+		<!-- added for csm orm1.cfg.xml file-->
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+			<include name="orm1.cfg.xml" />
+			<replacefilter token="@@dialect@@" value="${mysql.dialect.h3.string}" />
+		</replace>
+
+		<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+			<include name="catissuecore-ds.xml" />
+			<include name="login-config.xml" />
+			<replacefilter token="@@databaseurl@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+			<replacefilter token="@@username@@" value="${database.username}" />
+			<replacefilter token="@@pasword@@" value="${database.password}" />
+			<replacefilter token="@@databasedriver@@" value="${mysql.driver.string}" />
+		</replace>
+		<if>
+			<equals arg1="${idp.enabled}" arg2="true" />
+			<then>
+				<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+					<include name="catissuecore-ds.xml" />
+					<include name="login-config.xml" />
+					<replacefilter token="@@CSMdatabaseurl@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+					<replacefilter token="@@CSMusername@@" value="${csm.database.username}" />
+					<replacefilter token="@@CSMpasword@@" value="${csm.database.password}" />
+				</replace>
+			</then>
+			<else>
+				<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+					<include name="catissuecore-ds.xml" />
+					<include name="login-config.xml" />
+					<replacefilter token="@@CSMdatabaseurl@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+					<replacefilter token="@@CSMusername@@" value="${database.username}" />
+					<replacefilter token="@@CSMpasword@@" value="${database.password}" />
+				</replace>
+			</else>
+		</if>
+
+		<!-- change ${csm.dir} to {catissuecore} because using one war only -->
+		<!-- Configuring CSM hibernate property File-->
+		<!--
+		<replace dir="${temp.dir}/clinportal/WEB-INF" propertyfile="ClinPortalInstall.properties">
+			<include name="classes/hibernate.properties"/>
+			<include name="conf/hibernate.properties"/>
+			<replacefilter
+				token="hibernate.dialect org.hibernate.dialect.MySQLDialect"
+			  	value="hibernate.dialect ${mysql.dialect.h3.string}"/>
+			<replacefilter
+				token="hibernate.connection.driver_class com.mysql.jdbc.Driver"
+			  	value="hibernate.connection.driver_class ${mysql.driver.string}"/>
+
+			<replacefilter
+				token="hibernate.connection.url jdbc:mysql://ps0154:3306/clinportal_mysql"
+			  	value="hibernate.connection.url jdbc:mysql://${database.host}:${database.port}/${database.name}"/>
+			<replacefilter
+				token="hibernate.connection.username catissue_core"
+			  	value="hibernate.connection.username ${database.username}"/>
+			<replacefilter
+				token="hibernate.connection.password catissue_core"
+			  	value="hibernate.connection.password ${database.password}"/>
+		</replace>
+		-->
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/hibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${mysql.dialect.string}" />
+		</replace>
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${mysql.dialect.string}" />
+		</replace>
+
+		<replace file="${temp.dir}/dynamicExtensionsjar/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${mysql.dialect.string}" />
+		</replace>
+
+		<!--<replace file="${temp.dir}/clinportal/WEB-INF/classes/hibernate.cfg.xml">
+			<replacefilter token="${oracle.dialect.string}" value="${mysql.dialect.string}"/>
+		</replace>
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${oracle.dialect.string}" value="${mysql.dialect.string}"/>
+		</replace>-->
+
+	</target>
+
+	<!--Modify Configuration For Oracle-->
+	<target name="oracle_config">
+		<echo message="Modifying ClinPortal Oracle specific Configuration File..." />
+		<replace dir="${temp.dir}/clinportal-properties" propertyfile="ClinPortalInstall.properties">
+			<include name="upt.hibernate.cfg.xml" />
+			<include name="clinportal.hibernate.cfg.xml" />
+			<replacefilter token="@@dialect@@" value="${oracle.dialect.string}" />
+		</replace>
+
+		<!-- added for csm orm1.cfg.xml file-->
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+			<include name="orm1.cfg.xml" />
+			<replacefilter token="@@dialect@@" value="${oracle.dialect.h3.string}" />
+		</replace>
+
+		<!-- Configuring Data Source File-->
+		<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+			<include name="catissuecore-ds.xml" />
+			<include name="login-config.xml" />
+			<replacefilter token="@@databaseurl@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+			<replacefilter token="@@username@@" value="${database.username}" />
+			<replacefilter token="@@pasword@@" value="${database.password}" />
+			<replacefilter token="@@databasedriver@@" value="${oracle.driver.string}" />
+		</replace>
+
+		<if>
+			<equals arg1="${idp.enabled}" arg2="true" />
+			<then>
+				<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+					<include name="catissuecore-ds.xml" />
+					<include name="login-config.xml" />
+					<replacefilter token="@@CSMdatabaseurl@@" value="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" />
+					<replacefilter token="@@CSMusername@@" value="${csm.database.username}" />
+					<replacefilter token="@@CSMpasword@@" value="${csm.database.password}" />
+				</replace>
+			</then>
+			<else>
+				<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+					<include name="catissuecore-ds.xml" />
+					<include name="login-config.xml" />
+					<replacefilter token="@@CSMdatabaseurl@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					<replacefilter token="@@CSMusername@@" value="${database.username}" />
+					<replacefilter token="@@CSMpasword@@" value="${database.password}" />
+				</replace>
+			</else>
+		</if>
+
+		<!-- change ${csm.dir} to {catissuecore} because using one war only -->
+		<!-- Configuring CSM hibernate property File-->
+		<!--
+		<replace dir="${temp.dir}/clinportal/WEB-INF" propertyfile="ClinPortalInstall.properties">
+			<include name="classes/hibernate.properties"/>
+			<include name="conf/hibernate.properties"/>
+			<replacefilter
+				token="hibernate.dialect org.hibernate.dialect.MySQLDialect"
+			  	value="hibernate.dialect ${oracle.dialect.h3.string}"/>
+			<replacefilter
+				token="hibernate.connection.driver_class com.mysql.jdbc.Driver"
+			  	value="hibernate.connection.driver_class ${oracle.driver.string}"/>
+
+			<replacefilter
+				token="hibernate.connection.url jdbc:mysql://ps0154:3306/clinportal_mysql"
+			  	value="hibernate.connection.url jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}"/>
+			<replacefilter
+				token="hibernate.connection.username catissue_core"
+			  	value="hibernate.connection.username ${database.username}"/>
+			<replacefilter
+				token="hibernate.connection.password catissue_core"
+			  	value="hibernate.connection.password ${database.password}"/>
+		</replace>
+		-->
+
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/hibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${oracle.dialect.string}" />
+		</replace>
+
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${oracle.dialect.string}" />
+
+		</replace>
+
+		<replace file="${temp.dir}/dynamicExtensionsjar/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${oracle.dialect.string}" />
+
+		</replace>
+
+
+		<!--<replace file="${temp.dir}/clinportal/WEB-INF/classes/hibernate.cfg.xml">
+			<replacefilter
+				token="${mysql.dialect.string}"
+			  	value="${oracle.dialect.string}"/>
+		</replace>
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${oracle.dialect.string}"/>
+	        <replacefilter token="&lt;MySQL c3p properties start" value="&lt;MySQL c3p properties start"/>
+	        <replacefilter token="&lt;MySQL c3p properties end" value="MySQL c3p properties end"/>
+		</replace>-->
+
+	</target>
+	<!--Server clean-up-->
+	<target name="clean_server" description="deletes the WAR file and cache from server ">
+		<delete file="${jboss.home.dir}/server/default/deploy/clinportal.war" />
+		<delete includeemptydirs="true">
+			<fileset dir="${jboss.home.dir}/server/default/work">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${jboss.home.dir}/server/default/tmp">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!--Buid New WAR File-->
+	<target name="build_war">
+		<echo message="Creating New Web Application Archieve File..." />
+		<if>
+			<equals arg1="${idp.enabled}" arg2="true" />
+			<then>
+				<antcall target="IdPWarConfig" />
+			</then>
+			<else>
+				<echo message="IdP is not enabled" />
+			</else>
+		</if>
+
+		<delete file="${temp.dir}/clinportal.war" />
+		<delete file="${temp.dir}/dynamicExtensions.war" />
+
+		<war destfile="${temp.dir}/clinportal.war" webxml="${temp.dir}/clinportal/WEB-INF/web.xml">
+			<fileset dir="${temp.dir}/clinportal">
+				<exclude name="**/*build*" />
+				<exclude name="**/*WEB-INF*" />
+				<exclude name="**/*servlet.jar*" />
+				<exclude name="**/WEB-INF/lib/log4j-1.2.9.jar*" />
+				<exclude name="**/WEB-INF/lib/boot.jar*" />
+				<exclude name="**/WEB-INF/lib/datafile.jar*" />
+				<exclude name="**/WEB-INF/lib/db2java.jar*" />
+				<exclude name="**/WEB-INF/lib/dtsrpcclient.jar*" />
+				<exclude name="**/WEB-INF/lib/freemarker-2.3.4.jar*" />
+				<exclude name="**/WEB-INF/lib/freemarker.jar*" />
+				<exclude name="**/WEB-INF/lib/lucene-core-2.0.0.jar*" />
+				<exclude name="**/WEB-INF/lib/mdrant.jar*" />
+				<exclude name="**/WEB-INF/lib/Metaphrase.jar*" />
+				<exclude name="**/WEB-INF/lib/mysql-connector-java-3.1.13-bin.jar*" />
+				<exclude name="**/WEB-INF/lib/odmg.jar*" />
+				<exclude name="**/WEB-INF/lib/ognl-2.6.7.jar*" />
+				<exclude name="**/WEB-INF/lib/osgi.jar*" />
+				<exclude name="**/WEB-INF/lib/p6spy.jar*" />
+
+				<exclude name="**/WEB-INF/lib/retrotranslator-runtime-1.2.0.jar*" />
+				<exclude name="**/WEB-INF/lib/retrotranslator-transformer-1.2.0.jar*" />
+				<exclude name="**/WEB-INF/lib/xmlpublic.jar*" />
+				<exclude name="**/WEB-INF/lib/xwork-j4-2.0.0.jar*" />
+				<exclude name="**/WEB-INF/lib/xml-apis.jar*" />
+				<exclude name="**/*hibernate2.jar*" />
+				<exclude name="**/*jta.jar*" />
+				<exclude name="**/.*" />
+				<exclude name="**/*.sql" />
+				<exclude name="**/CVS*" />
+				<exclude name="**/jta.jar" />
+				<exclude name="**/jboss-common-jdbc-wrapper.jar" />
+				<exclude name="**/jboss.jar" />
+				<exclude name="**/dom4*.jar" />
+			</fileset>
+		</war>
+
+	</target>
+
+	<!--Copy WAR and Configuration Files to JBOSS Directory-->
+	<target name="copy_files">
+		<echo message="Copying ClinPortal Application Components..." />
+		<delete file="${jboss.home.dir}/server/default/deploy/dynamicExtensions.war" />
+		<copy todir="${jboss.home.dir}/server/default/clinportal-properties" overwrite="true">
+			<fileset dir="${temp.dir}/clinportal-properties">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${jboss.home.dir}/server/default/deploy" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="clinportal.war" />
+				<include name="catissuecore-ds.xml" />
+				<include name="clinportalcsm.war" />
+			</fileset>
+		</copy>
+		<replace dir="${jboss.home.dir}/server/default/clinportal-properties">
+			<include name="ApplicationSecurityConfig.xml" />
+			<replacefilter token="@@hibernate-config-file@@" value="${jboss.home.dir}/server/default/clinportal-properties/clinportal.hibernate.cfg.xml" />
+		</replace>
+
+		<replace dir="${jboss.home.dir}/server/default/clinportal-properties">
+			<include name="ClinPortal_Properties.xml" />
+			<replacefilter token="@@email.admin@@" value="${email.administrative.emailAddress}" />
+			<replacefilter token="@@sendEmailFrom@@" value="${email.sendEmailFrom.emailAddress}" />
+			<replacefilter token="@@mailServer@@" value="${email.mailServer}" />
+			<replacefilter token="@@adminId@@" value="${first.admin.emailAddress}" />
+			<replacefilter token="@@IDP-ENABLED@@" value="${idp.enabled}" />
+			<replacefilter token="@@catissueURL@@" value="${catissue.url}" />
+			<replacefilter token="@@CIDERURL@@" value="${CIDER.url}" />
+			<replacefilter token="@@application_titleversion@@" value="${application.version}" />
+
+		</replace>
+
+		<copy todir="${jboss.home.dir}/server/default/lib">
+			<fileset dir="${lib.dir}">
+				<include name="${mysql.lib}" />
+			</fileset>
+		</copy>
+		<copy todir="${jboss.home.dir}/bin" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="DAOConfig.xml" />
+			</fileset>
+		</copy>
+	</target>
+	<!--Changes for v 1.0.1 - Start-->
+	<target name="config_jboss_files">
+		<copy todir="${jboss.home.dir}/server/default/conf" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="login-config.xml" />
+			</fileset>
+		</copy>
+
+		<replace dir="${temp.dir}">
+			<include name="properties-service.xml" />
+			<replacefilter token="@@app-security-file@@" value="${jboss.home.dir}/server/default/clinportal-properties/ApplicationSecurityConfig.xml" />
+			<replacefilter token="@@app-properties-file@@" value="${jboss.home.dir}/server/default/clinportal-properties/ClinPortal_Properties.xml" />
+			<replacefilter token="@@app-dynamicuixml-file@@" value="${jboss.home.dir}/server/default/clinportal-properties/dynamicUI.xml" />
+
+		</replace>
+
+
+		<copy todir="${jboss.home.dir}/server/default/deploy" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="properties-service.xml" />
+			</fileset>
+		</copy>
+		<delete file="${jboss.home.dir}/server/default/lib/hibernate2.jar" />
+
+	</target>
+
+
+	<!--Target call for both Deployment of Core -->
+	<target name="deploy_app">
+		<antcall target="assert" />
+		<antcall target="assertfordb" />
+		<delete dir="${temp.dir}" />
+		<antcall target="init" />
+		<antcall target="configure_war" />
+		<antcall target="adopter_configuration" />
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="mysql_config" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="oracle_config" />
+				</then>
+			</elseif>
+		</if>
+		<!-- configure titli.properties -->
+		<!--<antcall target="configure_titli" />
+		-->
+		<antcall target="de_integrate_app" />
+		<!--Start of Integrating the Advance Query Module  -->
+		<echo>Integrating the  Advance Query Module</echo>
+		<antcall target="unzip_aq_installable" />
+		<ant dir="${temp.dir}/AdvanceQuery" inheritAll="false" antfile="queryintegration.xml" target="aq_integrate_app">
+			<property name="parent.base.dir" value="${base.dir}" />
+			<property name="deploy.temp.dir" value="${basedir}/tempClinPortal" />
+			<property name="war.dir" value="clinportal" />
+			<property name="datasource" value="${datasource}" />
+			<property name="database.type" value="${database.type}" />
+			<property name="oracle.dialect.string" value="${oracle.dialect.string}" />
+			<property name="mysql.dialect.string" value="${mysql.dialect.string}" />
+		</ant>
+		<!--End of Integrating the Advance Query Module  -->
+
+		<antcall target="configure_reports" />
+		<antcall target="build_war" />
+		<antcall target="copy_files" />
+		<replace file="${basedir}/clinportal_caCORE_Client/conf/remoteService.xml">
+			<replacefilter token="@@HOST@@" value="${jboss.server.host}" />
+			<replacefilter token="@@PORT@@" value="${jboss.server.port}" />
+		</replace>
+		<replace file="${basedir}/clinportal_caCORE_Client/conf/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+			<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+			<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<antcall target="send_mail" />
+	</target>
+
+	<target name="de_check_prerequisite">
+		<!-- Check dynamicextensions.zip file exists or not in base directory. -->
+		<available file="${base.dir}/dynamicextensions.zip" property="file.exists" value="false" />
+		<if>
+			<not>
+				<isset property="file.exists" />
+			</not>
+			<then>
+				<echo message="dynamicextensions.zip file not found. It should be in base directory to deploy DynamicExtensions." level="error" />
+			</then>
+			<else>
+				<echo message="DynamicExtensions is ready to use." />
+			</else>
+		</if>
+	</target>
+	<!-- Modify dynamicExtensions configuration For MySQL -->
+	<target name="de_mysql_config">
+		<replace file="${temp.dir}/dynamicextensions/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${mysql.dialect.string}" />
+		</replace>
+	</target>
+
+	<!-- Modify dynamicextensions configuration For ORACLE -->
+	<target name="de_oracle_config">
+		<replace file="${temp.dir}/dynamicextensions/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml">
+			<replacefilter token="${mysql.dialect.string}" value="${oracle.dialect.string}" />
+		</replace>
+	</target>
+
+	<!--Target for Deployment with jboss config-->
+	<target name="deploy_app_with_config">
+		<antcall target="deploy_app" />
+		<antcall target="config_jboss_files" />
+		<delete dir="${temp.dir}" />
+	</target>
+	<target name="deploy_app_with_IdPDB">
+		<!--with Db changes -->
+		<antcall target="deploy_app" />
+		<antcall target="IdPSettings" />
+		<antcall target="config_jboss_files" />
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<!--Target call for both Deployment and Database Creation-->
+	<target name="deploy_all_with_config">
+		<antcall target="deploy_app_with_config" />
+		<antcall target="deploy_db" />
+		<if>
+			<equals arg1="true" arg2="${integrate.catisssue.metadata}" />
+			<then>
+				<antcall target="integrate_catissue_metadata" />
+			</then>
+		</if>
+	</target>
+
+	<!--Target call for both Deployment and Database Creation-->
+	<target name="upgrade_all_with_config_from_CP_1.0_to_CP_1.1">
+		<antcall target="deploy_app_with_config" />
+		<antcall target="upgrade_db_from_CP_1.0_to_CP_1.1" />
+	</target>
+
+	<!--Target for  Database Upgrade from ClinPortal 1.0  to ClinPortal 1.1-->
+	<target name="upgrade_db_from_CP_1.0_to_CP_1.1">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="upgrade_db_mysql_from_CP_1.0_to_CP_1.1" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="upgrade_db_oracle_from_CP_1.0_to_CP_1.1" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
+
+	<target name="upgrade_db_mysql_from_CP_1.0_to_CP_1.1">
+	</target>
+
+	<target name="upgrade_db_oracle_from_CP_1.0_to_CP_1.1">
+		<echo message="Updating DE Model changes..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/Upgrade_DE_Schema.sql" />
+			<transaction src="${oracle.sql.dir}/Upgrade_Clinportal_Schema.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+	<!--Target call for both Deployment and Database Creation-->
+	<target name="upgrade_all_with_config_from_CP_1.1_to_CP_1.2">
+		<antcall target="deploy_app_with_config" />
+		<antcall target="upgrade_db_from_CP_1.1_to_CP_1.2" />
+		<antcall target="update_metadata_for_tag_path_race" />
+		<antcall target="upgrade_category_entity_names" />
+		<antcall target="assignPrivilgeDBUpdate" />
+	</target>
+
+	<!--Target for  Database Upgrade from ClinPortal 1.0  to ClinPortal 1.1-->
+	<target name="upgrade_db_from_CP_1.1_to_CP_1.2">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="upgrade_db_mysql_from_CP_1.1_to_CP_1.2" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="upgrade_db_oracle_from_CP_1.1_to_CP_1.2" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
+	<target name="upgrade_db_mysql_from_CP_1.1_to_CP_1.2">
+	</target>
+
+	<target name="upgrade_db_oracle_from_CP_1.1_to_CP_1.2">
+		<echo message="Updating DE Model changes from CP_1.1 to CP_1.2" />
+		<antcall target="upgrade_metadata_for_constraintproperties" />
+		<antcall target="upgrade_db_catissue_integration" />
+	</target>
+<target name="commondbconfig">
+	<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+				</replace>
+			</then>
+
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="mssqlserver" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${mssqlserver.dialect.string}"/>
+						<replacefilter token="@@DRIVER@@" value="${mssqlserver.driver.string}"/>
+						<replacefilter token="@@URL@@" value="jdbc:sqlserver://${database.host}:${database.port};databaseName=${database.name};" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+
+		</replace>
+	</target>
+	
+	<!-- call this task in Feb End release while upgrading Db -->
+	<target name="upgrade_metadata_for_constraintproperties" depends="commondbconfig">
+	
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="upgrade_metadata_for_constraintproperties_mysql" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="upgrade_metadata_for_constraintproperties_oracle" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>			
+	</target>
+
+	<target name="upgrade_metadata_for_constraintproperties_mysql">
+	<echo message="Updating DE Model changes..." />
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}">
+			<transaction src="${mysql.sql.dir}/upgrade_metadata_cnstrProp.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<java classname="edu.wustl.clinportal.querysuite.metadata.UpdateSchemaForConstraintProperties" fork="true">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="upgrade_metadata_for_constraintproperties_oracle">
+		<echo message="Updating DE Model changes..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${dbupgrade.sql.dir}/Oracle/upgrade_cnstrProp_createTable.sql" />
+			<transaction src="${dbupgrade.sql.dir}/Oracle/upgrade_cnstrProp_alterTable.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<java classname="edu.wustl.clinportal.querysuite.metadata.UpdateSchemaForConstraintProperties" fork="true">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
+
+			<!--<transaction  src="${dbupgrade.sql.dir}/Oracle/upgrade_cnstrProp_dropColumn.sql"/>-->
+			<transaction src="${dbupgrade.sql.dir}/Oracle/upgrade_cnstrProp_createSeq.sql" />
+			<transaction src="${dbupgrade.sql.dir}/Oracle/upgrade_cnstrProp_resetDESequences.sql" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+	<!--Target for Database Creation-->
+	<target name="deploy_db">
+		<antcall target="assertfordb" />
+		<antcall target="firstUser" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="deploy_db_mysql" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="deploy_db_oracle" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
+	<!--Changes for v 1.0.1 - End-->
+
+	<!--Target call for both Deployment and Database Creation-->
+	<target name="deploy_all">
+		<antcall target="deploy_app" />
+		<antcall target="deploy_db" />
+		<if>
+			<equals arg1="true" arg2="${integrate.catisssue.metadata}" />
+			<then>
+				<antcall target="integrate_catissue_metadata" />
+			</then>
+		</if>
+
+	</target>
+	
+	<!--MySQL Database Creation -->
+	<target name="deploy_db_mysql">
+		<echo message="Initializing MySQL Database for ClinPortal Application..." />
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+		<transaction src="${mysql.sql.dir}/clinportal.sql" />
+		<transaction src="${mysql.sql.dir}/InitDB_CreateTable.sql" />
+		<transaction src="${common.sql.dir}/initDB_Insert_Common.sql" />
+		<transaction src="${mysql.sql.dir}/AlterTable.sql" />
+		<transaction src="${common.sql.dir}/CDE_DummyData_Common.sql" />
+		<transaction src="${mysql.sql.dir}/CSM_Create_MySQL.sql" />
+		<transaction src="${mysql.sql.dir}/CSM_InsertData_MySQL.sql" />
+		<transaction src="${mysql.sql.dir}/CSM_AddConstraints_MySQL.sql" />
+		<!--<transaction src="${mysql.sql.dir}/CSMUpgrade_3_to_3.2.sql" />-->
+		<transaction src="${common.sql.dir}/indexes.sql" />
+		<transaction src="${mysql.sql.dir}/dynamicextension.sql" />
+		<transaction src="${mysql.sql.dir}/metadata_schema_script.sql" />
+		<transaction src="${mysql.sql.dir}/query_schema_script.sql" />
+		<transaction src="${mysql.sql.dir}/caB2B Table Generation Script.sql" />
+		<transaction>commit;</transaction>
+		<classpath>
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</sql>
+	<antcall target="upgrade_db_demodel_mysql" />
+	
+	<antcall target="insertQueryMetadata" />
+
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+			<transaction src="${mysql.sql.dir}/addCatissueReln.sql" />
+			<transaction src="${common.sql.dir}/createUser.sql" />
+			<transaction>commit;</transaction>
+		<classpath>
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</sql>
+
+		<!-- Upgrade from CP 1.2.1 to CP 1.3.0 (Query Related)-->
+
+<!--
+	<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+		<transaction src="${oracle.sql.dir}/query/update_query_metadata.sql" />
+		<transaction>commit;</transaction>
+		<classpath>
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</sql>
+-->
+
+	</target>
+
+	<target name="upgrade_db_demodel_mysql">
+			<echo message="Upgrading MySQL Database for DE model Application ..." />
+			<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" >
+				<transaction src="${mysql.sql.dir}/dropdeconstraints.sql" />
+				<transaction src="${mysql.sql.dir}/createnewtable.sql" />
+				<transaction src="${mysql.sql.dir}/alterqueries.sql" />
+				<transaction src="${mysql.sql.dir}/addconstraints.sql" />
+				<transaction src="${mysql.sql.dir}/deupgrade_to_v1.2.0.rc1.sql" />
+				<transaction src="${mysql.sql.dir}/Upgrade_DE_Schema.sql" />
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
+		</target>
+	
+	<!--Oracle Database Creation -->
+	<target name="deploy_db_oracle">
+		<echo message="Initializing Oracle Database for ClinPortal Application..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/clinportal.sql" />
+			<transaction src="${oracle.sql.dir}/InitDB_CreateTable.sql" />
+			<transaction src="${common.sql.dir}/initDB_Insert_Common.sql" />
+			<transaction src="${oracle.sql.dir}/AlterTable.sql" />
+			<transaction src="${common.sql.dir}/CDE_DummyData_Common.sql" />
+			<transaction src="${oracle.sql.dir}/CSM_Create_Oracle.sql" />
+			<transaction src="${dbupgrade.sql.dir}/Oracle/CSMUpgrade_3_to_3.2.sql" />
+			<!--	  <transaction  src="${oracle.sql.dir}/createUser.sql"/>-->
+			<transaction src="${common.sql.dir}/indexes.sql" />
+			<transaction src="${oracle.sql.dir}/dynamicextension.sql" />
+			<transaction src="${oracle.sql.dir}/query/caB2B Table Generation Script.sql" />
+			<transaction src="${oracle.sql.dir}/query/query_schema_script.sql" />
+			<transaction src="${oracle.sql.dir}/addCatissueReln.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<antcall target="insertQueryMetadata" />
+
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle" delimiter="/" delimitertype="row">
+			<transaction src="${oracle.sql.dir}/CSM_Trigger_Oracle.sql" />
+			<transaction src="${oracle.sql.dir}/DBUtility.sql" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/CSM_InsertData_Oracle.sql" />
+			<transaction src="${oracle.sql.dir}/CSM_AddConstraints_Oracle.sql" />
+			<transaction src="${oracle.sql.dir}/createUser.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<!-- Upgrade from CP 1.2.1 to CP 1.3.0 (Query Related)-->
+
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+			<transaction src="${dbupgrade.sql.dir}/Oracle/DBUpgrade_CP_1.2.1_to_CP_1.3.0.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/query/update_query_metadata.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+	<target name="UpdateMetadata">
+		<echo message="Updating DE Metadata for consents....." />
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+			<!--<replacefilter token="@@DATABASE_NAME@@" value="${database.name}"/> -->
+		</replace>
+		<java classname="edu.wustl.clinportal.querysuite.metadata.UpdateMetadata" fork="true" maxmemory="512m">
+			<classpath location="${temp.dir}/clinportal/WEB-INF/classes" />
+			<classpath refid="temp.classpath" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+	<target name="insertQueryMetadata">
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+			<transaction src="${mysql.sql.dir}/PopulateTable.sql" />
+			<transaction src="${mysql.sql.dir}/UpdateTable.sql" />
+			<transaction src="${mysql.sql.dir}/csm_mysql.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+			<transaction src="${mysql.sql.dir}/update_de_model.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<antcall target="upgrade_metadata_for_constraintproperties" />
+		<antcall target="UpdateMetadata" />
+		<!--<antcall target="update_metadata_for_tag_path_race" />-->
+		<antcall target="update_clinportal_association_metadata" />
+	</target>
+	<target name="reset_DE_sequences">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction>
+							DROP SEQUENCE DE_ATTR_REC_SEQ ;
+							DROP SEQUENCE DE_COLL_ATTR_REC_VALUES_SEQ ;
+							DROP SEQUENCE DE_FILE_ATTR_REC_VALUES_SEQ ;
+							DROP SEQUENCE DE_OBJECT_ATTR_REC_VALUES_SEQ ;
+							DROP SEQUENCE DYEXTN_ABSTRACT_METADATA_SEQ ;
+							DROP SEQUENCE DYEXTN_ASSO_DISPLAY_ATTR_SEQ ;
+							DROP SEQUENCE DYEX_ATTR_TYP_INFO_SEQ ;
+							DROP SEQUENCE DYEXTN_CONTAINER_SEQ ;
+							DROP SEQUENCE DYEXTN_CONTROL_SEQ ;
+							DROP SEQUENCE DYEXTN_DATABASE_PROPERTIES_SEQ ;
+							DROP SEQUENCE DYEXTN_DATA_ELEMENT_SEQ ;
+							DROP SEQUENCE DYEXTN_ENTITY_MAP_CONDN_SEQ ;
+							DROP SEQUENCE DYEXTN_ENTITY_MAP_SEQ ;
+							DROP SEQUENCE DYEXTN_ENTITY_RECORD_SEQ ;
+							DROP SEQUENCE DYEXTN_FILE_EXTN_SEQ ;
+							DROP SEQUENCE DYEXTN_FORM_CONTEXT_SEQ ;
+							DROP SEQUENCE DYEXTN_PERMISSIBLEVAL_SEQ ;
+							DROP SEQUENCE DYEXTN_ROLE_SEQ ;
+							DROP SEQUENCE DYEXTN_RULE_PARAMETER_SEQ ;
+							DROP SEQUENCE DYEXTN_RULE_SEQ ;
+							DROP SEQUENCE DYEXTN_SEMANTIC_PROPERTY_SEQ ;
+							DROP SEQUENCE DYEXTN_TAGGED_VALUE_SEQ ;
+							DROP SEQUENCE DYEXTN_VALUE_DOMAIN_SEQ ;
+							DROP SEQUENCE DYEXTN_VIEW_SEQ ;
+							DROP SEQUENCE DYEXTN_CNSTRKEY_PROP_SEQ;
+							</transaction>
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<transaction src="${oracle.sql.dir}/query/createDESequence.SQL" />
+		</sql>
+	</target>
+
+	<target name="send_mail">
+		<echo message="Sending mail to: ${email.administrative.emailAddress}" />
+		<echo message="Sending mail from: ${email.sendEmailFrom.emailAddress}" />
+		<mail mailhost="${email.mailServer}" subject="Clinportal Successfully Deployed" encoding="plain" failonerror="false">
+			<from address="${email.sendEmailFrom.emailAddress}" />
+			<to address="${email.administrative.emailAddress}" />
+			<message>
+			Dear clinportal Administrator,
+			
+				This is to validate that clinportal application has been installed at
+			the following location: ${jboss.home.dir}
+			
+				To complete the deployment, you have to now perform the post installation
+			steps described in section "Post Installation Configuration" in the deployment
+			guide (Clinportal Deployment Guide.doc).
+			
+				Once you have completed deployment, you should be able to login with the following
+			details:
+			URL: https://${jboss.server.host}:${jboss.server.port}/clinportal
+			Username:${first.admin.emailAddress}
+			Password:${first.admin.password}
+			
+			Thanking You,
+			-clinportal
+						</message>
+		</mail>
+		<echo>
+			Please check the Email of ${first.admin.emailAddress}.
+			If the Deployment mail is not received please check your
+			email.administrative.emailAddress and email.sendEmailFrom.emailAddress
+			properties in ClinPortalInstall.properties and Re-deploy the Application.
+		</echo>
+	</target>
+
+	<!--First User Creation. Mandar : 02-May-2006 -->
+	<path id="temp.classpath">
+		<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="firstUser">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="mysqlFirstUser" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="oracleFirstUser" />
+				</then>
+			</elseif>
+		</if>
+	</target>
+	<target name="oracleFirstUser">
+		<echo message="Encoding Password..." />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<antcall target="create_temp_loggger_properties_file" />
+
+		<java classname="edu.wustl.common.util.global.PasswordManager" fork="true">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="AdvanceQuery.jar" />
+				</fileset>
+			</classpath>
+			<arg value="${base.dir}/catissuetmp.txt" />
+			<arg value="${first.admin.password}" />
+		</java>
+
+		<property file="${base.dir}/catissuetmp.txt" />
+		<echo>
+						Encoded Password ${first.admin.encodedPassword}
+				</echo>
+
+		<echo message="Modifying ClinPortal SQL file for user information..." />
+		<copy file="${oracle.sql.dir}/createUser.sql" todir="${temp.dir}" overwrite="true" />
+
+		<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+			<include name="createUser.sql" />
+			<replacefilter token="@@first.admin.department@@" value="${first.admin.department}" />
+			<replacefilter token="@@first.admin.institution@@" value="${first.admin.institution}" />
+			<replacefilter token="@@first.admin.cancerresearchgroup@@" value="${first.admin.cancerresearchgroup}" />
+			<replacefilter token="@@first.admin.emailAddress@@" value="${first.admin.emailAddress}" />
+			<replacefilter token="@@first.admin.encodedPassword@@" value="${first.admin.encodedPassword}" />
+		</replace>
+
+		<copy todir="${oracle.sql.dir}" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="createUser.sql" />
+			</fileset>
+		</copy>
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<target name="mysqlFirstUser">
+		<echo message="Encoding Password..." />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<java classname="edu.wustl.common.util.global.PasswordManager" fork="true">
+
+			<classpath refid="temp.classpath" />
+
+			<arg value="${base.dir}/catissuetmp.txt" />
+			<arg value="${first.admin.password}" />
+		</java>
+
+		<property file="${base.dir}/catissuetmp.txt" />
+		<echo>
+						Encoded Password ${first.admin.encodedPassword}
+				</echo>
+
+		<echo message="Modifying ClinPortal SQL file for user information..." />
+		<copy file="${mysql.sql.dir}/createUser.sql" todir="${temp.dir}" overwrite="true" />
+
+		<replace dir="${temp.dir}" propertyfile="ClinPortalInstall.properties">
+			<include name="createUser.sql" />
+			<replacefilter token="@@first.admin.department@@" value="${first.admin.department}" />
+			<replacefilter token="@@first.admin.institution@@" value="${first.admin.institution}" />
+			<replacefilter token="@@first.admin.cancerresearchgroup@@" value="${first.admin.cancerresearchgroup}" />
+			<replacefilter token="@@first.admin.emailAddress@@" value="${first.admin.emailAddress}" />
+			<replacefilter token="@@first.admin.encodedPassword@@" value="${first.admin.encodedPassword}" />
+		</replace>
+
+		<copy todir="${common.sql.dir}" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="createUser.sql" />
+			</fileset>
+		</copy>
+		<delete dir="${temp.dir}" />
+	</target>
+
+
+
+	<!-- Configure titli.properties according to ClinPortalInstall.properties and other set properties -->
+	<target name="configure_titli">
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+			<include name="titli.properties" />
+			<replacefilter token="@@username@@" value="${database.username}" />
+			<replacefilter token="@@password@@" value="${database.password}" />
+			<replacefilter token="@@titliindexlocation@@" value="${jboss.home.dir}/server/default/data/titli-index" />
+			<replacefilter token="@@databasename@@" value="${database.name}" />
+		</replace>
+		<!-- conditional configuration of database url and driver names -->
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="titli.properties" />
+					<replacefilter token="@@databasedriver@@" value="${mysql.driver.string}" />
+					<replacefilter token="@@databaseurl@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+						<include name="titli.properties" />
+						<replacefilter token="@@databaseurl@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+						<replacefilter token="@@databasedriver@@" value="${oracle.driver.string}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+	</target>
+
+
+	<property name="filename" value="" />
+	<property name="mainContainerList" value="" />
+	<property name="package" value="" />
+	<property name="addQueryPaths" value="" />
+	<property name="condition" value="" />
+	<property name="categoryDefinitionFilePath" value="" />
+	<property name="hookentity" value="" />
+
+	<target name="import_xmi">
+
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+			<!--<replacefilter token="@@DATABASE_NAME@@" value="${database.name}"/> -->
+		</replace>
+
+		<java classname="edu.wustl.clinportal.annotations.xmi.ImportXmi" fork="true" maxmemory="1024M">
+			<arg value="${filename}" />
+			<arg value="${mainContainerList}" />
+			<arg value="${package}" />
+			<arg value="${addQueryPaths}" />
+			<arg value="${condition}" />
+			<arg value="${hookentity}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+
+	<target name="create_category">
+
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+
+		<java classname="edu.wustl.clinportal.util.CategoryCreator" fork="true" maxmemory="1024M">
+			<arg value="${categoryDefinitionFilePath}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+
+	<!--This target executes create_all_categories command for all the  category-forms file specified within csv file-->
+	<property name="categoryFormNames" value="" />
+	<target name="create_all_categories" depends="setupEnvForExecutingDEClasses">
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.util.MultipleCategoryCreator" fork="true" maxmemory="1024M">
+			<arg value="${categoryFormNames}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+	<!--end of  target create_all_categories -->
+	<target name="import_permissible_values">
+
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+
+		<java classname="edu.common.dynamicextensions.util.parser.ImportPermissibleValues" fork="true" maxmemory="1024M">
+			<arg value="${permissibleValuesFile}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+
+
+	<target name="createDESequence">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction>
+						DROP SEQUENCE DE_ATTR_REC_SEQ ;
+						DROP SEQUENCE DE_COLL_ATTR_REC_VALUES_SEQ ;
+						DROP SEQUENCE DE_FILE_ATTR_REC_VALUES_SEQ ;
+						DROP SEQUENCE DE_OBJECT_ATTR_REC_VALUES_SEQ ;
+						DROP SEQUENCE DYEXTN_ABSTRACT_METADATA_SEQ ;
+						DROP SEQUENCE DYEXTN_ASSO_DISPLAY_ATTR_SEQ ;
+						DROP SEQUENCE DYEX_ATTR_TYP_INFO_SEQ ;
+						DROP SEQUENCE DYEXTN_CONTAINER_SEQ ;
+						DROP SEQUENCE DYEXTN_CONTROL_SEQ ;
+						DROP SEQUENCE DYEXTN_DATABASE_PROPERTIES_SEQ ;
+						DROP SEQUENCE DYEXTN_DATA_ELEMENT_SEQ ;
+						DROP SEQUENCE DYEXTN_ENTITY_MAP_CONDN_SEQ ;
+						DROP SEQUENCE DYEXTN_ENTITY_MAP_SEQ ;
+						DROP SEQUENCE DYEXTN_ENTITY_RECORD_SEQ ;
+						DROP SEQUENCE DYEXTN_FILE_EXTN_SEQ ;
+						DROP SEQUENCE DYEXTN_FORM_CONTEXT_SEQ ;
+						DROP SEQUENCE DYEXTN_PERMISSIBLEVAL_SEQ ;
+						DROP SEQUENCE DYEXTN_ROLE_SEQ ;
+						DROP SEQUENCE DYEXTN_RULE_PARAMETER_SEQ ;
+						DROP SEQUENCE DYEXTN_RULE_SEQ ;
+						DROP SEQUENCE DYEXTN_SEMANTIC_PROPERTY_SEQ ;
+						DROP SEQUENCE DYEXTN_TAGGED_VALUE_SEQ ;
+						DROP SEQUENCE DYEXTN_VALUE_DOMAIN_SEQ ;
+						DROP SEQUENCE DYEXTN_VIEW_SEQ ;
+						</transaction>
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<transaction src="${oracle.sql.dir}/query/createDESequence.SQL" />
+		</sql>
+
+	</target>
+
+
+	<!-- XMI EXPORT-->
+	<property name="groupname" value="" />
+	<property name="version" value="" />
+	<target name="export_xmi">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+
+		<java classname="edu.wustl.clinportal.annotations.xmi.XMIExporter" fork="true" maxmemory="1024M">
+			<arg value="${groupname}" />
+			<arg value="${filename}" />
+			<arg value="${version}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+					<exclude name="commons-lang-1.0.1.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+
+	<!--Target for Database Upgrade from 1.2.0.1 to 1.2.1-->
+
+	<target name="csm_upgrade" depends="db_upgrade_csm, encryptPassword">
+	</target>
+
+	<!--CSM Upgradation -->
+	<target name="db_upgrade_csm">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="db_upgrade_csm_mysql" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="db_upgrade_csm_oracle" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE UPGRADATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
+
+	<!--MySQL Database CSM Upgradation -->
+	<target name="db_upgrade_csm_mysql">
+		<echo message="Upgrading MySQL Database for CSM 3.2..." />
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+			<transaction src="${dbupgrade.sql.dir}/MySql/CSMUpgrade_3_to_3.2.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+	<!--Oracle Database CSM Upgradation -->
+	<target name="db_upgrade_csm_oracle">
+		<echo message="Upgrading Oracle Database for CSM 3.2..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${dbupgrade.sql.dir}/Oracle/CSMUpgrade_3_to_3.2.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+
+	<!--Encrypt Password-->
+	<target name="encryptPassword">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="mysqlEncryptPassword" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="oracleEncryptPassword" />
+				</then>
+			</elseif>
+		</if>
+	</target>
+
+	<!--Mysql Encrypt Password-->
+	<target name="mysqlEncryptPassword">
+		<echo message="Encrypting Password for Mysql DB..." />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<delete file="${temp.dir}/clinportal/WEB-INF/lib/mmtxProject.jar" />
+		<java classname="edu.wustl.common.util.global.PasswordEncrypter" fork="true">
+
+			<classpath refid="temp.classpath" />
+
+			<arg value="${database.host}" />
+			<arg value="${database.port}" />
+			<arg value="${database.type}" />
+			<arg value="${database.name}" />
+			<arg value="${database.username}" />
+			<arg value="${database.password}" />
+			<arg value="${mysql.driver.string}" />
+		</java>
+	</target>
+
+	<!--Oracle Encrypt Password-->
+	<target name="oracleEncryptPassword">
+		<echo message="Encrypting Password for Oracle DB..." />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<java classname="edu.wustl.common.util.global.PasswordEncrypter" fork="true">
+
+			<classpath refid="temp.classpath" />
+
+			<arg value="${database.host}" />
+			<arg value="${database.port}" />
+			<arg value="${database.type}" />
+			<arg value="${database.name}" />
+			<arg value="${database.username}" />
+			<arg value="${database.password}" />
+			<arg value="${oracle.driver.string}" />
+		</java>
+	</target>
+
+
+	<target name="assign_privilege">
+
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<copy file="${base.dir}/clinportal-properties/ApplicationSecurityConfig.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/clinportal.hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="hibernate.cfg.xml" />
+					<include name="DynamicExtensionsHibernate.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="hibernate.cfg.xml" />
+						<include name="DynamicExtensionsHibernate.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="hibernate.cfg.xml" />
+			<include name="DynamicExtensionsHibernate.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+
+		<if>
+			<equals arg1="${idp.enabled}" arg2="true" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="clinportal.hibernate.cfg.xml" />
+					<replacefilter token="@@DATABASE_USERNAME@@" value="${csm.database.username}" />
+					<replacefilter token="@@DATABSE_PASSWORD@@" value="${csm.database.password}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+				</replace>
+			</then>
+			<else>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="clinportal.hibernate.cfg.xml" />
+					<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+					<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+				</replace>
+			</else>
+		</if>
+
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="ApplicationSecurityConfig.xml" />
+			<replacefilter token="@@hibernate-config-file@@" value="${temp.dir}/clinportal/WEB-INF/classes/clinportal.hibernate.cfg.xml" />
+		</replace>
+		<java classname="edu.wustl.clinportal.privilege.AssignPrivilege" fork="true" maxmemory="1024M">
+			<arg value="${filename}" />
+			<arg value="${temp.dir}/clinportal/WEB-INF/classes/ApplicationSecurityConfig.xml" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+	</target>
+
+	<!-- Configure reports.properties according to ClinPortalInstall.properties and other set properties -->
+	<target name="configure_reports">
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+			<include name="reports.properties" />
+			<replacefilter token="@@username@@" value="${database.username}" />
+			<replacefilter token="@@password@@" value="${database.password}" />
+			<replacefilter token="@@databasename@@" value="${database.name}" />
+		</replace>
+		<!-- conditional configuration of database url and driver names -->
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="reports.properties" />
+					<replacefilter token="@@databasedriver@@" value="${mysql.driver.string}" />
+					<replacefilter token="@@databaseurl@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+						<include name="reports.properties" />
+						<replacefilter token="@@databaseurl@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+						<replacefilter token="@@databasedriver@@" value="${oracle.driver.string}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+	</target>
+	<!-- This target will import the catissue dynamic model to Clinportal,create paths and associate with entity -->
+	<target name="integrate_dynamic_metadata">
+		<antcall target="validate_catissue_db_details" />
+		<antcall target="validate_db_user_rights" />
+		<antcall target="export_metadata" />
+		<antcall target="import_metadata" />
+		<echo>caTissueSuite dynamic model integration task has been completed successfully.</echo>
+	</target>
+	<property name="modelName" value="" />
+	<property name="packageName" value="" />
+	<target name="export_metadata">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<antcall target="inject_dbutil_properties_entry" />
+		<copy file="${base.dir}/catissuexmi/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/catissuexmi/oldDynamicExtensions.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+		<copy file="${base.dir}/catissuexmi/oldcommonpackage.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+		<copy file="${base.dir}/catissuexmi/cpexception.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${integrate.catissue.database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${integrate.catissue.database.password}" />
+
+		</replace>
+		<if>
+			<equals arg1="oracle" arg2="${integrate.catissue.database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${integrate.catissue.database.host}:${integrate.catissue.database.port}:${integrate.catissue.database.name}" />
+				</replace>
+			</then>
+		</if>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal//WEB-INF/lib">
+				<include name="DynamicExtensions.jar" />
+				<include name="commonpackage.jar" />
+			</fileset>
+		</delete>
+
+		<java classname="edu.wustl.clinportal.uploadmetadata.AutomateDynamicExportMetadata" fork="true" maxmemory="1024M">
+			<arg value="exportModel" />
+			<arg value="${modelName}" />
+			<arg value="${packageName}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+	</target>
+	<target name="import_metadata">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<antcall target="inject_dbutil_properties_entry" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+
+		</replace>
+		<java classname="edu.wustl.clinportal.uploadmetadata.AutomateDynamicMetadataUpload" fork="true" maxmemory="1024M">
+			<arg value="importModel" />
+			<arg value="${integrate.catissue.database.schemaname}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+	</target>
+
+	<!-- This target will import the catissue static model to Clinportal,creates indirect path,set table/col properties and add relation between both appl.objects -->
+	<target name="integrate_static_metadata">
+
+		<antcall target="import_xmi">
+			<param name="filename" value="${base.dir}/catissuexmi/catissue.xmi" />
+			<param name="mainContainerList" value="${base.dir}/catissuexmi/catissuecontainer.csv" />
+			<param name="package" value="edu.wustl.clinportal.domain" />
+			<param name="addQueryPaths" value="true" />
+			<param name="condition" value="''" />
+			<param name="hookentity" value="None" />
+		</antcall>
+
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/catissuexmi/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal//WEB-INF/classes">
+				<include name="**/domain/*" />
+				<include name="**/domain/pathology/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.uploadmetadata.ImportIntegrationMetaData" fork="true" maxmemory="1024M">
+			<arg value="${catissuehibernateConfigFile}" />
+			<arg value="${catissueMetadataUploadingLogFile}" />
+			<arg value="${base.dir}/catissuexmi/catissueidfattr.txt" />
+			<arg value="${base.dir}/catissuexmi/containmentassociation.txt" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${base.dir}/catissuexmi/">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+
+			</classpath>
+		</java>
+		<java classname="edu.wustl.clinportal.uploadmetadata.InsertCatissueIndirectPaths">
+			<arg value="${base.dir}/catissuexmi/catissueindirectpath.txt" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<java classname="edu.wustl.clinportal.querysuite.metadata.UpdateColProtocolMetadata">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<java classname="edu.wustl.clinportal.uploadmetadata.UpdateMetadataTagPath" fork="true" maxmemory="1024M">
+			<arg value="${base.dir}/catissuexmi/taggedvalues.xml" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<antcall target="reset_DE_sequences" />
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<echo>caTissue static model integration task has been completed successfully.</echo>
+	</target>
+	<!-- validation for database user rights for creating synonyms to catissue tables -->
+
+	<target name="validate_db_user_rights">
+		<if>
+			<equals arg1="mysql" arg2="${integrate.catissue.database.type}" />
+			<then>
+				<fail message="The caTissueSuite metadata integration is only feasible when caTissueSuite is deployed on Oracle database" />
+			</then>
+		</if>
+		<property name="synonymcreatequery" value="CREATE  SYNONYM SYN_TEST FOR ${integrate.catissue.database.schemaname}.ASSOCIATION;" />
+		<property name="synonymdropquery" value="DROP SYNONYM SYN_TEST;" />
+		<trycatch>
+			<try>
+				<if>
+					<equals arg1="oracle" arg2="${integrate.catissue.database.type}" />
+					<then>
+						<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+							<transaction>${synonymcreatequery} </transaction>
+							<transaction>commit;</transaction>
+							<transaction>${synonymdropquery} </transaction>
+							<transaction>commit;</transaction>
+							<classpath>
+								<fileset dir="${lib.dir}">
+									<include name="*.jar" />
+								</fileset>
+							</classpath>
+						</sql>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="The ClinPortal database user does not have proper db-rights for creating synonym for the mentioned Catissue db-schema.Please check the database schema details are proper ,else contact DBA" />
+			</catch>
+		</trycatch>
+	</target>
+
+	<!--This will update the CS and CSE db table for relating with Catissue -->
+	<target name="upgrade_db_catissue_integration">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/addCatissueReln.sql" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+	</target>
+	<target name="create_catissue_synonyms">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<java classname="edu.wustl.clinportal.uploadmetadata.CreateCatissueSynonym">
+			<arg value="${oracle.sql.dir}/createCatissueSynonym.sql" />
+			<arg value="${integrate.catissue.database.schemaname}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+	</target>
+	<target name="validate_catissue_db_details">
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.host}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.host' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.port}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.port' can not be empty. Default port for  Oracle: 1521" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.name}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.name' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.username}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.username' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.password}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.password' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.schemaname}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.schemaname' can not be empty" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="" arg2="${integrate.catissue.database.type}" />
+			<then>
+				<fail message="The property 'integrate.catissue.database.type' can not be empty" />
+			</then>
+		</if>
+		<antcall target="validate_catissue_database_connection" />
+
+	</target>
+	<target name="validate_integrated_catissue_database_connection">
+		<!-- validation for validate_catissue_database_connection -->
+		<trycatch>
+			<try>
+				<if>
+					<equals arg1="true" arg2="${integrate.catisssue.metadata}" />
+					<then>
+						<if>
+
+							<equals arg1="oracle" arg2="${integrate.catissue.database.type}" />
+							<then>
+								<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${integrate.catissue.database.host}:${integrate.catissue.database.port}:${integrate.catissue.database.name}" userid="${integrate.catissue.database.username}" password="${integrate.catissue.database.password}" rdbms="oracle">
+									<transaction>select sysdate from dual;</transaction>
+									<transaction>commit;</transaction>
+									<classpath>
+										<fileset dir="${lib.dir}">
+											<include name="*.jar" />
+										</fileset>
+									</classpath>
+								</sql>
+							</then>
+						</if>
+					</then>
+				</if>
+			</try>
+			<catch>
+				<fail message="Connection fails.Please check the Catissue related database configuration parameters like integrate.catissue.database.host,integrate.catissue.database.port,integrate.catissue.database.name etc.  " />
+			</catch>
+		</trycatch>
+	</target>
+	<!--This will update Catissue Static and Dynamic metadata within ClinPortal  -->
+	<target name="integrate_catissue_metadata">
+		<antcall target="validate_integrated_catissue_database_connection" />
+		<antcall target="validate_db_user_rights" />
+		<antcall target="create_catissue_synonyms" />
+		<antcall target="integrate_static_metadata" />
+		<!--<antcall target="integrate_dynamic_metadata" />-->
+	</target>
+	<!-- IDP settings -->
+
+
+	<target name="runCSMscripts">
+		<antcall target="createCSMSequence">
+		</antcall>
+		<echo message="running IdP scripts..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/IdP/IdP_CSM_InsertData_Oracle.sql" />
+			<transaction src="${oracle.sql.dir}/IdP/createTable.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" delimiter="/" delimitertype="row">
+			<transaction src="${oracle.sql.dir}/IdP/triggers.sql" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/IdP/updateOtherUsers.sql" />
+
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+	<target name="AddUsersToOtherApplications">
+		<mkdir dir="IdPTemp" />
+		<unwar src="${base.dir}/clinportal.war" dest="IdPTemp/clinportal" />
+		<unjar src="${temp.dir}/IdPJar.jar" dest="IdPTemp/IdP" />
+		<copy file="IdP/IdP.properties" todir="IdPTemp/IdP" overwrite="true" />
+		<copy file="IdP/IdPTimerTask.class" todir="IdPTemp/IdP/edu/wustl/common/idp" overwrite="true" />
+
+		<jar destfile="IdPTemp/IdPJar.jar" basedir="IdPTemp/IdP" />
+		<copy file="IdPTemp/IdPJar.jar" todir="IdPTemp/clinportal/WEB-INF/lib" overwrite="true" />
+		<java classname="edu.wustl.clinportal.util.global.AddUsersToOtherApplications" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="IdPTemp/clinportal/WEB-INF/classes" />
+				<fileset dir="IdPTemp/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="updateUser">
+		<java classname="edu.wustl.clinportal.util.global.UpdateUser" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="IdPTemp/clinportal/WEB-INF/classes" />
+				<fileset dir="IdPTemp/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete quiet="true" includeemptydirs="true">
+
+			<fileset dir="IdPTemp">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="createCSMSequence">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" rdbms="oracle">
+			<transaction>
+							DROP SEQUENCE CSM_APPLICATI_APPLICATION__SEQ ;
+							DROP SEQUENCE CSM_GROUP_GROUP_ID_SEQ ;
+							DROP SEQUENCE CSM_PG_PE_PG_PE_ID_SEQ ;
+							DROP SEQUENCE CSM_PROTECTIO_PROTECTION_E_SEQ ;
+							DROP SEQUENCE CSM_PROTECTIO_PROTECTION_G_SEQ ;
+							DROP SEQUENCE CSM_ROLE_ROLE_ID_SEQ ;
+							DROP SEQUENCE CSM_ROLE_PRIV_ROLE_PRIVILE_SEQ ;
+							DROP SEQUENCE CSM_USER_GROU_USER_GROUP_I_SEQ ;
+							DROP SEQUENCE CSM_USER_GROU_USER_GROUP_R_SEQ ;
+							DROP SEQUENCE CSM_USER_USER_ID_SEQ ;
+							DROP SEQUENCE CSM_PRIVILEGE_PRIVILEGE_ID_SEQ;
+							</transaction>
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<transaction src="${oracle.sql.dir}/createCSMSequence.sql" />
+		</sql>
+
+	</target>
+
+	<target name="assignPrivilgeDBUpdate">
+		<antcall target="createCSMSequence">
+		</antcall>
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" keepformat="yes" rdbms="oracle">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<transaction src="${oracle.sql.dir}/AssignPrivileges.sql" />
+			<transaction>commit;</transaction>
+		</sql>
+	</target>
+
+	<target name="IdPSettings">
+		<!--
+					<antcall target="IdPWarConfig"></antcall>
+					-->
+		<antcall target="runCSMscripts">
+		</antcall>
+		<antcall target="AddUsersToOtherApplications">
+		</antcall>
+		<antcall target="updateUser">
+		</antcall>
+
+		<delete quiet="true" includeemptydirs="true">
+
+			<fileset dir="${temp.dir}/IdP">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="IdPWarConfig">
+		<mkdir dir="${temp.dir}/IdP" />
+		<unjar src="${temp.dir}/clinportal/WEB-INF/lib/IdPJar.jar" dest="${temp.dir}/IdP" />
+
+		<replace dir="${temp.dir}/IdP" propertyfile="ClinPortalInstall.properties">
+			<include name="IdPConfigure.xml" />
+
+			<replacefilter token="@@clinportal.database.type@@" value="${database.type}" />
+			<replacefilter token="@@clinportal.database.name@@" value="${database.name}" />
+			<replacefilter token="@@clinportal.database.host@@" value="${database.host}" />
+			<replacefilter token="@@clinportal.database.username@@" value="${database.username}" />
+			<replacefilter token="@@clinportal.database.password@@" value="${database.password}" />
+			<replacefilter token="@@clinportal.database.port@@" value="${database.port}" />
+
+			<replacefilter token="@@catissuecore.database.type@@" value="${catissue.database.type}" />
+			<replacefilter token="@@catissuecore.database.name@@" value="${catissue.database.name}" />
+			<replacefilter token="@@catissuecore.database.host@@" value="${catissue.database.host}" />
+			<replacefilter token="@@catissuecore.database.username@@" value="${catissue.database.username}" />
+			<replacefilter token="@@catissuecore.database.password@@" value="${catissue.database.password}" />
+			<replacefilter token="@@catissuecore.database.port@@" value="${catissue.database.port}" />
+
+			<replacefilter token="@@csm.database.type@@" value="${csm.database.type}" />
+			<replacefilter token="@@csm.database.name@@" value="${csm.database.name}" />
+			<replacefilter token="@@csm.database.host@@" value="${csm.database.host}" />
+			<replacefilter token="@@csm.database.username@@" value="${csm.database.username}" />
+			<replacefilter token="@@csm.database.password@@" value="${csm.database.password}" />
+			<replacefilter token="@@csm.database.port@@" value="${csm.database.port}" />
+		</replace>
+
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/IdP" propertyfile="ClinPortalInstall.properties">
+					<include name="IdPConfigure.xml" />
+					<replacefilter token="@@clinportal.database.driverURL@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@catissuecore.database.driverURL@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@csm.database.driverURL@@" value="${oracle.driver.string}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="mysql" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/IdP" propertyfile="ClinPortalInstall.properties">
+						<include name="IdPConfigure.xml" />
+						<replacefilter token="@@clinportal.database.driverURL@@" value="${mysql.driver.string}" />
+						<replacefilter token="@@catissuecore.database.driverURL@@" value="${mysql.driver.string}" />
+						<replacefilter token="@@csm.database.driverURL@@" value="${mysql.driver.string}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+
+		<jar destfile="${temp.dir}/IdPJar.jar" basedir="${temp.dir}/IdP" />
+		<copy file="${temp.dir}/IdPJar.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+
+
+	</target>
+	<target name="deleteUsers">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/IdP/DisableUser.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+
+	<!-- IDP settings ends-->
+	<target name="create_temp_loggger_properties_file">
+		<copy file="${base.dir}/log4j.properties.template" tofile="${base.dir}/log4j.properties" overwrite="true" />
+		<mkdir dir="${base.dir}/log" />
+		<replace file="${base.dir}/log4j.properties">
+			<replacefilter token="@@jbosshome@@" value="${base.dir}" />
+		</replace>
+	</target>
+
+	<!-- Query Integration targets start -->
+	<target name="unzip_aq_installable" depends="aq_check_prerequisite">
+		<unzip src="AdvanceQuery_Installable.zip" dest="${temp.dir}/AdvanceQuery" overwrite="true" />
+	</target>
+
+	<target name="aq_check_prerequisite">
+		<!--
+						Check AdvanceQueryInstallable.zip file exists or not in base
+						directory.
+					-->
+		<available file="${base.dir}/AdvanceQuery_Installable.zip" property="file.exists" value="false" />
+		<if>
+			<not>
+				<isset property="file.exists" />
+			</not>
+			<then>
+				<echo message="AdvanceQuery_Installable.zip file not found. It should be in base directory to deploy Advance Query." level="error" />
+			</then>
+		</if>
+	</target>
+	<!-- Query Integration targets End -->
+
+	<!-- upgrade category entity names from CP_1.1 to CP_1.2 -->
+	<target name="upgrade_category_entity_names">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<unzip src="${base.dir}/dynamicextensions.zip" dest="${temp.dir}/clinportal" overwrite="true" />
+		<unjar src="${temp.dir}/clinportal/DynamicExtensionsInterface/DynamicExtensions.jar" dest="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${temp.dir}/clinportal/DynamicExtensionsInterface/DynamicExtensions.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+		</if>
+		<elseif>
+				<equals arg1="mysql" arg2="${database.type}" />
+							<then>
+								<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+									<include name="*.cfg.xml" />
+									<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+									<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+									<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+								</replace>
+				</then>
+			</elseif>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<java classname="edu.common.dynamicextensions.util.UpgradeCategoryEntityName" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+	<!-- upgrade category entity names ends-->
+
+	<!--Add tagged value to metadata objects and add Race metadata  and add Path from Evententry to Participanttask-->
+
+	<target name="update_metadata_for_tag_path_race">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="mysql" arg2="${database.type}" />
+							<then>
+								<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+									<include name="*.cfg.xml" />
+									<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+									<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+									<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}:${database.port}/${database.name}" />
+								</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<java classname="edu.wustl.clinportal.uploadmetadata.UpdateMetadataTagPath" fork="true" maxmemory="1024M">
+			<arg value="${base.dir}/catissuexmi/taggedvalues.xml" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<java classname="edu.wustl.clinportal.querysuite.metadata.UpdateRaceMetadata" fork="true">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+	<!--Add tagged value to metadata objects task end-->
+
+	<!-- Inject db-util.properties entry in clinportal -> db-util.properties starts-->
+	<target name="inject_dbutil_properties_entry">
+		<replace file="${temp.dir}/clinportal/WEB-INF/classes/dbutil.properties">
+			<replacefilter token="${clinportal.hibernate.config.file}" value="${clinportal.hibernate.config.file}, DynamicExtensionsHibernate.cfg.xml" />
+		</replace>
+	</target>
+	<!-- Inject db-util.properties entry in clinportal -> db-util.properties ends-->
+	<target name="modifyCRG">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/modifyData.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+
+	<target name="upgrade_db_from_CP_1.2.0_to_CP_1.2.1" depends="setupEnvForExecutingDEClasses">
+		<java classname="edu.common.dynamicextensions.util.DynamicExtensionsDBFixer" fork="true" maxmemory="1024M">
+			<arg value="upgrade_1.2.0_to_1.2.1" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<echo message="Updating DE metadata table..." />
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="deDBFixes.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+		<antcall target="modifyCRG" />
+		<antcall target="particpantStatusPrivilge" />
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+
+	<target name="setupEnvForExecutingDEClasses">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+	</target>
+
+	<!--Target call for both Deployment and Database Creation-->
+	<target name="upgrade_all_with_config_from_CP_1.2.0_to_CP_1.2.1">
+		<antcall target="deploy_app_with_config" />
+		<antcall target="upgrade_db_from_CP_1.2.0_to_CP_1.2.1" />
+		<antcall target="update_catissue_containment_association" />
+		<antcall target="update_clinportal_association_metadata" />
+		<antcall target="update_curatepath_for_deentitiy_metadata" />
+	</target>
+	<!--Add tagged value to metadata objects task end-->
+	<!--Add  containment type association for CSR,EEntry and RecordEntry-->
+	<target name="update_clinportal_association_metadata" depends="setupEnvForExecutingDEClasses">
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.uploadmetadata.UpdateCSREentryRentryAssnMetadata" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+	<!--END-Add  containment type association for Participant,CSR,EEntry and RecordEntry-->
+	<!--Add  curated path from CSR to all DE entities-->
+	<target name="update_curatepath_for_deentitiy_metadata" depends="setupEnvForExecutingDEClasses">
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.uploadmetadata.UpdateCSRToEntityPath" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<delete file="${base.dir}/log4j.properties" />
+	</target>
+	<!--Add  containment type association for all caTissue metadata objects-->
+	<target name="update_catissue_containment_association">
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/catissuexmi/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+					<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+				</replace>
+			</then>
+		</if>
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal//WEB-INF/classes">
+				<include name="**/domain/*" />
+				<include name="**/domain/pathology/*" />
+			</fileset>
+		</delete>
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.uploadmetadata.ImportIntegrationMetaData" fork="true" maxmemory="1024M">
+			<arg value="${catissuehibernateConfigFile}" />
+			<arg value="${catissueMetadataUploadingLogFile}" />
+			<arg value="${base.dir}/catissuexmi/catissueidfattr.txt" />
+			<arg value="${base.dir}/catissuexmi/containmentassociation.txt" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${base.dir}/catissuexmi/">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<antcall target="reset_DE_sequences" />
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<echo>--containment type association has been added for caTissue objects.</echo>
+	</target>
+	<!--This task will update the catissue synonyms within any existing dump and create new synonym with integrate.catissue.database -->
+	<target name="update_catissue_synonyms" depends="setupEnvForExecutingDEClasses">
+		<antcall target="create_temp_loggger_properties_file" />
+		<java classname="edu.wustl.clinportal.uploadmetadata.UpdateCatissueSynonym">
+			<arg value="${integrate.catissue.database.schemaname}" />
+			<classpath>
+				<pathelement location="${temp.dir}/clinportal/WEB-INF/classes" />
+				<fileset dir="${temp.dir}/clinportal/WEB-INF/lib">
+					<include name="*.jar" />
+					<exclude name="IdPJar.jar" />
+				</fileset>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}/clinportal">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<echo>--All existing synonyms has been updated for caTissue tables.</echo>
+	</target>
+	<!--END -Add  containment type association for all caTissue metadata objects-->
+
+
+	<target name="particpantStatusPrivilge">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/participantActivityStatus.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+	<target name="updateDBForRestructure">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${csm.database.host}:${csm.database.port}:${csm.database.name}" userid="${csm.database.username}" password="${csm.database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/restructure/csm_restructure.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${oracle.sql.dir}/restructure/query_restructure.sql" />
+			<transaction src="${oracle.sql.dir}/restructure/droptables.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+	<target name="upgrade_all_with_config_from_CP_1.2.1_to_CP_1.3.0">
+		<antcall target="deploy_app_with_config" />
+		<antcall target="upgrade_db_from_CP_1.2.1_to_CP_1.3.0" />
+	</target>
+	<target name="upgrade_db_from_CP_1.2.1_to_CP_1.3.0">
+		<antcall target="updateDBForRestructure" />
+		<echo message="Updating DE Model changes from CP_1.2.1_to_CP_1.3.0" />
+		<antcall target="upgrade_de_metadata" />
+
+		<!-- Upgrade from CP 1.2.1 to CP 1.3.0 (Query Related)-->
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" rdbms="oracle">
+			<transaction src="${dbupgrade.sql.dir}/Oracle/DBUpgrade_CP_1.2.1_to_CP_1.3.0.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+
+		<antcall target="upgrade_saved_queries" />
+	</target>
+
+	<!--Target for upgrade DE metadata starts-->
+	<target name="upgrade_de_metadata">
+		<sql driver="${oracle.driver.string}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${dbupgrade.sql.dir}/Oracle/Upgrade_DE_Metadata.sql" />
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+	<!--Target upgrade DE metadata ends -->
+
+	<!-- This target is used to upgrade the saved queries -->
+	<target name="upgrade_saved_queries">
+		<echo message="Upgrading saved queries...." />
+		<antcall target="create_temp_loggger_properties_file" />
+		<unwar src="${base.dir}/clinportal.war" dest="${temp.dir}/clinportal" />
+		<copy file="${base.dir}/clinportal-properties/ApplicationSecurityConfig.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<antcall target="replacecfgfiles" />
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="ApplicationSecurityConfig.xml" />
+			<replacefilter token="@@hibernate-config-file@@" value="${temp.dir}/clinportal/WEB-INF/classes/QueryHibernate.cfg.xml" />
+		</replace>
+		<java classname="edu.wustl.query.querysuite.UpgradeSavedQueries" fork="true" maxmemory="1024M">
+			<classpath location="${temp.dir}/clinportal/WEB-INF/classes" />
+			<classpath refid="temp.classpath" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="${temp.dir}/clinportal/WEB-INF/classes/ApplicationSecurityConfig.xml" />
+		</java>
+		<delete dir="${temp.dir}" />
+	</target>
+
+	<target name="replacecfgfiles">
+		<copy file="${base.dir}/DE_conf/hibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/DynamicExtensionsHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<copy file="${base.dir}/DE_conf/QueryHibernate.cfg.xml" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+					<include name="*.cfg.xml" />
+					<replacefilter token="@@DIALECT@@" value="${mysql.dialect.string}" />
+					<replacefilter token="@@DRIVER@@" value="com.mysql.jdbc.Driver" />
+					<replacefilter token="@@URL@@" value="jdbc:mysql://${database.host}/${database.name}" />
+				</replace>
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+						<include name="*.cfg.xml" />
+						<replacefilter token="@@DIALECT@@" value="${oracle.dialect.string}" />
+						<replacefilter token="@@DRIVER@@" value="${oracle.driver.string}" />
+						<replacefilter token="@@URL@@" value="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" />
+					</replace>
+				</then>
+			</elseif>
+		</if>
+
+		<replace dir="${temp.dir}/clinportal/WEB-INF/classes">
+			<include name="*.cfg.xml" />
+			<replacefilter token="@@DATABASE_USERNAME@@" value="${database.username}" />
+			<replacefilter token="@@DATABSE_PASSWORD@@" value="${database.password}" />
+		</replace>
+	</target>
+
+	<!-- PLEASE ALWAYS KEEP THIS TARGET AT END FOR PROPER FORMATTING -->
+	<!-- Integrating DynamicExtensions application with Clinportal -->
+	<target name="de_integrate_app" depends="de_check_prerequisite" if="file.exists">
+		<echo message="Integrating DynamicExtensions app ...." />
+		<unzip src="dynamicextensions.zip" dest="${temp.dir}/dynamicextensions" overwrite="true" />
+		<unjar src="${temp.dir}/dynamicextensions/DynamicExtensionsInterface/DynamicExtensions.jar" dest="${temp.dir}/dynamicextensions/WEB-INF/classes" />
+		<!-- Inject db specific information to configuration files -->
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<antcall target="de_mysql_config" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" />
+				<then>
+					<antcall target="de_oracle_config" />
+				</then>
+			</elseif>
+		</if>
+		<!-- 1) Copy DynamicExtensions.jar -> copy it to catissue/WEB-INF/Lib -->
+		<copy file="${temp.dir}/dynamicextensions/DynamicExtensionsInterface/DynamicExtensions.jar" todir="${temp.dir}/clinportal/WEB-INF/lib" overwrite="true" />
+
+		<!-- 2) Copy *.properties, st*.cfg.xml, *.jsp, *.css, *.images, st*-struts-config.xml to respective folders -->
+		<copy todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true">
+			<fileset dir="${temp.dir}/dynamicextensions/WEB-INF/classes">
+				<include name="edu/common/dynamicextensions/**/**.class" />
+				<include name="edu/wustl/cab2b/**/**.class" />
+				<include name="edu/wustl/common/**/**.class" />
+				<include name="edu/wustl/metadata/**/**.class" />
+				<include name="**/hbm/**/*.*" />
+				<include name="DynamicExtensionsErrorsMessages.properties" />
+				<include name="DynamicExtensionsFileFormats.properties" />
+				<include name="DynamicExtensionsApplicationResources.properties" />
+				<exclude name="DynamicExtensionsHibernate.cfg.xml" />
+				<include name="uicontrols-captions.properties" />
+				<include name="displaytype-classname-mapping.properties" />
+				<include name="ControlConfigurations.xml" />
+				<include name="EAVValidationRules.xml" />
+				<include name="PrimitiveAttributeDataTypes_MSSQLSERVER.xml" />
+				<include name="PrimitiveAttributeDataTypes_MYSQL.xml" />
+				<include name="PrimitiveAttributeDataTypes_ORACLE.xml" />
+				<include name="RuleConfigurations.xml" />
+				<include name="XMI_1.4-1.3Transformer.xsl" />
+				<exclude name="dbutil.properties" />
+				<exclude name="hibernate.properties" />
+				<exclude name="log4j.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/clinportal/WEB-INF" overwrite="true">
+			<fileset dir="${temp.dir}/dynamicextensions/WEB-INF">
+				<include name="dynamicextensions-struts-config.xml" />
+				<include name="dynamicExtensions.tld" />
+			</fileset>
+		</copy>
+
+		<copy todir="${temp.dir}/clinportal/de" overwrite="true">
+			<fileset dir="${temp.dir}/dynamicextensions/de" />
+		</copy>
+
+		<!-- 3) Inject de-struts-config.xml entry in catisssue -> web.xml -->
+		<replace file="${temp.dir}/clinportal/WEB-INF/web.xml">
+			<replacefilter token="/WEB-INF/${clinportal.struts.config.file}" value="/WEB-INF/${clinportal.struts.config.file}, /WEB-INF/dynamicextensions-struts-config.xml" />
+			<replacetoken>&lt;/web-app&gt;</replacetoken>
+			<replacevalue>
+				<![CDATA[
+				    	 	<listener>
+				<listener-class>edu.common.dynamicextensions.util.listener.DynamicExtensionsServletContextListener</listener-class>
+			</listener>
+			<servlet>
+				<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
+				<servlet-class>edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction</servlet-class>
+			</servlet>
+			<servlet>
+				<servlet-name>DownloadFileAction</servlet-name>
+				<servlet-class>edu.common.dynamicextensions.ui.webui.action.DownloadFileAction</servlet-class>
+			</servlet>
+			<servlet-mapping>
+				<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
+				<url-pattern>/DynamicExtensionsInterfaceAction</url-pattern>
+			</servlet-mapping>
+			<servlet-mapping>
+				<servlet-name>DownloadFileAction</servlet-name>
+				<url-pattern>/DownloadFileAction</url-pattern>
+			</servlet-mapping>
+			<taglib>
+				<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>
+				<taglib-location>/WEB-INF/dynamicExtensions.tld</taglib-location>
+			</taglib>
+		</web-app>
+						]]>
+				</replacevalue>
+</replace>
+
+<!-- 4) Inject db-util.properties entry in catissue -> db-util.properties -->
+<replace file="${temp.dir}/clinportal/WEB-INF/classes/dbutil.properties">
+	<replacefilter token="${clinportal.hibernate.config.file}" value="${clinportal.hibernate.config.file}, DynamicExtensionsHibernate.cfg.xml" />
+</replace>
+
+<!-- 5) updating the application name in properties file  -->
+<propertyfile file="${temp.dir}/dynamicextensions/WEB-INF/classes/ApplicationResources.properties">
+	<entry key="app.name" value="ClinPortal" />
+</propertyfile>
+
+<!-- 6) Concatenating the AppplicationResource.properties file from
+							DE to caTissue AppplicationResource.properties file
+			-->
+<echo message="Concatenating the Application Resource Properties file" />
+<concat destfile="${temp.dir}/dynamicextensions/WEB-INF/classes/ApplicationResources.properties" append="true">
+	<fileset file="${temp.dir}/clinportal/WEB-INF/classes/ApplicationResources.properties" />
+</concat>
+<copy file="${temp.dir}/dynamicextensions/WEB-INF/classes/ApplicationResources.properties" todir="${temp.dir}/clinportal/WEB-INF/classes" overwrite="true" />
+</target>
+</project>

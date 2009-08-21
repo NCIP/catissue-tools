@@ -1,0 +1,681 @@
+<?xml version ="1.0"?>
+
+<!--Ant Script for create Build for caTISSUE Core-->
+<project name="Clinportal Build Reports" default="compile">
+	<import file="build-properties.xml" />
+	<!--define require dir and Properties for <if> </if> tag-->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="./lib/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+	<!--define require dir and Properties -->
+	<property file="ClinPortalInstall.properties" />
+	<property file="JMeterTest.properties" />
+	<property name="base.dir" value="." />
+	<property name="src.dir" value="${base.dir}/WEB-INF/src" />
+	<property name="target.dir" value="${base.dir}/WEB-INF/classes" />
+	<property name="lib.dir" value="${base.dir}/WEB-INF/lib" />
+	<property name="applet.dir" value="${base.dir}/Applet" />
+	<property name="dagviewapplet.dir" value="${applet.dir}/DagViewApplet" />
+	<property name="hbm.dir" value="${src.dir}/edu/wustl/clinportal/hbm" />
+	<property name="extra_lib.dir" value="${base.dir}/extra_lib" />
+	<property name="generateforce" value="true" />
+	<property name="application.version" value="1.0" />
+	<property name="junit.jar" value="${lib.dir}/junit-3.8.1.jar" />
+	<property name="cobertura.dir" value="${target.dir}/reports/coverage" />
+	<property name="report.dir" value="${base.dir}/WEB-INF" />
+	<property name="catissue.applet.dir" value="${base.dir}/Applet/catissue" />
+	<property name="mainlib.dir" value="${base.dir}/lib" />
+	<!--Properties set for checkstyle "PMD scans Java source code and looks for potential code problems"-->
+	<!--Read for more details http://pmd.sourceforge.net/cpd.html -->
+	<property name="pmd.dir" value="${base.dir}/pmd-3.8" />
+	<property name="pmd.report.dir" value="${pmd.dir}/reports" />
+	<property name="pmd.report.html" value="${pmd.report.dir}/DyExt_PMD_Report.html" />
+
+
+	<!--Properties set for checkstyle "Tools that generate report of code convention violations"-->
+	<property name="checkstyle.dir" value="${base.dir}/checkstyle" />
+	<property name="checkstyle.rules.file" value="${checkstyle.dir}/CheckStyleRules.xml" />
+	<property name="checkstyle.report.formatter" value="${checkstyle.dir}/report_formatter/checkstyle-simple.xsl" />
+	<property name="checkstyle.report.dir" value="${checkstyle.dir}/checkstyle_reports" />
+	<property name="checkstyle.unformatted.report" value="${checkstyle.report.dir}/checkstyle_report.xml" />
+	<property name="checkstyle.formatted.report" value="${checkstyle.report.dir}/catissue_suite_checkstyle_report.html" />
+
+	<!-- csm related properties -->
+	<property name="temp.dir" value="${base.dir}/tempClinPortal" />
+	<property name="oracle.dialect.h3.string" value="org.hibernate.dialect.Oracle9Dialect" />
+	<property name="mysql.dialect.h3.string" value="org.hibernate.dialect.MySQLDialect" />
+
+	<property name="FLEX_HOME" value="${basedir}/WEB-INF/flex" />
+	<property name="APP_ROOT" value="flexclient" />
+
+	<!--JUnit related Properties -->
+	<property name="junit.dir" value="${base.dir}/junit" />
+	<property name="junit.report.dir" value="${junit.dir}/reports" />
+
+	<path id="checkstyle.classpath">
+		<pathelement location="${lib.dir}/commonpackage.jar" />
+		<pathelement location="${lib.dir}/DynamicExtensions.jar" />
+	</path>
+
+	<path id="app.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="xdoclet.classpath">
+		<path refid="app.classpath" />
+		<pathelement location="${extra_lib.dir}/commons-net-1.2.2.jar" />
+		<pathelement location="${extra_lib.dir}/hibernate-tools.jar" />
+		<pathelement location="${extra_lib.dir}/servlet-api.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-hibernate-module-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-xdoclet-module-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xerces.jar" />
+		<pathelement location="${extra_lib.dir}/xjavadoc-1.0.2.jar" />
+		<pathelement location="${extra_lib.dir}/xsdlib.jar" />
+	</path>
+
+	<path id="junit.classpath">
+		<pathelement location="${junit.jar}" />
+		<pathelement location="${target.dir}" />
+		<pathelement location="${base.dir}/cobertura/cobertura.jar" />
+		<pathelement location="${base.dir}/cobertura/lib/jakarta-oro-2.0.8.jar" />
+		<pathelement location="${base.dir}/cobertura/lib/asm-2.2.1.jar" />
+
+		<path refid="app.classpath" />
+	</path>
+
+	<!-- sub tasks -->
+	<target name="init" description="initialize">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${target.dir}" />
+		<!-- Create the temp directory for caCORE CSM war file-->
+		<mkdir dir="${temp.dir}" />
+
+		<!-- Create the checkstyle report directory-->
+		<delete dir="${checkstyle.report.dir}" />
+		<mkdir dir="${checkstyle.report.dir}" />
+
+
+		<delete dir="${pmd.report.dir}" />
+		<mkdir dir="${pmd.report.dir}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete includeemptydirs="true">
+			<fileset dir="${target.dir}">
+				<include name="**/*" />
+				<exclude name="CVS" />
+			</fileset>
+		</delete>
+
+	</target>
+
+	<target name="checkstyle" depends="init" description="Generates a report of code convention violations.">
+		<taskdef resource="checkstyletask.properties" classpath="${extra_lib.dir}/checkstyle-all-4.2.jar" />
+
+		<checkstyle config="${checkstyle.rules.file}" failureProperty="checkstyle.failed" failOnViolation="false" classpathref="checkstyle.classpath">
+			<formatter type="xml" tofile="${checkstyle.unformatted.report}" />
+			<fileset dir="${src.dir}" includes="**/bean/*.java" />
+			<fileset dir="${src.dir}" includes="**/actionForm/RequestDetailsForm.java, **/actionForm/RequestListFilterationForm.java,
+						**/actionForm/CollectionProtocolForm.java" />
+			<fileset dir="${src.dir}" includes="**/actionForm/OrderForm.java, **/actionForm/OrderSpecimenForm.java, **/actionForm/OrderBiospecimenArrayForm.java ,**/actionForm/OrderPathologyCaseForm.java, **/actionForm/DefineArrayForm.java" />
+			<fileset dir="${src.dir}" includes="**/action/OrderSpecimenInitAction.java, **/action/OrderBiospecimenArrayAction.java, **/action/OrderPathologyCaseAction.java, **/action/RequestToOrderAction.java, **/RequestToOrderSubmitAction.java, **DefineArrayAction.java, **DefineArraySubmitAction.java" />
+			<fileset dir="${src.dir}" includes="**/action/RequestDetailsAction.java, **/action/RequestListAction.java, **/action/SubmitRequestDetailsAction.java,
+						**/action/UpdateAvailableQuantity.java" />
+			<fileset dir="${src.dir}" includes="**/action/ShowFramedPageAction.java ,**/action/UpdateStatusAction.java ,**/action/TreeDataAction.java ,**/action/AddToOrderListAction.java" />
+			<fileset dir="${src.dir}" includes="**/util/OrderingSystemUtil.java" />
+			<fileset dir="${src.dir}" includes="**/domain/pathology/*.java" />
+			<fileset dir="${src.dir}" includes="**/domain/OrderItem.java, **/domain/OrderDetails.java, **/domain/SpecimenOrderItem.java, **/domain/ExistingSpecimenOrderItem.java, **/domain/NewSpecimenOrderItem.java, **/domain/DerivedSpecimenOrderItem.java, **/domain/PathologicalCaseOrderItem.java, **/domain/SpecimenArrayOrderItem.java,
+				   		**/domain/ExistingSpecimenArrayOrderItem.java,**/domain/CollectionProtocol.java" />
+			<fileset dir="${src.dir}" includes="**/reportloader/*.java" />
+			<fileset dir="${src.dir}" includes="**/bizlogic/OrderBizLogic.java" />
+			<fileset dir="${src.dir}" includes="**/bizlogic/querysuite/*.java" />
+			<fileset dir="${src.dir}" includes="**/action/querysuite/*.java" />
+			<fileset dir="${src.dir}" includes="**/edu/wustl/clinportal/util/querysuite/*.java" />
+		</checkstyle>
+
+		<style in="${checkstyle.unformatted.report}" out="${checkstyle.formatted.report}" style="${checkstyle.report.formatter}" />
+	</target>
+
+	<target name="checkstyle_wrapper" depends="checkstyle" description="Breaks the build is checkstyle detected code conventions violations.">
+	</target>
+
+	<!-- Compile all files, generated and hand-written -->
+	<target name="compile" depends="init, checkstyle_wrapper">
+		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="yes">
+			<src path="${src.dir}" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${mainlib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="C:\apache-ant-1.6.5\lib\ant.jar" />
+			</classpath>
+		</javac>
+		<copy todir="${target.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.hbm.xml" />
+				<include name="**/*.ser" />
+				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+		<copy file="log4j.properties.template" tofile="${target.dir}/log4j.properties" />
+
+	</target>
+
+	<target name="compile_cobertura" depends="init, checkstyle_wrapper">
+		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="yes">
+			<src path="${src.dir}" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${mainlib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="C:\apache-ant-1.6.5\lib\ant.jar" />
+			</classpath>
+		</javac>
+
+		<antcall target="instrument">
+		</antcall>
+
+		<copy todir="${target.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.hbm.xml" />
+				<include name="**/*.ser" />
+				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+		<copy file="log4j.properties.template" tofile="${target.dir}/log4j.properties" />
+	</target>
+
+	<!-- Creates the WAR (Web Application Archive) file of the application -->
+	<target name="build_war" depends="init, compile, unpack_cacore_war,replace_database_type,common_build_war,build_client_jar">
+	</target>
+
+	<!-- Nightly build code coverage -->
+	<target name="build_war_cobertura" depends="init, compile_cobertura, unpack_cacore_war,replace_database_type,common_build_war,build_client_jar">
+	</target>
+	<!-- Create war file for installable zip file.Please us this target when creating installable zip.
+		Note: database type is not replaced
+	-->
+	<target name="installable_build_war" depends="init, compile, unpack_cacore_war,common_build_war,build_client_jar">
+	</target>
+
+	<!-- build clinportal war file which is common to above both targets -->
+	<target name="common_build_war">
+		<delete file="clinportal.war" />
+		<antcall target="copydeletedjars">
+			<param name="deleteFromDir" value="${temp.dir}/clinportalcsm" />
+		</antcall>
+		<delete file="${base.dir}/MANIFEST.MF" />
+		<manifest file="${base.dir}/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Version" value="${application.name} ${application.version}" />
+			<attribute name="CSM-Version" value="${csm.version}" />
+			<attribute name="caCore-Version" value="${cacore.version}" />
+			<attribute name="DE-Tag" value="${DE.tag}" />
+			<attribute name="AdvQuery-Tag" value="${advancedQuery.tag}" />
+			<attribute name="ClinPortal-Tag" value="${clinportaltag.tag}" />
+			<attribute name="Build-on" value="${TODAY}" />
+		</manifest>
+		<echo>creating ClinPortal war file </echo>
+		<war destfile="clinportal.war" webxml="WEB-INF/web.xml" duplicate="preserve" manifest="${base.dir}/MANIFEST.MF">
+			<fileset dir="${base.dir}">
+				<include name="Applet/**" />
+				<include name="css/**" />
+				<include name="images/**" />
+				<include name="jss/**" />
+				<include name="dhtml_comp/**" />
+				<include name="pages/**" />
+				<include name="flexclient/**" />
+				<include name="runtime/**" />
+				<include name="WEB-INF/**" />
+				<include name="CDEConfig.xml" />
+				<include name="CDEConfig.xsd" />
+				<include name="ApplicationVersionInfo.txt" />
+				<include name="WEB-INF/buildreportjars/cobertura.jar" />
+
+				<exclude name="**/log4j.properties" />
+				<exclude name="**/WEB-INF/src*/**" />
+				<exclude name="**/WEB-INF/lib/*.zip" />
+				<exclude name="**/WEB-INF/lib/ant*.jar" />
+				<exclude name="**/*servlet.jar*" />
+				<exclude name="**/*hibernate2.jar*" />
+				<exclude name="**/*jta.jar*" />
+				<exclude name="**/CVS*" />
+				<exclude name="**/WEB-INF/lib/jta.jar" />
+				<exclude name="**/WEB-INF/lib/c3p0-0.8.5.2.jar" />
+			</fileset>
+
+			<!-- change for csm related war -->
+			<fileset dir="${temp.dir}/clinportalcsm">
+				<include name="**/WEB-INF/**" />
+				<include name="**/images/**" />
+				<include name="**/log/**" />
+				<include name="**/*" />
+
+				<exclude name="**/WEB-INF/web.xml" />
+				<exclude name="**/WEB-INF/classes/edu/wustl/clinportal/domain/**" />
+				<exclude name="**/WEB-INF/lib/csmapi.jar" />
+				<exclude name="**/WEB-INF/lib/dom4*.jar" />
+				<exclude name="**/WEB-INF/lib/jta.jar" />
+				<exclude name="**/WEB-INF/lib/cglib*.jar" />
+				<exclude name="**/META-INF/**" />
+			</fileset>
+		</war>
+		<echo>clinportal.war file created </echo>
+	</target>
+
+	<target name="clean_temp_dir_csmwar" description="delete temp directory used for caCORE unpack">
+		<!-- do delete ${temp.dir} -->
+		<delete dir="${temp.dir}" />
+		<delete file="${jboss.home.dir}/server/default/deploy/clinportalcsm.war" />
+	</target>
+
+
+	<!-- =================================================================== -->
+	<!-- Junit test case execution report                                    -->
+	<!-- =================================================================== -->
+	<target name="run_junit_testcases">
+		<mkdir dir="${target.dir}/reports" />
+		<mkdir dir="${target.dir}/reports/junit" />
+
+		<junit printsummary="yes" fork="yes" haltonfailure="no">
+			<formatter type="xml" />
+
+			<!--
+					Specify the name of the coverage data file to use.
+					The value specified below is the default.
+ 	     -->
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.dir}/coverage.ser" />
+
+
+			<classpath>
+				<pathelement path="${cobertura.dir}" />
+				<pathelement path="${target.dir}" />
+			</classpath>
+
+			<classpath refid="junit.classpath" />
+
+			<batchtest todir="${target.dir}/reports/junit">
+				<fileset dir="${src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+
+		</junit>
+	</target>
+
+
+	<target name="gen_detailed_report_junit_testcases">
+		<antcall target="clean" />
+		<antcall target="compile" />
+		<antcall target="run_junit_testcases" />
+		<mkdir dir="${report.dir}/reports/junit" />
+
+		<junitreport todir="${report.dir}/reports/junit">
+			<fileset dir="${target.dir}/reports/junit">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${report.dir}/reports/junit" />
+		</junitreport>
+	</target>
+
+
+	<!--  Added by Ashish Gupta for Ordering System and Consent Tracking -->
+	<target name="gen_simple_report_junit_testcases" depends="compile">
+		<delete dir="${junit.report.dir}" />
+		<mkdir dir="${junit.report.dir}" />
+		<junit printsummary="yes" haltonfailure="no" fork="yes">
+			<formatter type="xml" />
+			<batchtest todir="${junit.report.dir}">
+				<fileset dir="${src.dir}">
+					<include name="**/TestAll.java" />
+				</fileset>
+			</batchtest>
+			<classpath>
+				<pathelement location="${target.dir}" />
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</junit>
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${junit.report.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${junit.report.dir}" />
+		</junitreport>
+		<delete>
+			<fileset dir="${junit.report.dir}">
+				<include name="**/**/*.xml" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- JMeter TestCases for Nightly Build  -->
+	<!-- =================================================================== -->
+	<property name="Jmeter-Tests" value="${base.dir}/JmeterTestCases" />
+	<property name="testplan" value="Clinportal-all-testcases" />
+	<property name="jtl" value="JTL" />
+
+	<mkdir dir="${base.dir}/${Jmeter-Tests}/${jtl}" />
+	<taskdef name="jmeter" classpath="${lib.dir}/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
+	<target name="JMeterTests" depends="runJmeterTests,JmeterReport" />
+	<target name="runJmeterTests">
+		<delete file="${Jmeter-Tests}/Mysql_CaTissueJMeterTests.html" />
+		<delete file="${Jmeter-Tests}/Oracle_CaTissueJMeterTests.html" />
+		<delete file="${Jmeter-Tests}/${testplan}.html" />
+		<delete file="${Jmeter-Tests}/${jtl}/${testplan}.jtl" />
+		<jmeter jmeterhome="${jmeter.home.dir}" testplan="${Jmeter-Tests}/${testplan}.jmx" resultlog="${Jmeter-Tests}/${jtl}/${testplan}.jtl">
+
+			<!-- Force suitable defaults -->
+			<property name="jmeter.save.saveservice.output_format" value="xml" />
+			<property name="jmeter.save.saveservice.assertion_results" value="all" />
+			<property name="jmeter.save.saveservice.bytesx" value="true" />
+			<property name="file_format.testlog" value="${format}" />
+			<property name="jmeter.save.saveservice.response_data.on_error" value="${funcMode}" />
+		</jmeter>
+	</target>
+
+	<target name="JmeterReport">
+		<xslt force="true" in="${Jmeter-Tests}/${jtl}/${testplan}.jtl" out="${Jmeter-Tests}/${testplan}.html" style="${Jmeter-Tests}/jmeter-results-detail-report_21.xsl">
+			<param name="showData" expression="${show-data}" />
+		</xslt>
+	</target>
+
+	<property name="reportgenerator.input.jmeterfile" value="D:/Clinportal_Nightly_Build/XmlReport/CaTissueJMeterTests.jtl" />
+	<property name="reportgenerator.input.junitfile" value="D:/Clinportal_Nightly_Build/XmlReport/TESTS-TestSuites.xml" />
+	<property name="reportgenerator.output.file" value="D:/Clinportal_Nightly_Build/script/mail_setting.properties" />
+
+	<target name="GenerateNightlyBuildReport" depends="compile">
+		<java classname="NightlyBuildReportGenerator" fork="true">
+			<arg value="${reportgenerator.input.jmeterfile}" />
+			<arg value="${reportgenerator.input.junitfile}" />
+			<arg value="${reportgenerator.output.file}" />
+			<classpath>
+				<pathelement location="./WEB-INF/classes" />
+				<fileset dir="${mainlib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+		</java>
+
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Cobertura code coverage report                                      -->
+	<!-- =================================================================== -->
+
+	<taskdef classpathref="junit.classpath" resource="tasks.properties" />
+
+	<target name="instrument">
+
+		<delete dir="./cobertura/instrumented" />
+		<delete file="${jboss.home.dir}/bin/cobertura.ser" />
+		<mkdir dir="./cobertura/instrumented" />
+		<!--
+	       Instrument the application classes, writing the
+	       instrumented classes into ${build.instrumented.dir}.
+	    -->
+		<cobertura-instrument datafile="${jboss.home.dir}/bin/cobertura.ser" todir="./cobertura/instrumented">
+			<!--
+	         The following line causes instrument to ignore any
+	         source line containing a reference to log4j, for the
+	         purposes of coverage reporting.
+	      -->
+			<ignore regex="org.apache.log4j.*" />
+
+
+			<fileset dir="./WEB-INF/classes">
+				<!-- exclude some action classes-->
+
+				<include name="**/action/AccessDeniedAction.class" />
+				<include name="**/action/CSBasedSearchAction.class" />
+				<include name="**/action/CancerResearchGroupAction.class" />
+				<include name="**/action/ChangePasswordAction.class" />
+				<include name="**/action/ClinicalStudyAction.class" />
+				<include name="**/action/ClinicalStudyRegistrationAction.class" />
+				<include name="**/action/DepartmentAction.class" />
+				<include name="**/action/ForgotPasswordAction.class" />
+				<include name="**/action/ForwardAction.class" />
+				<include name="**/action/InstitutionAction.class" />
+				<include name="**/action/LoadEventDetailsAction.class" />
+				<include name="**/action/LoginAction.class" />
+				<include name="**/action/LogoutAction.class" />
+				<include name="**/action/ParticipantAction.class" />
+				<include name="**/action/ParticipantLookupAction.class" />
+				<include name="**/action/ParticipantRegistrationSelectAction.class" />
+				<include name="**/action/ReportProblemAction.class" />
+				<include name="**/action/RoleBasedForwardAction.class" />
+				<include name="**/action/SearchObjectAction.class" />
+				<include name="**/action/SetSessionDataForUpdatePasswordAction.class" />
+				<include name="**/action/ShowCSAndParticipantsAction.class" />
+				<include name="**/action/SiteAction.class" />
+				<include name="**/action/SpreadsheetViewAction.class" />
+				<include name="**/action/UserAction.class" />
+
+				<include name="**/annotations/LoadAnnotationDataEntryPageAction.class" />
+				<include name="**/annotations/LoadAnnotationDefinitionAction.class" />
+				<include name="**/annotations/LoadDynamicExtensionsAction.class" />
+				<include name="**/annotations/LoadDynamicExtentionsDataEntryPageAction.class" />
+
+				<!-- include actionForm classes-->
+				<include name="**/actionForm/*.class" />
+				<!-- exclude some actionForm classes-->
+				<exclude name="**/actionForm/AssignPrivilegesForm.class" />
+				<exclude name="**/actionForm/DefineArrayForm.class" />
+				<exclude name="**/actionForm/CategorySearchForm.class" />
+				<!-- exclude some bizlogic classes-->
+				<include name="**/bizlogic/*.class" />
+				<exclude name="**/bizlogic/AdvanceQueryBizlogic.class" />
+				<exclude name="**/bizlogic/AnnotationBizLogic.class" />
+				<exclude name="**/bizlogic/AnnotationUtil.class" />
+				<exclude name="**/bizlogic/AssignPrivilegePageBizLogic.class" />
+				<exclude name="**/bizlogic/TreeBizLogic.class" />
+				<exclude name="**/bizlogic/EventTreeBizLogic.class" />
+				<exclude name="**/bizlogic/ReportedProblemBizLogic.class" />
+				<!-- exclude some domain classes-->
+				<!--	<exclude name="**/domain/*.class"/>   -->
+				<include name="**/domain/Address.class" />
+				<include name="**/domain/CancerResearchGroup.class" />
+				<include name="**/domain/ClinicalStudy.class" />
+				<include name="**/domain/ClinicalStudyConsentTier.class" />
+				<include name="**/domain/ClinicalStudyConsentTierResponse.class" />
+				<include name="**/domain/ClinicalStudyEvent.class" />
+				<include name="**/domain/ClinicalStudyRegistration.class" />
+				<include name="**/domain/Department.class" />
+				<include name="**/domain/DomainObjectFactory.class" />
+				<include name="**/domain/EventEntry.class" />
+				<include name="**/domain/Institution.class" />
+				<include name="**/domain/Participant.class" />
+				<include name="**/domain/ParticipantMedicalIdentifier.class" />
+				<include name="**/domain/Password.class" />
+				<include name="**/domain/Race.class" />
+				<include name="**/domain/RecordEntry.class" />
+				<include name="**/domain/ReportedProblem.class" />
+				<include name="**/domain/Site.class" />
+				<include name="**/domain/SpecimenProtocol.class" />
+				<include name="**/domain/StudyFormContext.class" />
+				<include name="**/domain/User.class" />
+				<include name="**/listener/ClinPortalServletContextListener.class" />
+			</fileset>
+
+		</cobertura-instrument>
+		<echo>Copying instrumented class files to classes folder</echo>
+		<copy todir="./WEB-INF/classes">
+			<fileset dir="./cobertura/instrumented">
+				<include name="**/*.class" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="gen_report_cobertura">
+		<cobertura-report datafile="./cobertura/cobertura.ser" srcdir="${src.dir}" destdir="./cobertura/reports/coverage" format="html" />
+		<delete file="./cobertura/cobertura.ser" />
+	</target>
+
+	<!-- unpack caCORE war into temp folder -->
+	<target name="unpack_cacore_war">
+		<unwar src="${base.dir}/clinportalcsm.war" dest="${temp.dir}/clinportalcsm" />
+	</target>
+
+	<target name="replace_database_type">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportalcsm/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="orm1.cfg.xml" />
+					<replacefilter token="@@dialect@@" value="${mysql.dialect.h3.string}" />
+				</replace>
+			</then>
+		</if>
+
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportalcsm/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="orm1.cfg.xml" />
+					<replacefilter token="@@dialect@@" value="${oracle.dialect.h3.string}" />
+				</replace>
+			</then>
+		</if>
+	</target>
+
+	<!-- build catissuecore client jar to content latest domain classes & put inside client lib folder-->
+	<target name="build_client_jar">
+		<jar taskname="buildClientJar" jarfile="${temp.dir}/clinportal.jar">
+			<fileset dir="${target.dir}">
+				<include name="**/edu/wustl/clinportal/domain/**" />
+				<include name="**/edu/wustl/clinportal/actionForm/**" />
+				<include name="**/edu/wustl/clinportal/util/**" />
+				<include name="**/edu/wustl/clinportal/client/**" />
+				<include name="**/edu/wustl/clinportal/bean/**" />
+				<exclude name="**/CVS*" />
+				<exclude name="**/java.policy.applet*" />
+			</fileset>
+		</jar>
+
+		<copy todir="${base.dir}/clinportal_caCORE_Client/lib" overwrite="true">
+			<fileset dir="${lib.dir}">
+				<include name="commonpackage.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/clinportal_caCORE_Client/lib" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="clinportal.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/catissue_de_integration_client/lib" overwrite="true">
+			<fileset dir="${lib.dir}">
+				<include name="commonpackage.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/catissue_de_integration_client/lib" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="clinportal.jar" />
+			</fileset>
+		</copy>
+	</target>
+	<!-- ,,,,,junit,logging-jakarta-commons,logging-java,migrating,,optimizations,strictexception,,,"-->
+	<target name="pmd" depends="init" description="PMD scans Java source code and looks for potential code problems.">
+		<taskdef name="pmd" classpath="${pmd.dir}/lib/pmd-3.8.jar" classname="net.sourceforge.pmd.ant.PMDTask" />
+		<pmd shortFilenames="true">
+			<ruleset>basic</ruleset>
+			<ruleset>braces</ruleset>
+			<ruleset>clone</ruleset>
+			<ruleset>codesize</ruleset>
+			<ruleset>controversial</ruleset>
+			<ruleset>coupling</ruleset>
+			<ruleset>design</ruleset>
+			<ruleset>finalizers</ruleset>
+			<ruleset>imports</ruleset>
+			<ruleset>j2ee</ruleset>
+			<ruleset>migrating</ruleset>
+			<ruleset>naming</ruleset>
+			<ruleset>strings</ruleset>
+			<ruleset>unusedcode</ruleset>
+			<ruleset>sunsecure</ruleset>
+
+			<formatter type="html" toFile="${pmd.report.html}" />
+			<fileset dir="${src.dir}" includes="**/*.java" />
+		</pmd>
+	</target>
+	<target name="copydeletedjars">
+		<echo>deleting unneccesary jars from ${deleteFromDir}</echo>
+		<delete failonerror="false">
+			<fileset dir="${deleteFromDir}">
+				<include name="backport-util-concurrent-3.0.jar" />
+				<include name="c3p0-0.8.4.5.jar" />
+				<include name="c3p0-0.8.5.2.jar" />
+				<include name="castor-1.0.2.jar" />
+				<include name="cglib-2.1.jar" />
+				<include name="commons-collections-2.1.1.jar" />
+				<include name="commons-collections-3.1.jar" />
+				<include name="commons-discovery-0.2.jar" />
+				<include name="commons-fileupload.jar" />
+				<include name="commons-lang-2.1.jar" />
+				<include name="commons-logging-1.0.4.jar" />
+				<include name="ehcache-1.1.jar" />
+				<include name="ehcache-1.2.2.jar" />
+				<include name="freemarker.jar" />
+				<include name="jakarta-oro.jar" />
+				<include name="uml-1.3.jar" />
+				<include name="wsdl4j-1.5.1.jar" />
+				<include name="xalan-2.4.0.jar" />
+				<include name="p6spy.jar" />
+				<include name="sdkClient.jar" />
+				<include name="uuid-key-generator.jar" />
+				<include name="wsdl4j.jar" />
+				<include name="caGrid-1.0-caDSR-client.jar" />
+				<include name="caGrid-1.0-caDSR-common.jar" />
+				<include name="caGrid-1.0-caDSR-stubs.jar" />
+				<include name="caGrid-1.0-core.jar" />
+				<include name="caGrid-1.0-data-common.jar" />
+				<include name="caGrid-1.0-data-stubs.jar" />
+				<include name="caGrid-1.0-data-utils.jar" />
+				<include name="caGrid-1.0-fqp-client.jar" />
+				<include name="caGrid-1.0-fqp-common.jar" />
+				<include name="caGrid-1.0-fqp-stubs.jar" />
+				<include name="caGrid-1.0-metadata-common.jar" />
+				<include name="caGrid-1.0-metadata-security.jar" />
+				<include name="caGrid-1.0-sdkQuery.jar" />
+				<include name="caGrid-1.0-ServiceSecurityProvider-client.jar" />
+				<include name="caGrid-1.0-ServiceSecurityProvider-common.jar" />
+				<include name="jboss-common-jdbc-wrapper.jar" />
+				<include name="mysql-connector-java-3.1.13-bin.jar" />
+				<include name="ojdbc14.jar" />
+				<include name="boot.jar" />
+				<include name="c3p0-0.9.0.jar" />
+				<include name="clinportal-client.jar" />
+				<include name="experiment-client.jar" />
+				<include name="jboss-client.jar" />
+				<include name="mockobjects-core-0.09.jar" />
+				<include name="mysql-connector-java-5.0.8-bin.jar" />
+				<include name="openide-util.jar" />
+				<include name="acrobat-core.jar" />
+			</fileset>
+
+		</delete>
+	</target>
+</project>

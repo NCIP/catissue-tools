@@ -1,0 +1,1 @@
+update csm_protection_element set PROTECTION_ELEMENT_DESCRIPTION=Replace(PROTECTION_ELEMENT_DESCRIPTION,'catissuecore','clinportal'),PROTECTION_ELEMENT_NAME=Replace(PROTECTION_ELEMENT_NAME,'catissuecore','clinportal'),OBJECT_ID=Replace(OBJECT_ID,'catissuecore','clinportal')  where APPLICATION_ID=2;

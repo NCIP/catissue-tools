@@ -1,0 +1,460 @@
+<?xml version ="1.0"?>
+
+<!--Ant Script for create Build for ClinPortal-->
+<project name="Clinportal New Model build file" default="compile">
+	<import file="build-properties.xml" />
+	<!--define require dir and Properties for <if> </if> tag-->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="./lib/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+	<!--define require dir and Properties -->
+	<property file="ClinPortalInstall.properties" />
+	<property name="base.dir" value="." />
+	<property name="src.dir" value="${base.dir}/WEB-INF/src" />
+	<property name="target.dir" value="${base.dir}/WEB-INF/classes" />
+	<property name="lib.dir" value="${base.dir}/WEB-INF/lib" />
+	<property name="applet.dir" value="${base.dir}/Applet" />
+	<property name="dagviewapplet.dir" value="${applet.dir}/DagViewApplet" />
+	<property name="hbm.dir" value="${src.dir}/edu/wustl/clinportal/hbm" />
+	<property name="extra_lib.dir" value="${base.dir}/extra_lib" />
+	<property name="generateforce" value="true" />
+	<property name="report.dir" value="${base.dir}/WEB-INF" />
+	<property name="mainlib.dir" value="${base.dir}/lib" />
+
+	<!-- csm related properties -->
+	<property name="temp.dir" value="${base.dir}/tempClinPortal" />
+	<property name="oracle.dialect.h3.string" value="org.hibernate.dialect.Oracle9Dialect" />
+	<property name="mysql.dialect.h3.string" value="org.hibernate.dialect.MySQLDialect" />
+
+	<property name="FLEX_HOME" value="${basedir}/WEB-INF/flex" />
+	<property name="APP_ROOT" value="flexclient" />
+
+	<path id="app.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="xdoclet.classpath">
+		<path refid="app.classpath" />
+		<pathelement location="${extra_lib.dir}/commons-net-1.2.2.jar" />
+		<pathelement location="${extra_lib.dir}/hibernate-tools.jar" />
+		<pathelement location="${extra_lib.dir}/servlet-api.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-hibernate-module-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xdoclet-xdoclet-module-1.2.jar" />
+		<pathelement location="${extra_lib.dir}/xerces.jar" />
+		<pathelement location="${extra_lib.dir}/xjavadoc-1.0.2.jar" />
+		<pathelement location="${extra_lib.dir}/xsdlib.jar" />
+	</path>
+
+	<!-- sub tasks -->
+	<target name="init" description="initialize">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${target.dir}" />
+		<!-- Create the temp directory for caCORE CSM war file-->
+		<mkdir dir="${temp.dir}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete includeemptydirs="true">
+			<fileset dir="${target.dir}">
+				<include name="**/*" />
+				<exclude name="CVS" />
+			</fileset>
+		</delete>
+
+	</target>
+
+	<!-- Compile all files, generated and hand-written -->
+	<target name="compile" depends="init">
+		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="yes">
+			<src path="${src.dir}" />
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${mainlib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<copy todir="${target.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+				<include name="**/*.hbm.xml" />
+				<include name="**/*.ser" />
+				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+		<copy file="log4j.properties.template" tofile="${target.dir}/log4j.properties" />
+	</target>
+
+	<!-- Creates the WAR (Web Application Archive) file of the application -->
+	<target name="build_war" depends="init, compile, unpack_cacore_war,replace_database_type,common_build_war,build_client_jar">
+	</target>
+
+	<!-- Create war file for installable zip file.Please us this target when creating installable zip.
+		Note: database type is not replaced
+	-->
+	<target name="installable_build_war" depends="init, compile, unpack_cacore_war,common_build_war,build_client_jar">
+	</target>
+
+	<!-- build clinportal war file which is common to above both targets -->
+	<target name="common_build_war">
+		<delete file="clinportal.war" />
+		<antcall target="copydeletedjars">
+			<param name="deleteFromDir" value="${temp.dir}/clinportalcsm" />
+		</antcall>
+		<delete file="${base.dir}/MANIFEST.MF" />
+		<manifest file="${base.dir}/MANIFEST.MF">
+			<attribute name="Built-By" value="${user.name}" />
+			<attribute name="Version" value="${application.name} ${app.version}" />
+			<attribute name="CSM-Version" value="${csm.version}" />
+			<attribute name="caCore-Version" value="${cacore.version}" />
+			<attribute name="DE-Tag" value="${DE.tag}" />
+			<attribute name="AdvQuery-Tag" value="${advancedQuery.tag}" />
+			<attribute name="ClinPortal-Tag" value="${clinportaltag.tag}" />
+			<attribute name="Build-on" value="${TODAY}" />
+		</manifest>
+		<echo>creating ClinPortal war file </echo>
+		<war destfile="clinportal.war" webxml="WEB-INF/web.xml" duplicate="preserve" manifest="${base.dir}/MANIFEST.MF">
+			<fileset dir="${base.dir}">
+				<include name="Applet/**" />
+				<include name="css/**" />
+				<include name="images/**" />
+				<include name="jss/**" />
+				<include name="dhtml_comp/**" />
+				<include name="pages/**" />
+				<include name="flexclient/**" />
+				<include name="runtime/**" />
+				<include name="WEB-INF/**" />
+				<include name="CDEConfig.xml" />
+				<include name="CDEConfig.xsd" />
+				<include name="ApplicationVersionInfo.txt" />
+				<exclude name="**/log4j.properties" />
+				<exclude name="**/WEB-INF/src*/**" />
+				<exclude name="**/WEB-INF/lib/*.zip" />
+				<exclude name="**/WEB-INF/lib/ant*.jar" />
+				<exclude name="**/*servlet.jar*" />
+				<exclude name="**/*hibernate2.jar*" />
+				<exclude name="**/*jta.jar*" />
+				<exclude name="**/CVS*" />
+				<exclude name="**/WEB-INF/lib/jta.jar" />
+				<exclude name="**/WEB-INF/lib/clinportal-client.jar" />
+				<exclude name="**/WEB-INF/lib/c3p0-0.8.5.2.jar" />
+			</fileset>
+
+			<!-- change for csm related war -->
+			<fileset dir="${temp.dir}/clinportalcsm">
+				<include name="**/WEB-INF/**" />
+				<include name="**/images/**" />
+				<include name="**/log/**" />
+				<include name="**/*" />
+
+				<exclude name="**/WEB-INF/web.xml" />
+				<exclude name="**/WEB-INF/classes/edu/wustl/clinportal/domain/**" />
+				<exclude name="**/WEB-INF/lib/csmapi.jar" />
+				<exclude name="**/WEB-INF/lib/dom4*.jar" />
+				<exclude name="**/WEB-INF/lib/jta.jar" />
+				<exclude name="**/WEB-INF/lib/cglib*.jar" />
+				<exclude name="**/META-INF/**" />
+			</fileset>
+		</war>
+		<echo>clinportal.war file created </echo>
+	</target>
+
+	<target name="clean_temp_dir_csmwar" description="delete temp directory used for caCORE unpack">
+		<!-- do delete ${temp.dir} -->
+		<delete dir="${temp.dir}" />
+		<delete file="${jboss.home.dir}/server/default/deploy/clinportalcsm.war" />
+	</target>
+	<!--
+		Generates the Hibernate mapping (HBM) files which are used in mapping
+		the domain objects to database schema of the application.
+		This generates the HBM files from the XDoclet tags written in the domain object classes.
+	-->
+	<target name="generate_hbm" description="Generates Hibernate class descriptor files.">
+		<!-- Define the hibernatedoclet task -->
+		<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
+			<classpath refid="xdoclet.classpath" />
+		</taskdef>
+
+		<!-- Execute the hibernatedoclet task -->
+		<hibernatedoclet destdir="${src.dir}" excludedtags="@version,@author,@todo" force="${generateforce}" mergedir="${src.dir}" verbose="false">
+			<fileset dir="${src.dir}">
+				<include name="**/domain/*.java" />
+				<include name="**/domain/pathology/*.java" />
+				<!--include name="**/cde/*.java" /-->
+			</fileset>
+			<hibernate version="2.0" />
+		</hibernatedoclet>
+
+		<!-- Upgrade grammar from Hibernate1 to Hibernate2 -->
+		<replace dir="${src.dir}">
+			<include name="**/domain/*.hbm.xml" />
+			<include name="**/domain/pathology/*.hbm.xml" />
+			<replacefilter token="readonly=" value="inverse=" />
+			<replacefilter token="role=" value="name=" />
+			<replacefilter token="hibernate-mapping.dtd" value="hibernate-mapping-2.0.dtd" />
+		</replace>
+
+		<copy todir="${hbm.dir}">
+			<fileset dir="${src.dir}/edu/wustl/clinportal/domain">
+				<include name="*.hbm.xml" />
+			</fileset>
+			<fileset dir="${src.dir}/edu/wustl/clinportal/domain/pathology">
+				<include name="*.hbm.xml" />
+			</fileset>
+		</copy>
+		<delete>
+			<fileset dir="${src.dir}/edu/wustl/clinportal/domain" includes="*.hbm.xml" />
+			<!--fileset dir="${src.dir}/edu/wustl/common/cde" includes="*.hbm.xml" /-->
+			<fileset dir="${src.dir}/edu/wustl/clinportal/domain/pathology" includes="*.hbm.xml" />
+		</delete>
+	</target>
+
+	<target name="create_zip" depends="installable_build_war">
+		<property name="zip.dir" value="${base.dir}/clinportal_Installable_v${app.version}/clinportal_Installable_v${app.version}" />
+		<property name="zip.file" value="${base.dir}/clinportal_Installable_v${app.version}.zip" />
+
+		<delete file="${zip.file}" />
+		<delete dir="${zip.dir}" />
+		<mkdir dir="${zip.dir}" />
+		<copy file="clinportal.war" todir="${zip.dir}" overwrite="true" />
+		<copy file="dynamicextensions.zip" todir="${zip.dir}" overwrite="true" />
+
+		<!-- only single war file is being used so comment it -->
+		<copy file="catissuecore-ds.xml" todir="${zip.dir}" overwrite="true" />
+		<copy file="log4j.properties.template" tofile="${zip.dir}/log4j.properties.template" overwrite="true" />
+		<copy file="ClinPortalInstall.properties" todir="${zip.dir}" overwrite="true" />
+		<copy file="deploy.xml" todir="${zip.dir}" overwrite="true" />
+		<copy file="login-config.xml" todir="${zip.dir}" overwrite="true" />
+		<copy file="properties-service.xml" todir="${zip.dir}" overwrite="true" />
+		<copy todir="${zip.dir}/clinportal-properties" overwrite="true">
+			<fileset dir="${base.dir}/clinportal-properties" />
+		</copy>
+
+		<copy todir="${zip.dir}/lib" overwrite="true">
+			<fileset file="${base.dir}/extra_lib/ant-contrib.jar" />
+			<fileset file="${base.dir}/WEB-INF/lib/mysql-connector-java-5.0.8-bin.jar" />
+			<fileset file="${base.dir}/lib/oracleDriver.jar" />
+			<fileset file="${base.dir}/lib/dom4j-1.6.jar" />
+			<fileset file="${base.dir}/lib/j2ee.jar" />
+			<fileset file="${base.dir}/lib/log4j-1.2.9.jar" />
+			<fileset file="${base.dir}/lib/catissuesuite.jar" />
+
+		</copy>
+		<copy todir="${zip.dir}/catissuexmi" overwrite="true">
+			<fileset file="${base.dir}/catissuexmi/catissueidfattr.txt" />
+			<fileset file="${base.dir}/catissuexmi/catissuecontainer.csv" />
+			<fileset file="${base.dir}/catissuexmi/catissueindirectpath.txt" />
+			<fileset file="${base.dir}/catissuexmi/containmentassociation.txt" />
+			<fileset file="${base.dir}/catissuexmi/hibernate.cfg.xml" />
+			<fileset file="${base.dir}/catissuexmi/DynamicExtensionsHibernate.cfg.xml" />
+			<fileset file="${base.dir}/catissuexmi/catissue.xmi" />
+			<fileset file="${base.dir}/catissuexmi/oldcommonpackage.jar" />
+			<fileset file="${base.dir}/catissuexmi/oldDynamicExtensions.jar" />
+			<fileset file="${base.dir}/catissuexmi/cpexception.jar" />
+			<fileset file="${base.dir}/catissuexmi/taggedvalues.xml" />
+
+		</copy>
+
+		<copy todir="${zip.dir}/SQL" overwrite="true">
+			<fileset dir="${base.dir}/SQL" />
+		</copy>
+		<copy file="Oracle_DB_Creation.sql" todir="${zip.dir}" overwrite="true" />
+		<copy file="Sample-login-config.xml" todir="${zip.dir}" overwrite="true" />
+		<copy file="Sample-properties-service.xml" todir="${zip.dir}" overwrite="true" />
+		<copy todir="${zip.dir}/images" overwrite="true">
+			<fileset file="${base.dir}/images/InstitutionLogo.gif" />
+		</copy>
+		<copy todir="${zip.dir}/catissue_de_integration_client" overwrite="true">
+			<fileset dir="${base.dir}/catissue_de_integration_client" />
+		</copy>
+		<copy todir="${zip.dir}/clinportal_caCORE_Client" overwrite="true">
+			<fileset dir="${base.dir}/clinportal_caCORE_Client" />
+		</copy>
+		<copy file="AdvanceQuery_Installable.zip" todir="${zip.dir}" overwrite="true" />
+
+		<!-- DE conf files -->
+		<copy todir="${zip.dir}/DE_conf" overwrite="true">
+			<fileset dir="${base.dir}/DE_conf" />
+		</copy>
+		<!-- DE conf files end -->
+		<!-- Copying DEIntegration.war-->
+		<copy file="deintegration.war" todir="${zip.dir}" overwrite="true" />
+		<copy file="clinportal.csv" todir="${zip.dir}" overwrite="true" />
+		<property name="zip1.dir" value="${base.dir}/clinportal_Installable_v${app.version}" />
+		<property name="zip1.file" value="${base.dir}//clinportal_Installable_v${app.version}.zip" />
+		<zip destfile="${zip1.file}">
+			<fileset dir="${zip1.dir}" />
+		</zip>
+		<delete dir="${zip.dir}" />
+		<delete dir="${zip1.dir}" />
+	</target>
+
+	<!-- unpack caCORE war into temp folder -->
+	<target name="unpack_cacore_war">
+		<unwar src="${base.dir}/clinportalcsm.war" dest="${temp.dir}/clinportalcsm" />
+	</target>
+
+	<target name="replace_database_type">
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportalcsm/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="orm1.cfg.xml" />
+					<replacefilter token="@@dialect@@" value="${mysql.dialect.h3.string}" />
+				</replace>
+			</then>
+		</if>
+
+		<if>
+			<equals arg1="oracle" arg2="${database.type}" />
+			<then>
+				<replace dir="${temp.dir}/clinportalcsm/WEB-INF/classes" propertyfile="ClinPortalInstall.properties">
+					<include name="orm1.cfg.xml" />
+					<replacefilter token="@@dialect@@" value="${oracle.dialect.h3.string}" />
+				</replace>
+			</then>
+		</if>
+	</target>
+
+	<!-- build catissuecore client jar to content latest domain classes & put inside client lib folder-->
+	<target name="build_client_jar">
+		<jar taskname="buildClientJar" jarfile="${temp.dir}/clinportal.jar">
+			<fileset dir="${target.dir}">
+				<include name="**/edu/wustl/clinportal/domain/**" />
+				<include name="**/edu/wustl/clinportal/actionForm/**" />
+				<include name="**/edu/wustl/clinportal/util/**" />
+				<include name="**/edu/wustl/clinportal/client/**" />
+				<include name="**/edu/wustl/clinportal/bean/**" />
+				<exclude name="**/CVS*" />
+				<exclude name="**/java.policy.applet*" />
+			</fileset>
+		</jar>
+
+		<copy todir="${base.dir}/clinportal_caCORE_Client/lib" overwrite="true">
+			<fileset dir="${lib.dir}">
+				<include name="commonpackage.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/clinportal_caCORE_Client/lib" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="clinportal.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/catissue_de_integration_client/lib" overwrite="true">
+			<fileset dir="${lib.dir}">
+				<include name="commonpackage.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${base.dir}/catissue_de_integration_client/lib" overwrite="true">
+			<fileset dir="${temp.dir}">
+				<include name="clinportal.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="Generate-Schema">
+		<java classname="edu.wustl.clinportal.util.GenerateSchema">
+			<arg value="false" />
+			<classpath>
+				<pathelement path="${target.dir}" />
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${extra_lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${mainlib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="build_DomainObject_jar" depends="compile" description="To create jar which contains domain object along with its hbm file. This is required for Query Metedata loading.">
+		<jar taskname="buildJar" jarfile="${base.dir}/catissueDomain.jar">
+			<fileset dir="${target.dir}">
+				<include name="**/*.hbm.xml" />
+				<include name="**/edu/wustl/clinportal/domain/**" />
+				<include name="**/edu/wustl/clinportal/actionForm/**" />
+				<include name="**/edu/wustl/clinportal/bean/**" />
+			</fileset>
+		</jar>
+	</target>
+
+
+	<property name="filename" value="" />
+	<property name="condition" value="" />
+	<property name="package" value="" />
+
+	<target name="copydeletedjars">
+		<echo>deleting unneccesary jars from ${deleteFromDir}</echo>
+		<delete failonerror="false">
+			<fileset dir="${deleteFromDir}">
+				<include name="backport-util-concurrent-3.0.jar" />
+				<include name="c3p0-0.8.4.5.jar" />
+				<include name="c3p0-0.8.5.2.jar" />
+				<include name="castor-1.0.2.jar" />
+				<include name="cglib-2.1.jar" />
+				<include name="commons-collections-2.1.1.jar" />
+				<include name="commons-collections-3.1.jar" />
+				<include name="commons-discovery-0.2.jar" />
+				<include name="commons-fileupload.jar" />
+				<include name="commons-lang-2.1.jar" />
+				<include name="commons-logging-1.0.4.jar" />
+				<include name="ehcache-1.1.jar" />
+				<include name="ehcache-1.2.2.jar" />
+				<include name="freemarker.jar" />
+				<include name="jakarta-oro.jar" />
+				<include name="uml-1.3.jar" />
+				<include name="wsdl4j-1.5.1.jar" />
+				<include name="xalan-2.4.0.jar" />
+				<include name="p6spy.jar" />
+				<include name="sdkClient.jar" />
+				<include name="uuid-key-generator.jar" />
+				<include name="wsdl4j.jar" />
+				<include name="caGrid-1.0-caDSR-client.jar" />
+				<include name="caGrid-1.0-caDSR-common.jar" />
+				<include name="caGrid-1.0-caDSR-stubs.jar" />
+				<include name="caGrid-1.0-core.jar" />
+				<include name="caGrid-1.0-data-common.jar" />
+				<include name="caGrid-1.0-data-stubs.jar" />
+				<include name="caGrid-1.0-data-utils.jar" />
+				<include name="caGrid-1.0-fqp-client.jar" />
+				<include name="caGrid-1.0-fqp-common.jar" />
+				<include name="caGrid-1.0-fqp-stubs.jar" />
+				<include name="caGrid-1.0-metadata-common.jar" />
+				<include name="caGrid-1.0-metadata-security.jar" />
+				<include name="caGrid-1.0-sdkQuery.jar" />
+				<include name="caGrid-1.0-ServiceSecurityProvider-client.jar" />
+				<include name="caGrid-1.0-ServiceSecurityProvider-common.jar" />
+				<include name="jboss-common-jdbc-wrapper.jar" />
+				<include name="mysql-connector-java-3.1.13-bin.jar" />
+				<include name="ojdbc14.jar" />
+				<include name="boot.jar" />
+				<include name="c3p0-0.9.0.jar" />
+				<include name="clinportal-client.jar" />
+				<include name="experiment-client.jar" />
+				<include name="jboss-client.jar" />
+				<include name="mockobjects-core-0.09.jar" />
+				<include name="mysql-connector-java-5.0.8-bin.jar" />
+				<include name="openide-util.jar" />
+				<include name="acrobat-core.jar" />
+			</fileset>
+
+		</delete>
+	</target>
+</project>

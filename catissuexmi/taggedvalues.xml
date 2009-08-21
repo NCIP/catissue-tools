@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+<entity-group>
+<name>catissueSuite_wid</name>
+<entity>
+	<name>edu.wustl.clinportal.domain.Participant</name>
+	<attribute>
+		<name>firstName</name>
+		<tag>
+			<tag-name>resultview</tag-name>
+			<tag-value>2</tag-value>
+		</tag>
+	</attribute>
+	<attribute>
+		<name>lastName</name>
+		<tag>
+			<tag-name>resultview</tag-name>
+			<tag-value>1</tag-value>
+		</tag>
+	</attribute>
+	<tag>
+		<tag-name>resultview</tag-name>
+		<tag-value>resultview</tag-value>
+	</tag>
+</entity>
+</entity-group>
+<entity-group>
+<name>catissue</name>
+<entity>
+	<name>edu.wustl.catissuecore.domain.Participant</name>
+	<attribute>
+		<name>firstName</name>
+		<tag>
+			<tag-name>resultview</tag-name>
+			<tag-value>2</tag-value>
+		</tag>
+	</attribute>
+	<attribute>
+		<name>lastName</name>
+		<tag>
+			<tag-name>resultview</tag-name>
+			<tag-value>1</tag-value>
+		</tag>
+	</attribute>
+	<tag>
+		<tag-name>resultview</tag-name>
+		<tag-value>resultview</tag-value>
+	</tag>
+</entity>
+</entity-group>
+</xml>

@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class
+        name="edu.wustl.clinportal.domain.ClinicalStudyEvent"
+        table="CATISSUE_CLINICAL_STUDY_EVENT"
+        dynamic-update="false"
+        dynamic-insert="false"
+    >
+
+        <id
+            name="id"
+            column="IDENTIFIER"
+            type="long"
+            length="30"
+            unsaved-value="null"
+        >
+            <generator class="native">
+                <param name="sequence">CATISSUE_STUDY_EVNT_SEQ</param>
+            </generator>
+        </id>
+
+        <many-to-one
+            name="clinicalStudy"
+            class="edu.wustl.clinportal.domain.ClinicalStudy"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="CLINICAL_STUDY_ID"
+        />
+
+        <property
+            name="collectionPointLabel"
+            type="string"
+            update="true"
+            insert="true"
+            column="COLLECTION_POINT_LABEL"
+            length="255"
+        />
+
+        <property
+            name="studyCalendarEventPoint"
+            type="int"
+            update="true"
+            insert="true"
+            column="EVENT_POINT"
+            length="10"
+        />
+
+        <property
+            name="noOfEntries"
+            type="int"
+            update="true"
+            insert="true"
+            column="NO_OF_ENTRIES"
+            length="30"
+        />
+
+        <property
+            name="activityStatus"
+            type="string"
+            update="true"
+            insert="true"
+            column="ACTIVITY_STATUS"
+            length="10"
+        />
+
+        <property
+            name="isInfiniteEntry"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_INFINITE_ENTRY"
+            length="5"
+        />
+ 		<property
+            name="relToCPEId"
+            type="long"
+            update="true"
+            insert="true"
+            column="REL_CPE_ID"
+            length="30"
+        />   
+
+        <set
+            name="studyFormContextCollection"
+            table="CATISSUE_STUDY_FORM_CONTEXT"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="unsorted"
+        >
+
+              <key
+                  column="CLINICAL_STUDY_EVENT_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.clinportal.domain.StudyFormContext"
+              />
+        </set>
+
+        <set
+            name="eventEntryCollection"
+            table="CATISSUE_EVENT_ENTRY"
+            lazy="true"
+            inverse="true"
+            cascade="all"
+            sort="unsorted"
+        >
+
+              <key
+                  column="CLINICAL_STUDY_EVENT_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.clinportal.domain.EventEntry"
+              />
+        </set>
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-ClinicalStudyEvent.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

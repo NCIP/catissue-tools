@@ -1,0 +1,17 @@
+SET FOREIGN_KEY_CHECKS=0;
+update dyextn_role set ASSOCIATION_TYPE = 'ASSOCIATION';
+update dyextn_role set association_type='CONTAINTMENT' where identifier in (31);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','1',61);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','1',48);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','1',57);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',109);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',35);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',2);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',33);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',32);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',91);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',106);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',13);
+insert into dyextn_tagged_value (T_KEY,T_VALUE,ABSTRACT_METADATA_ID) values('PRIVILEGE_ID','2',15);
+UPDATE dyextn_primitive_attribute SET IS_IDENTIFIED =1 where IDENTIFIER in (119,95,103,101,97,94,100,117,87);
+SET FOREIGN_KEY_CHECKS=1;

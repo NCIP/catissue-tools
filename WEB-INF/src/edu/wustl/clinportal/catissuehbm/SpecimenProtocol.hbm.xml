@@ -1,0 +1,507 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping
+>
+    <class
+        name="edu.wustl.catissuecore.domain.SpecimenProtocol"
+        table="SYN_CAT_SPECIMEN_PROTOCOL"
+		lazy="true"
+    >
+    
+    <cache usage="read-write" />
+
+        <id
+            name="id"
+            column="IDENTIFIER"
+            type="long"
+            length="30"
+            unsaved-value="null"
+        >
+            <generator class="native">
+                <param name="sequence">CATISSUE_SPECIMEN_PROTOCOL_SEQ</param>
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-SpecimenProtocol.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <many-to-one
+            name="principalInvestigator"
+            class="edu.wustl.catissuecore.domain.User"
+            cascade="none"
+             
+            update="true"
+            insert="true"
+            column="PRINCIPAL_INVESTIGATOR_ID" 
+            lazy="false" 
+        />
+
+        <property
+            name="title"
+            type="string"
+            update="true"
+            insert="true"
+            column="TITLE"
+            length="255"
+            not-null="true"
+            unique="true"
+        />
+
+        <property
+            name="shortTitle"
+            type="string"
+            update="true"
+            insert="true"
+            column="SHORT_TITLE"
+            length="255"
+        />
+
+        <property
+            name="irbIdentifier"
+            type="string"
+            update="true"
+            insert="true"
+            column="IRB_IDENTIFIER"
+            length="255"
+        />
+
+        <property
+            name="startDate"
+            type="date"
+            update="true"
+            insert="true"
+            column="START_DATE"
+            length="50"
+        />
+
+        <property
+            name="endDate"
+            type="date"
+            update="true"
+            insert="true"
+            column="END_DATE"
+            length="50"
+        />
+
+        <property
+            name="enrollment"
+            type="int"
+            update="true"
+            insert="true"
+            column="ENROLLMENT"
+            length="50"
+        />
+
+        <property
+            name="descriptionURL"
+            type="string"
+            update="true"
+            insert="true"
+            column="DESCRIPTION_URL"
+            length="255"
+        />
+
+        <property
+            name="activityStatus"
+            type="string"
+            update="true"
+            insert="true"
+            column="ACTIVITY_STATUS"
+            length="50"
+        />
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-SpecimenProtocol.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+        <joined-subclass
+            name="edu.wustl.catissuecore.domain.CollectionProtocol"
+            table="SYN_CAT_COLLECTION_PROTOCOL"
+			lazy="true"
+        >
+            <key
+                column="IDENTIFIER"
+            />
+        <property
+            name="unsignedConsentDocumentURL"
+            type="string"
+            update="true"
+            insert="true"
+            column="UNSIGNED_CONSENT_DOC_URL"
+            length="1000"
+        />
+
+
+        <set
+            name="collectionProtocolRegistrationCollection"
+            table="SYN_CAT_COLL_PROT_REG"
+            lazy="true"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="COLLECTION_PROTOCOL_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.catissuecore.domain.CollectionProtocolRegistration"
+              />
+        </set>
+
+        <set
+            name="consentTierCollection"
+            table="SYN_CAT_CONSENT_TIER"
+            fetch="subselect" lazy="false" 
+            inverse="false"
+            cascade="save-update"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+        
+        
+
+              <key
+                  column="COLL_PROTOCOL_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.catissuecore.domain.ConsentTier"
+              />
+        </set>
+
+        <set
+            name="distributionProtocolCollection"
+            table="SYN_CAT_COLL_DISTRIBUTION_REL"
+            lazy="true"
+            inverse="false"
+            cascade="save-update"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="COLLECTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <many-to-many
+                class="edu.wustl.catissuecore.domain.DistributionProtocol"
+                column="DISTRIBUTION_PROTOCOL_ID"
+                 
+             />
+
+        </set>
+
+        <set
+            name="coordinatorCollection"
+            table="SYN_CAT_COLL_COORDINATORS"
+            fetch="subselect" lazy="false" 
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="COLLECTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <many-to-many
+                class="edu.wustl.catissuecore.domain.User"
+                column="USER_ID"
+                 
+             />
+
+        </set>
+        
+        <set
+            name="assignedProtocolUserCollection"
+            table="SYN_CAT_USER_CP"
+            fetch="subselect" lazy="false" 
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="COLLECTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <many-to-many
+                class="edu.wustl.catissuecore.domain.User"
+                column="USER_ID"
+                 
+             />
+
+        </set>
+        
+        <set
+            name="siteCollection"
+            table="SYN_CAT_SITE_CP"
+            lazy="false" fetch="subselect"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="COLLECTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <many-to-many
+                class="edu.wustl.catissuecore.domain.Site"
+                column="SITE_ID"
+                 
+             />
+
+        </set>
+
+        <set
+            name="collectionProtocolEventCollection"
+            table="SYN_CAT_COLL_PROT_EVENT"
+         
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"     fetch="subselect" lazy="false" 
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="COLLECTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <one-to-many
+                  class="edu.wustl.catissuecore.domain.CollectionProtocolEvent"   
+            />	 
+    </set>
+	<set
+            name="childCollectionProtocolCollection"
+            table="SYN_CAT_COLLECTION_PROTOCOL"
+            fetch="subselect" lazy="false" 
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+         >
+         
+         <cache usage="read-write" />
+
+            <key
+                column="PARENT_CP_ID"
+            >
+            </key>
+
+            <one-to-many
+                  class="edu.wustl.catissuecore.domain.CollectionProtocol"
+            />
+
+        </set>
+	
+	    <many-to-one
+            name="parentCollectionProtocol"
+            class="edu.wustl.catissuecore.domain.CollectionProtocol"
+            cascade="none"
+            update="true"
+            insert="true"
+            column="PARENT_CP_ID"
+        />
+        
+		<property
+            name="type"
+            type="string"
+            update="true"
+            insert="true"
+            column="CP_TYPE"
+            length="50"
+        />
+          <property
+            name="sequenceNumber"
+            type="int"
+            update="true"
+            insert="true"
+            column="SEQUENCE_NUMBER"
+            length="30"
+        />
+
+	  <property
+            name="studyCalendarEventPoint"
+            type="double"
+            update="true"
+            insert="true"
+            column="STUDY_CALENDAR_EVENT_POINT"
+            length="50"
+        />
+		<property
+            name="aliquotInSameContainer"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="ALIQUOT_IN_SAME_CONTAINER"
+        />
+
+        <property
+            name="consentsWaived"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="CONSENTS_WAIVED"
+        />
+
+        </joined-subclass>
+        
+        <joined-subclass
+            name="edu.wustl.catissuecore.domain.DistributionProtocol"
+            table="SYN_CAT_DISTRIBUTION_PROTOCOL"
+			lazy="true"
+        >
+            <key
+                column="IDENTIFIER"
+            />
+
+        <set
+            name="distributionSpecimenRequirementCollection"
+            table="SYN_CAT_DISTRIBUTION_SPEC_REQ"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+            fetch="subselect"
+            lazy="false"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="DISTRIBUTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <one-to-many
+                class="edu.wustl.catissuecore.domain.DistributionSpecimenRequirement"
+             />
+
+        </set>
+
+        <set
+            name="collectionProtocolCollection"
+            table="SYN_CAT_COLL_DISTRIBUTION_REL"
+            lazy="true"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+            <key
+                column="DISTRIBUTION_PROTOCOL_ID"
+            >
+            </key>
+
+            <many-to-many
+                class="edu.wustl.catissuecore.domain.CollectionProtocol"
+                column="COLLECTION_PROTOCOL_ID"
+                 
+             />
+
+        </set>
+
+        </joined-subclass>
+
+		    <joined-subclass
+            name="edu.wustl.catissuecore.domain.ClinicalStudy"
+            table="SYN_CAT_CLINICAL_STUDY"
+            lazy="true"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+
+        <set
+            name="coordinatorCollection"
+            table="SYN_CAT_CLINICAL_STUDY_COORDINATORS"
+            lazy="true"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="CLINICAL_STUDY_ID"
+              />
+
+              <many-to-many
+                  class="edu.wustl.catissuecore.domain.User"
+                  column="USER_ID"
+                   
+              />
+
+        </set>
+	<set
+            name="clinicalStudyEventCollection"
+            table="SYN_CAT_CLINICAL_STUDY_EVENT"
+            lazy="true"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="CLINICAL_STUDY_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.catissuecore.domain.ClinicalStudyEvent"
+              />
+        </set>
+
+ 	  <set
+            name="clinicalStudyRegistrationCollection"
+            table="SYN_CAT_CLINICAL_STUDY_REG"
+            lazy="true"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+        >
+        
+        <cache usage="read-write" />
+
+              <key
+                  column="CLINICAL_STUDY_ID"
+              />
+
+              <one-to-many
+                  class="edu.wustl.catissuecore.domain.ClinicalStudyRegistration"
+              />
+        </set>
+
+        </joined-subclass>
+
+    </class>
+
+</hibernate-mapping>

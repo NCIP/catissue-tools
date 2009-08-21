@@ -1,0 +1,1 @@
+update CSM_PRIVILEGE set privilege_name='PHI_ACCESS' where privilege_name='IDENTIFIED_DATA_ACCESS';

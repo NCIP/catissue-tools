@@ -1,0 +1,3 @@
+ant -f deploy.xml import_xmi -Dfilename=E:/TestModels/TestModel_withTags/original/test.xmi -DmainContainerList=E:/TestModels/TestModel_withTags/original/main.csv -Dpackage=annotations
+ant -f deploy.xml import_permissible_values -DpermissibleValuesFile=E:/TestModels/TestModel_withTags/original/TestModel_pv.csv
+ant -f deploy.xml create_category -DcategoryDefinitionFilePath=E:/TestModels/TestModel_withTags/original/Categories/categoryChemotherapy.csv

@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	
+    <session-factory>
+  		<property name="show_sql">false</property>
+  	 	<property name="dialect">@@DIALECT@@</property>	
+        <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+		<property name="connection.driver_class">@@DRIVER@@</property>
+	
+	 	<property name="connection.url">@@URL@@</property>
+	    <property name="connection.username">@@DATABASE_USERNAME@@</property>
+	    <property name="connection.password">@@DATABSE_PASSWORD@@</property>
+	    <!-- oracle settings-->    	
+<!-- oracle settings end-->    
+    	<!--Consent Tracking Suite-->
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ConsentTier.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ConsentTierResponse.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ConsentTierStatus.hbm.xml"/>
+		<!--Consent Tracking Suite-->
+		
+		<!-- caTIES Suite-->
+    	<mapping resource="edu/wustl/clinportal/catissuehbm/Concept.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ConceptReferent.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ConceptReferentClassification.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/PathologyReportReviewParameter.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/QuarantineEventParameter.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ReportContent.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ReportLoaderQueue.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ReportSection.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SemanticType.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SurgicalPathologyReport.hbm.xml"/>
+		<!-- caTIES Suite-->
+
+        <!-- List of all Mapping files -->
+      	<mapping resource="edu/wustl/clinportal/catissuehbm/Address.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Biohazard.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Capacity.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/CancerResearchGroup.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/CollectionProtocolRegistration.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Department.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/DistributedItem.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ExternalIdentifier.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Institution.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Participant.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Race.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ParticipantMedicalIdentifier.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ReportedProblem.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Site.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/AbstractSpecimen.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SpecimenCharacteristics.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/AbstractSpecimenCollectionGroup.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SpecimenEventParameters.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SpecimenProtocol.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/DistributionSpecimenRequirement.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Container.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Password.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/User.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/Distribution.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/SpecimenArrayContent.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ContainerType.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/OrderItem.hbm.xml" />
+		<mapping resource="edu/wustl/clinportal/catissuehbm/OrderDetails.hbm.xml" />		
+		<mapping resource="edu/wustl/clinportal/catissuehbm/AbstractPosition.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/BaseShipment.hbm.xml"/>
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ClinicalStudyRegistration.hbm.xml"/>		
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ClinicalStudyEvent.hbm.xml"/>		
+		<mapping resource="edu/wustl/clinportal/catissuehbm/ClinicalStudyEventEntry.hbm.xml"/>	
+	
+ 	 
+        </session-factory>
+    
+</hibernate-configuration>
