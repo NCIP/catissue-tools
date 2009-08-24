@@ -69,15 +69,13 @@ table#browserDetailsContainer
 										<td align="left" valign="middle">
 										<table border="0" cellspacing="0" cellpadding="0">
 											<tr>
+												<td>
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												</td>
 												<td><input name="Submit" type="submit"
 													class="blue_ar_b" value="Login" /> <a href="#"
 													class="blue"><span class="wh_ar_b"></span></a></td>
-												<td><img src="images/uIEnhancementImages/or_dot.gif"
-												 alt="Divider line"
-													width="1" height="15" hspace="5" /></td>
-												<td><a
-													href="SignUp.do?operation=add&amp;pageOf=pageOfSignUp"
-													class="view"><bean:message key="app.signup" /></a></td>
+												
 											</tr>
 										</table>
 										</td>
@@ -100,9 +98,9 @@ table#browserDetailsContainer
 								<%
 										}
 										%> <bean:message key="app.welcomeNote"
-									arg0="<%=ApplicationProperties.getValue("app.name")%>"
-									arg1="<%=XMLPropertyHandler.getValue("application.titleversion")%>"
-									arg2="<%=Variables.applicationCvsTag%>" /></TD>
+									arg0="PaperFreeDoctor"
+									arg1="v0.5"
+									arg2="" /></TD>
 							</tr>
 						</logic:notEmpty></td>
 					</tr>

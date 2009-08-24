@@ -150,10 +150,10 @@
 <LINK href="css/calanderComponent.css" type=text/css rel=stylesheet>
 <!-- Mandar 11-Aug-06 : calendar changes end -->
 
-<!-- For Favicon -->
+<!-- For Favicon 
 <link rel="shortcut icon" href="images/favicon.ico" type="image/vnd.microsoft.icon"/>
 <link rel="icon" href="images/favicon.ico" type="image/vnd.microsoft.icon"/>
-
+-->
 
 </head>
 <body>
