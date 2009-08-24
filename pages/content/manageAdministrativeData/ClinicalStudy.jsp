@@ -14,23 +14,23 @@
 <%@ page import="edu.wustl.clinportal.util.global.Variables"%>
 <%@ page import="edu.wustl.clinportal.util.global.Utility"%>
 
-<link rel="stylesheet" type="text/css" href="/clinportal/css/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="css/styleSheet.css" />
 
-<link rel="stylesheet" type="text/css" href="/clinportal/css/clinicalstudyext-all.css" />
+<link rel="stylesheet" type="text/css" href="css/clinicalstudyext-all.css" />
 
-<script>var imgsrc="/clinportal/de/images/";</script>
+<script>var imgsrc="de/images/";</script>
 
-<script language="JavaScript" type="text/javascript" src="/clinportal/de/jss/prototype.js"></script>
+<script language="JavaScript" type="text/javascript" src="de/jss/prototype.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="/clinportal/de/jss/scr.js"></script>
-<script language="JavaScript" type="text/javascript" src="/clinportal/de/jss/combobox.js"></script>
-<script language="JavaScript" type="text/javascript" src="/clinportal/jss/ext-base.js"></script>
+<script language="JavaScript" type="text/javascript" src="de/jss/scr.js"></script>
+<script language="JavaScript" type="text/javascript" src="de/jss/combobox.js"></script>
+<script language="JavaScript" type="text/javascript" src="jss/ext-base.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="/clinportal/jss/ext-all.js"></script>
-<script language="JavaScript" type="text/javascript" src="/clinportal/de/jss/combos.js"></script>
+<script language="JavaScript" type="text/javascript" src="jss/ext-all.js"></script>
+<script language="JavaScript" type="text/javascript" src="de/jss/combos.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="/clinportal/de/jss/ajax.js"></script>
-<script language="JavaScript" type="text/javascript" src="/clinportal/jss/ajax.js"></script>
+<script language="JavaScript" type="text/javascript" src="de/jss/ajax.js"></script>
+<script language="JavaScript" type="text/javascript" src="jss/ajax.js"></script>
 <%
 ClinicalStudyForm form = (ClinicalStudyForm) request.getAttribute(Constants.CLINICAL_STUDY_FORM);
 Long  piId = form.getPrincipalInvestigatorId();

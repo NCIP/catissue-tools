@@ -43,6 +43,7 @@
 	<property name="clinportal.struts.config.file" value="struts-config.xml" />
 	<property name="clinportal.hibernate.config.file" value="hibernate.cfg.xml" />
 	<property name="clinportal.tiles.def.file" value="tiles-defs.xml" />
+	<property name="projectNamePFD" value="paperfreedoctor"/>
 	<!-- Check for required properties -->
 	<target name="assert">
 		<if>
@@ -529,7 +530,7 @@
 		<delete file="${temp.dir}/clinportal.war" />
 		<delete file="${temp.dir}/dynamicExtensions.war" />
 
-		<war destfile="${temp.dir}/clinportal.war" webxml="${temp.dir}/clinportal/WEB-INF/web.xml">
+		<war destfile="${temp.dir}/${projectNamePFD}.war" webxml="${temp.dir}/clinportal/WEB-INF/web.xml">
 			<fileset dir="${temp.dir}/clinportal">
 				<exclude name="**/*build*" />
 				<exclude name="**/*WEB-INF*" />
@@ -580,7 +581,7 @@
 		</copy>
 		<copy todir="${jboss.home.dir}/server/default/deploy" overwrite="true">
 			<fileset dir="${temp.dir}">
-				<include name="clinportal.war" />
+				<include name="paperfreedoctor.war" />
 				<include name="catissuecore-ds.xml" />
 				<include name="clinportalcsm.war" />
 			</fileset>

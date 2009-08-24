@@ -75,13 +75,13 @@ System.out.println("containerId:"+containerId);
 			function editAnno()
 			{
 				//alert('EditAnno');
-				document.forms[0].action="/clinportal/DefineAnnotations.do?link=edit";
+				document.forms[0].action="DefineAnnotations.do?link=edit";
 				document.forms[0].submit();
 			}
 			
 			function editCondition()
 			{     
-				document.forms[0].action="/clinportal/SaveAnnotationsConditions.do?containerId="+<%=containerId%>+"&selectedStaticEntityId="+<%=selectedStaticEntityId%>;
+				document.forms[0].action="SaveAnnotationsConditions.do?containerId="+<%=containerId%>+"&selectedStaticEntityId="+<%=selectedStaticEntityId%>;
 				document.forms[0].submit();
 
 			}
