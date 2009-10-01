@@ -159,8 +159,10 @@ public class EventTreeBizLogic
 						{
 							eventNoOfEntry = 1;
 							DataEntryUtil dataBizLogic = new DataEntryUtil();
-							dataBizLogic.createEventEntry(event, clStudyRegstn, evntEntryColn
-									.size() + 1, request);
+							EventEntry eventEntry = dataBizLogic.createEventEntry(event,
+									clStudyRegstn, evntEntryColn.size() + 1, request);
+							Object[] entry = {eventEntry.getId(), null, eventEntry.getEntryNumber()};
+							evntEntryColn.add(entry);
 						}
 
 					}

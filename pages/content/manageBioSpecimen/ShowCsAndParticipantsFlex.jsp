@@ -18,6 +18,8 @@
 <head>
 <link rel="stylesheet" type="text/css" href="css/styleSheet.css" />
 <script language="JavaScript" type="text/javascript" src="jss/javaScript.js"></script>
+<script language="JavaScript" type="text/javascript" src="jss/ajax.js"></script>
+<script src="<%=request.getContextPath()%>/jss/breadcrumb.js"></script>
 
   <script language="JavaScript">
 
@@ -77,10 +79,16 @@
 	}
 	function refreshCpParticipants(participantId)
 	{
-        
-		 callFlexMethod();
-	     interfaceObj.editParticipant(participantId,"");
+        clearDiv();
+		callFlexMethod();
+	    interfaceObj.editParticipant(participantId,"");
 
+	}
+	function clearDiv()
+	{
+		window.parent.document.getElementById ("breadCrumbDiv").innerHTML ="";
+		window.parent.document.getElementById ("breadCrumbDiv").style.height="0%";
+		window.parent.document.getElementById ("breadCrumbDiv").style.fontSize="0px";
 	}
 
 
@@ -90,13 +98,15 @@
 	*/
 	function editParticipant(participantId,treeNodeId)
 	{
-		 callFlexMethod();
-	     interfaceObj.editParticipant(participantId,treeNodeId);
+     	clearDiv();
+		callFlexMethod();
+	    interfaceObj.editParticipant(participantId,treeNodeId);
 	
 	}
 
 	function onParticipantClick(pId,cpId,refParticipants)
 	{
+	  clearDiv();
 	  window.parent.frames[1].location ="QueryParticipantSearch.do?pageOf=pageOfParticipantCPQueryEdit&operation=edit&<%=Constants.CP_SEARCH_CP_ID%>="+cpId+"&id="+pId;
 	}
   
@@ -155,6 +165,7 @@
 					<%}else {%>
 					window.parent.frames[1].location = "LoadEventDetails.do?"+"<%=Constants.CP_SEARCH_PARTICIPANT_ID%>="+pId+"&<%=Constants.CP_SEARCH_CP_ID%>="+cpId+"&treeViewKey="+id+ "&<%=Constants.PROTOCOL_EVENT_ID%>=" +eventId+"&<%=Utility.attachDummyParam()%>";
 					<%}%>
+					window.parent.frames[1].onload = breadCrumbrequest(id,pId,cpId,formId,eventId,formContextId);
 				}
 				else if(obj1 == "<%=Constants.FORM_CONTEXT_OBJECT%>" || obj1 == "<%=Constants.SINGLE_RECORD_FORM%>" || obj1 == "<%=Constants.SINGLE_RECORD_FORM_EDIT%>")
 				{
@@ -165,14 +176,23 @@
 					}
 					
 					window.parent.frames[1].location = urlString;
+					window.parent.frames[1].onload = breadCrumbrequest(id,pId,cpId,formId,eventId,formContextId);
 				}
 				else
 				{
 					window.parent.frames[1].location = "LoadEventDetails.do?"+"<%=Constants.CP_SEARCH_PARTICIPANT_ID%>="+pId+"&<%=Constants.CP_SEARCH_CP_ID%>="+cpId + "&<%=Constants.PROTOCOL_EVENT_ID%>=" +eventId+"&entryId="+formId+"&treeViewKey="+id+"&<%=Utility.attachDummyParam()%>";
+					window.parent.frames[1].onload = breadCrumbrequest(id,pId,cpId,formId,eventId,formContextId);
 				}
 				
 
 	};
+
+	function clearFrame()
+	{
+		window.parent.frames[1].location = "blankScreenAction.do";
+		clearDiv();
+	}
+
  </script> 
 
 </head>

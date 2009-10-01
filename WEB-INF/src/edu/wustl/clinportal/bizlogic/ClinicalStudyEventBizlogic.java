@@ -4,7 +4,7 @@
 
 package edu.wustl.clinportal.bizlogic;
 
-import org.hibernate.HibernateException;
+import java.util.List;
 
 import edu.wustl.clinportal.domain.ClinicalStudy;
 import edu.wustl.clinportal.domain.ClinicalStudyEvent;
@@ -17,7 +17,7 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.exception.DAOException;
 
 /**
- * @author deepali
+ * @author Deepali
  *
  */
 public class ClinicalStudyEventBizlogic extends ClinportalDefaultBizLogic
@@ -28,9 +28,9 @@ public class ClinicalStudyEventBizlogic extends ClinportalDefaultBizLogic
 	/**
 	 * Saves the ClinicalStudyEvent object in the database.
 	 * @param obj The ClinicalStudyEvent object to be saved.
-	 * @param session The session in which the object is saved.
-	 * @throws DAOException 
-	 * @throws HibernateException Exception thrown during hibernate operations.
+	 * @param dao
+	 * @param sessionDataBean The session in which the object is saved.
+	 * @throws BizLogicException 
 	 */
 	protected void insert(Object obj, DAO dao, SessionDataBean sessionDataBean)
 			throws BizLogicException
@@ -63,9 +63,11 @@ public class ClinicalStudyEventBizlogic extends ClinportalDefaultBizLogic
 
 	/**
 	 * Updates the persistent object in the database.
+	 * @param dao
 	 * @param obj The object to be updated.
-	 * @param session The session in which the object is saved.
-	 * @throws DAOException 
+	 * @param oldObj
+	 * @param sessionDataBean The session in which the object is saved.
+	 * @throws BizLogicException 
 	 */
 	protected void update(DAO dao, Object obj, Object oldObj, SessionDataBean sessionDataBean)
 			throws BizLogicException
@@ -86,5 +88,24 @@ public class ClinicalStudyEventBizlogic extends ClinportalDefaultBizLogic
 			logger.debug(e.getMessage(), e);
 			throw getBizLogicException(e, e.getErrorKeyName(), e.getMsgValues());
 		}
+	}
+
+	/**
+	 * Method returns the ClinicalStudyEvent for the given Id
+	 * @param eventId
+	 * @return
+	 * @throws NumberFormatException
+	 * @throws BizLogicException
+	 */
+	public ClinicalStudyEvent getClinicalStudyEventById(Long eventId) throws NumberFormatException,
+			BizLogicException
+	{
+		List eventList = (List) retrieve(ClinicalStudyEvent.class.getName(), "id", eventId);
+		ClinicalStudyEvent event = null;
+		if (eventList != null && !eventList.isEmpty())
+		{
+			event = (ClinicalStudyEvent) eventList.get(0);
+		}
+		return event;
 	}
 }

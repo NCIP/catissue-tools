@@ -2272,5 +2272,9 @@ public class Constants
 	public static final String OPENING_ROUND_BRACKET = "(";
 	public static final String CLOSING_ROUND_BRACKET = ")";
 	public static final String HTML_BLANK_SPACE1 = "&nbsp;";
-	public static final String HTML_BLANK_SPACE2 = "&nbsp;&nbsp;";
+	public static final String HTML_BLANK_SPACE2 = "&nbsp;&nbsp;";	
+	public static String getFutureUserGroupName(String csId)
+	{
+	        return "FUTURE_USERS_FOR_CS_"+csId;	        
+	}
 }

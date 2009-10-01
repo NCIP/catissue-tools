@@ -28,6 +28,7 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.AuditException;
 import edu.wustl.common.exception.BizLogicException;
+import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.exceptionformatter.DefaultExceptionFormatter;
 import edu.wustl.common.factory.AbstractFactoryConfig;
 import edu.wustl.common.factory.IFactory;
@@ -64,7 +65,6 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 			throws BizLogicException
 	{
 		ClinicalStudyRegistration clStudyRegtion = (ClinicalStudyRegistration) obj;
-
 		checkStatus(dao, clStudyRegtion.getClinicalStudy(), "Clinical Study");
 		// Check for closed Participant
 		checkStatus(dao, clStudyRegtion.getParticipant(), "Participant");
@@ -399,7 +399,7 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 					whereColumnValue, joinCondition);
 			List list = dao.retrieve(sourceObjectName, selectColumns, queryWhereClause);
 
-			if (list.size() > 0)
+			if (!list.isEmpty())
 			{
 				if (oldClStudyRegtn == null
 						|| !(clStudyRegn.getClinicalStudyParticipantIdentifier()
@@ -410,8 +410,11 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 					errMsg = new DefaultExceptionFormatter().getErrorMessage(
 							"Err.ConstraintViolation", arguments);
 					Logger.out.debug("Unique Constraint Violated: " + errMsg);
-					//throw new DAOException(errMsg);
-					throw getBizLogicException(null, errMsg, "");
+					String csname = clStudyRegn.getClinicalStudy().getShortTitle();
+					String cspid = clStudyRegn.getClinicalStudyParticipantIdentifier();
+					ErrorKey errorKey = ErrorKey.getErrorKey("participant.uniqueconstviolation");
+					throw new BizLogicException(errorKey, null, cspid + ":" + csname);
+
 				}
 				else
 				{
@@ -477,7 +480,7 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 					whereColumnValue, joinCondition);
 			List list = dao.retrieve(sourceObjectName, selectColumns, queryWhereClause);
 
-			if (list.size() > 0)
+			if (!list.isEmpty())
 			{
 				// if list is not empty the Constraint Violation occurs
 				Logger.out.debug("Unique Constraint Violated: " + list.get(0));
@@ -513,6 +516,7 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 	 * @param dao
 	 * @param clStudyIDArr
 	 * @throws DAOException
+	 * @throws BizLogicException
 	 */
 	public void disableRelatedObjectsToClinicalStudy(DAO dao, Long[] clStudyIDArr)
 			throws DAOException, BizLogicException
@@ -536,8 +540,7 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 	* @param studyId
 	* @param participantId
 	* @return
-	 * @throws BizLogicException 
-	* @throws DAOException
+	* @throws BizLogicException 
 	*/
 	public List<ClinicalStudyRegistration> getClinicalStudyRegistration(Long studyId,
 			Long participantId) throws BizLogicException //throws DAOException
@@ -555,6 +558,26 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 	}
 
 	/**
+	 * 
+	 * @param studyId
+	 * @param participantId
+	 * @return
+	 * @throws BizLogicException
+	 */
+	public ClinicalStudyRegistration getCSRegistration(Long studyId, Long participantId)
+			throws BizLogicException
+	{
+		List<ClinicalStudyRegistration> regCollection = (List) getClinicalStudyRegistration(
+				studyId, participantId);
+		ClinicalStudyRegistration cstudyReg = null;
+		if (regCollection != null && !regCollection.isEmpty())
+		{
+			cstudyReg = regCollection.get(0);
+		}
+		return cstudyReg;
+	}
+
+	/**
 	* Returns registration object on study and participant 
 	* @param participantId
 	* @return
@@ -562,7 +585,6 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 	*/
 	public List<ClinicalStudyRegistration> getClinicalStudyRegistration(Long participantId)
 			throws BizLogicException
-	//throws DAOException
 	{
 		String[] whereColumnNames = {"participant.id"};
 		String[] whereColCondns = {"="};
@@ -693,13 +715,11 @@ public class ClinicalStudyRegistrationBizLogic extends ClinportalDefaultBizLogic
 				for (int j = 0; j < participantList.size(); j++)
 				{
 					Object[] participantObj = (Object[]) participantList.get(j);
-
 					Long participantID = (Long) participantObj[0];
-					String clStudyPartpantId = (String) participantObj[1];
-
 					if (participantID != null)
 					{
 						String participantInfo = participantID.toString() + ":";
+						String clStudyPartpantId = (String) participantObj[1];
 						if (clStudyPartpantId != null && !clStudyPartpantId.equals(""))
 						{
 							participantInfo = participantInfo + clStudyPartpantId;

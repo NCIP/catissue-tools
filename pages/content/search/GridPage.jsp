@@ -167,7 +167,28 @@ function init_grid()
 
 	//document.write("<hr>"+colWidth+"<hr>");
 
-	mygrid.setInitWidths(colWidth);
+	//mygrid.setInitWidths(colWidth);
+
+	if(navigator.userAgent.toString().toLowerCase().indexOf("firefox")!= -1)
+    {
+       <% if(columnList.size()<=10) 
+		  { %>
+			var colWidthP = "<%=edu.wustl.query.util.global.Utility.getColumnWidthP(columnList)%>";
+			mygrid.setInitWidthsP(colWidthP);
+			mygrid.entBox.style.width="100%";
+		  <%}
+		  else
+		  { %>
+			mygrid.setInitWidths(colWidth);
+			//mygrid.entBox.style.width=gridWidth;
+        <%}%>
+    }
+  else
+  {
+	  
+     mygrid.setInitWidths(colWidth);
+     //mygrid.entBox.style.width=gridWidth;
+  }
 
 	//mygrid.setColAlign("left,left")
 	mygrid.setColSorting(colTypes);

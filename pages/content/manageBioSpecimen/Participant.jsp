@@ -188,7 +188,7 @@ tr#hiddenCombo
 
 			//Second Cell
 			var spreqtype=x.insertCell(0);
-			spreqtype.className="formFieldWithoutBorder";
+			spreqtype.className="black_ar_s";
 			sname="";
 			var identifier = "value(ParticipantMedicalIdentifier:" + (q+1) +"_id)";
 			sname = sname + "<input type='hidden' name='" + identifier + "' value='' id='" + identifier + "'>";

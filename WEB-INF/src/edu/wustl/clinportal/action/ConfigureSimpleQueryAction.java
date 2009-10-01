@@ -15,7 +15,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import edu.wustl.clinportal.bizlogic.BizLogicFactory;
 import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.common.action.BaseAction;
 import edu.wustl.simplequery.actionForm.SimpleQueryInterfaceForm;
@@ -55,9 +54,10 @@ public class ConfigureSimpleQueryAction extends BaseAction
 			Map map = simpQueryIfaceFrm.getValuesMap();
 			Logger.out.debug("Form map size" + map.size());
 			Logger.out.debug("Form map" + map);
-			if (map.size() == 0)
+			if (map.isEmpty())
 			{
-				map = (Map) session.getAttribute(edu.wustl.simplequery.global.Constants.SIMPLE_QUERY_MAP);
+				map = (Map) session
+						.getAttribute(edu.wustl.simplequery.global.Constants.SIMPLE_QUERY_MAP);
 				Logger.out.debug("Session map size" + map.size());
 				Logger.out.debug("Session map" + map);
 			}
@@ -104,8 +104,6 @@ public class ConfigureSimpleQueryAction extends BaseAction
 				if (selectedColumns == null)
 				{
 					IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
-					/*QueryBizLogic bizLogic = (QueryBizLogic) BizLogicFactory.getInstance()
-							.getBizLogic(edu.wustl.simplequery.global.Constants.SIMPLE_QUERY_INTERFACE_ID);*/
 					QueryBizLogic bizLogic = (QueryBizLogic) factory
 							.getBizLogic(edu.wustl.simplequery.global.Constants.SIMPLE_QUERY_INTERFACE_ID);
 					List colNameValBeans = new ArrayList();
@@ -127,7 +125,8 @@ public class ConfigureSimpleQueryAction extends BaseAction
 				}
 				simpQueryIfaceFrm.setSelectedColumnNames(selectedColumns);
 			}
-			session.setAttribute(edu.wustl.common.util.global.Constants.TABLE_ALIAS_NAME, selectedTables);
+			session.setAttribute(edu.wustl.common.util.global.Constants.TABLE_ALIAS_NAME,
+					selectedTables);
 
 			//Counter required for redefining the query
 			map.put("counter", new String("" + counter));

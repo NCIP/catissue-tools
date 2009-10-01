@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.clinportal.action.annotations.AnnotationConstants;
 import edu.wustl.clinportal.actionForm.EventEntryForm;
 import edu.wustl.clinportal.bizlogic.AnnotationBizLogic;
+import edu.wustl.clinportal.bizlogic.ClinicalStudyEventBizlogic;
 import edu.wustl.clinportal.bizlogic.ClinicalStudyRegistrationBizLogic;
 import edu.wustl.clinportal.bizlogic.EventEntryBizlogic;
 import edu.wustl.clinportal.domain.ClinicalStudyEvent;
@@ -43,6 +45,7 @@ import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.clinportal.util.global.Utility;
 import edu.wustl.clinportal.util.global.Variables;
 import edu.wustl.common.action.BaseAction;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.AbstractBizLogic;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
@@ -67,20 +70,20 @@ public class LoadEventDetailsAction extends BaseAction
 	 * @param response
 	 * @return
 	 * @throws Exception
-	 * @see edu.wustl.common.action.BaseAction#executeAction(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 * @see edu.wustl.common.action.BaseAction#executeAction(
+	 * org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, 
+	 * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	protected ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
-		SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
-				Constants.SESSION_DATA);
 		// Getting required parameters to form XML/insert encountered date 
 
 		String target = null;
 		if (request.getParameter(Constants.OPERATION) != null
 				&& request.getParameter(Constants.OPERATION).equals(Constants.DELETE_XML))
 		{
-			String xmlFileName = getFileName(request);
+			String xmlFileName = request.getParameter("XMLFileName");
 			deleteXMLFilesIfExists(xmlFileName);
 		}
 		else
@@ -117,29 +120,15 @@ public class LoadEventDetailsAction extends BaseAction
 
 			EventEntryForm eventEntryForm = (EventEntryForm) form;
 
-			/*
-			 * Get the ClinicalStudyRegistration object 
-			 */
+			// Get the ClinicalStudyRegistration object 
 			ClinicalStudyRegistrationBizLogic regBizLogic = new ClinicalStudyRegistrationBizLogic();
-			List<ClinicalStudyRegistration> regCollection = (List) regBizLogic
-					.getClinicalStudyRegistration(Long.valueOf(studyId), Long
-							.valueOf(participantId));
-			ClinicalStudyRegistration cstudyReg = null;
-			if (regCollection != null && !regCollection.isEmpty())
-			{
-				cstudyReg = regCollection.get(0);
-			}
-
-			/*
-			 * Get the ClinicalStudyEvent object
-			 */
-			List eventList = (List) regBizLogic.retrieve(ClinicalStudyEvent.class.getName(), "id",
-					Long.valueOf(eventId));
-			ClinicalStudyEvent event = null;
-			if (eventList != null && !eventList.isEmpty())
-			{
-				event = (ClinicalStudyEvent) eventList.get(0);
-			}
+			ClinicalStudyRegistration cstudyReg = regBizLogic.getCSRegistration(Long
+					.valueOf(studyId), Long.valueOf(participantId));
+			
+			// Get the ClinicalStudyEvent object
+			ClinicalStudyEventBizlogic bizlogic = new ClinicalStudyEventBizlogic();
+			ClinicalStudyEvent event = bizlogic.getClinicalStudyEventById(Long.valueOf(eventId));
+			
 			EventEntry eventEntry = null;
 			if (eventEntryForm != null)
 			{
@@ -148,20 +137,15 @@ public class LoadEventDetailsAction extends BaseAction
 				{
 					eventEntryForm.setEncounterDate(edu.wustl.common.util.Utility
 							.parseDateToString(new Date(System.currentTimeMillis()),
-									Constants.DATE_PATTERN_MM_DD_YYYY));
+									Constants.DATE_PATTERN_DD_MM_YYYY));
 				}
 
 				String entryNumber = eventTreeObj.getEventEntryNumber(); //entryArr[2];
 
-				/*
-				 * Check the database whether the eventEntry object exists
-				 */
+				// Check the database whether the eventEntry object exists
 				eventEntry = getEventEntry(Integer.parseInt(entryNumber), eventEntry, cstudyReg,
 						event);
-				/*
-				 * If eventEntry exists update or else insert the eventEntry.
-				 * 
-				 */
+				// If eventEntry exists update or else insert the eventEntry.
 				if (Boolean.valueOf(request.getParameter(Constants.IS_EVENT_DATE_SUBMITTED)))
 				{
 					String encounterDate = "";
@@ -192,7 +176,8 @@ public class LoadEventDetailsAction extends BaseAction
 			StringBuffer formsXML = new StringBuffer();
 			formsXML.append("<?xml version='1.0' encoding='UTF-8'?><rows>");
 
-			if (eventList != null && !eventList.isEmpty())
+			//if (eventList != null && !eventList.isEmpty())
+			if (event != null)
 			{
 				//When clicked node is Event
 				if (eventTreeObj.getObjectName().equals(Constants.CLINICAL_STUDY_EVENT_OBJECT))
@@ -204,7 +189,7 @@ public class LoadEventDetailsAction extends BaseAction
 				{
 					String entryNumber = eventTreeObj.getEventEntryNumber();
 					String nodeId = eventTreeObj.getEventEntryId();//entryArr[3];
-				    StringBuffer studyFormHQL = new StringBuffer();
+				    StringBuffer studyFormHQL = new StringBuffer(25);
                     studyFormHQL.append("from ").append(StudyFormContext.class.getName());
                     studyFormHQL.append(" as studyFrm where studyFrm.clinicalStudyEvent.id=");
                     studyFormHQL.append(event.getId());
@@ -223,6 +208,8 @@ public class LoadEventDetailsAction extends BaseAction
 					Collection<StudyFormContext> studyFormColl = (Collection<StudyFormContext>) Utility
 							.executeQuery(studyFormHQL.toString());
 					commonSerialNo = 0;
+					SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
+							Constants.SESSION_DATA);
 					formsXML = generateFormXMLForEachEntry(formsXML, studyId, participantId,
 							Integer.parseInt(nodeId), studyFormColl, eventEntry, event, cstudyReg
 									.getId(), Integer.parseInt(entryNumber), eventTreeObj,
@@ -395,10 +382,12 @@ public class LoadEventDetailsAction extends BaseAction
 	 * @param formsXML
 	 * @param studyId
 	 * @param participantId
-	 * @param studyEventId
-	 * @param serialNo
-	 * @param entryNodeText
-	 * @param studyFormContext
+	 * @param studyEvent
+	 * @param eventEntry
+	 * @param request
+	 * @param csRegn
+	 * @param eventTreeObj
+	 * @param eventEntryForm
 	 * @throws DAOException
 	 * @throws CacheException 
 	 * @throws SQLException 
@@ -421,7 +410,7 @@ public class LoadEventDetailsAction extends BaseAction
 		request.setAttribute(Constants.INFINITE_ENTRY, studyEvent.getIsInfiniteEntry());
 
 		DataEntryUtil dataEntryUtil = new DataEntryUtil();
-		//List<EventEntry> eventEntryList = dataEntryUtil.getEventEntry(studyEvent, csRegn);
+		
 		if (studyEvent.getIsInfiniteEntry() != null
 				&& studyEvent.getIsInfiniteEntry().booleanValue()
 				&& request.getParameter("addEntry") != null)
@@ -437,8 +426,6 @@ public class LoadEventDetailsAction extends BaseAction
 				List<EventEntry> eventEntryList = dataEntryUtil.getEventEntry(studyEvent, csRegn);
 				dataEntryUtil.createEventEntry(studyEvent, csRegn, eventEntryList.size() + 1,
 						request);
-
-				eventEntryList = dataEntryUtil.getEventEntry(studyEvent, csRegn);
 			}
 			request.setAttribute(Constants.IS_TO_REFRESH_TREE, Constants.TRUE);
 		}
@@ -460,7 +447,14 @@ public class LoadEventDetailsAction extends BaseAction
 		{
 			entryCount = studyEvent.getNoOfEntries();
 		}
+		
+		request.setAttribute("numberOfVisits", String.valueOf(entryCount));
+		//Map studyFormMap = new HashMap();
+		List studyFormMap = new ArrayList();
 
+		String userId = sessionDataBean.getUserId().toString();
+		String userName = sessionDataBean.getUserName().toString();
+		
 		for (; noOfEntries <= entryCount; noOfEntries++)
 		{
 
@@ -475,8 +469,25 @@ public class LoadEventDetailsAction extends BaseAction
      
             Collection<StudyFormContext> studyFormColl = (Collection<StudyFormContext>) Utility
 					.executeQuery(studyFormHQL.toString());
-			if (studyFormColl != null && !studyFormColl.isEmpty())
+			if (studyFormColl != null)
 			{
+				if(studyFormMap.isEmpty())
+				{
+					for (StudyFormContext studyFormContext : studyFormColl)
+					{
+						Map<String, Boolean> privMap = Utility.checkFormPrivileges(studyFormContext
+								.getId().toString(), userId, userName);
+						boolean hideForm = privMap.get(Constants.HIDEFORMS);
+						if (!hideForm)
+						{
+							NameValueBean nameValueBean = new NameValueBean();
+							nameValueBean.setName(studyFormContext.getId());
+							nameValueBean.setValue(studyFormContext.getStudyFormLabel());
+							studyFormMap.add(nameValueBean);
+						}
+					}
+					request.setAttribute("studyFormMap", studyFormMap);
+				}
 				formsXML = generateFormXMLForEachEntry(formsXML, studyId, participantId, nodeId,
 						studyFormColl, eventEntry, studyEvent, csRegn.getId(), noOfEntries,
 						eventTreeObj, eventEntryForm, sessionDataBean);
@@ -498,6 +509,9 @@ public class LoadEventDetailsAction extends BaseAction
 	 * @param studyEvent
 	 * @param regId
 	 * @param eventEntryCount
+	 * @param eventTreeObj
+	 * @param eventEntryForm
+	 * @param sessionDataBean
 	 * @return
 	 * @throws DAOException
 	 * @throws DynamicExtensionsSystemException
@@ -520,6 +534,14 @@ public class LoadEventDetailsAction extends BaseAction
 				AnnotationConstants.RECORD_ENTRY_ENTITY_ID).toString();
 		Date encounterDate = null;
 
+		boolean isCsEventObject = false;
+		if (eventTreeObj.getObjectName() != null
+				&& eventTreeObj.getObjectName().equals(
+						Constants.CLINICAL_STUDY_EVENT_OBJECT))
+		{
+			isCsEventObject = true;
+		}
+		
 		Collection recIdList = new HashSet();
 		AnnotationBizLogic annoBizLogic = new AnnotationBizLogic();
 		for (StudyFormContext studyFormContext : studyFormColl)
@@ -554,7 +576,7 @@ public class LoadEventDetailsAction extends BaseAction
 					if (encounterDate != null)
 					{
 						SimpleDateFormat customFormat = new SimpleDateFormat("MMM-dd-yyyy");
-						dateString = dateString + ":" + customFormat.format(encounterDate);
+						dateString = dateString + customFormat.format(encounterDate);
 					}
 					if (eventEntry.getEntryNumber() != null)
 					{
@@ -575,6 +597,7 @@ public class LoadEventDetailsAction extends BaseAction
 							.toString());
 					if (recEntryColl != null && !recEntryColl.isEmpty())
 					{
+						commonSerialNo = 0;
 						for (Long entryId : recEntryColl)
 						{
 							commonSerialNo++;
@@ -602,7 +625,7 @@ public class LoadEventDetailsAction extends BaseAction
 
 							formsXML = formXml(formsXML, studyFormContext, dynamicRecId,
 									dyRecordurl, frmCount, commonSerialNo, dateString,
-									eventEntryForm);
+									eventEntryForm, isCsEventObject);
 						}
 					}
 				}
@@ -612,7 +635,8 @@ public class LoadEventDetailsAction extends BaseAction
 				}
 				if (!flag && !eventTreeObj.getObjectName().equals(Constants.FORM_ENTRY_OBJECT))
 				{
-					commonSerialNo++;
+					//commonSerialNo++;
+					commonSerialNo = 0;
 					String url = getDynamicRecordURL(studyId, participantId, studyEvent.getId()
 							.toString(), studyFormContext, regId.toString(), frmCount,
 							eventEntryId, recEntryId, dynamicRecId);
@@ -626,7 +650,7 @@ public class LoadEventDetailsAction extends BaseAction
 					}
 
 					formsXML = formXml(formsXML, studyFormContext, dynamicRecId, url, frmCount,
-							commonSerialNo, dateString, eventEntryForm);
+							commonSerialNo, dateString, eventEntryForm, isCsEventObject);
 				}
 			}
 		}
@@ -636,15 +660,12 @@ public class LoadEventDetailsAction extends BaseAction
 
 	/**
 	 * returns event entry object as per given entry number
-	 * @param formsXML
-	 * @param nodeId
 	 * @param noOfEntries
 	 * @param eventEntry
 	 * @param CSRegistration
 	 * @param event
 	 * @return
 	 * @throws BizLogicException 
-	 * @throws DAOException
 	 */
 	private EventEntry getEventEntry(Integer noOfEntries, EventEntry eventEntry,
 			ClinicalStudyRegistration CSRegistration, ClinicalStudyEvent event)
@@ -662,7 +683,7 @@ public class LoadEventDetailsAction extends BaseAction
 	}
 
 	/**
-	 * This method forms xml format required to populate grid using DHTML 
+	 * This method forms XML format required to populate grid using DHTML 
 	 * @param formsXML
 	 * @param studyFormContext
 	 * @param dynamicRecId
@@ -671,11 +692,12 @@ public class LoadEventDetailsAction extends BaseAction
 	 * @param serialNo
 	 * @param dateString
 	 * @param eventEntryForm
+	 * @param isCsEventObj
 	 * @return
 	 */
 	private StringBuffer formXml(StringBuffer formsXML, StudyFormContext studyFormContext,
 			String dynamicRecId, String url, int frmCount, int serialNo, String dateString,
-			EventEntryForm eventEntryForm)
+			EventEntryForm eventEntryForm, boolean isCsEventObj)
 	{
 		String operation = "";
 		if ("0".equals(dynamicRecId))
@@ -704,14 +726,21 @@ public class LoadEventDetailsAction extends BaseAction
 		}
 
 		//String entryText = "Visit-";//+ frmCount;
-		String entryText = "Visit-" + frmCount + dateString;
 		formsXML.append("<row><cell>");
-		formsXML.append(serialNo);
-		formsXML.append("</cell><cell>");
-		formsXML.append(entryText);
-
-		formsXML.append("</cell><cell>");
+		if(isCsEventObj)
+		{
+			//String entryText = "Visit-" + frmCount + dateString;
+			formsXML.append(frmCount);
+			formsXML.append("</cell><cell>");
+			formsXML.append(dateString);
+			formsXML.append("</cell><cell>");
+		}
+		
 		formsXML.append(studyFormContext.getStudyFormLabel());
+		if(studyFormContext.getCanHaveMultipleRecords() && serialNo != 0)
+		{
+			formsXML.append(" (Record-" + serialNo + ")");
+		}
 		formsXML.append("</cell><cell>" + operation + "^" + url + "^_self</cell></row>");
 
 		return formsXML;
@@ -876,11 +905,11 @@ public class LoadEventDetailsAction extends BaseAction
 	private String getFileName(HttpServletRequest request)
 	{
 		String sessionId = request.getSession().getId();
-		return "gridData" + sessionId + ".xml";
+		return "gridData" + sessionId + Math.random() + ".xml";
 	}
 
 	/**
-	 * Deleting existing xml file that starts with 'Test'
+	 * Deleting existing XML file that starts with 'Test'
 	 * @param baseFolder
 	 */
 	public void deleteXMLFilesIfExists(String filename)

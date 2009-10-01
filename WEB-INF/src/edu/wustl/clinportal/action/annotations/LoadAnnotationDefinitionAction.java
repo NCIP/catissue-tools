@@ -86,11 +86,7 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 	{
 
 		ActionForward actionfwd = null;
-		/*
-		 * 
-		 */
-		String comingFrom = (String) request.getSession()
-				.getAttribute(Constants.FORWARD_CONTROLLER);
+		
 		AnnotationForm annotationForm = (AnnotationForm) form;
 		annotationForm.setSelectedStaticEntityId(null);
 
@@ -118,6 +114,8 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 			processResponseFromDynamicExtensions(request);
 			loadAnnotations(annotationForm);
 			request.setAttribute(Constants.OPERATION, Constants.LOAD_INTEGRATION_PAGE);
+			String comingFrom = (String) request.getSession().getAttribute(
+					Constants.FORWARD_CONTROLLER);
 			if (comingFrom != null && !comingFrom.equals(""))
 			{
 				actionfwd = mapping.findForward(comingFrom);
@@ -204,7 +202,8 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 					AnnotationConstants.RECORD_ENTRY_ENTITY_ID).toString();
 			//getStaticEntityIdForLinking(request);
 
-			String[] staticRecordId = getStaticRecordIdForLinking(request);
+			//String[] staticRecordId = 
+			getStaticRecordIdForLinking(request);
 
 			logger.info("Need to link static entity [" + staticEntityId + "] to dyn ent ["
 					+ dynExtContainerId + "]");
@@ -215,15 +214,13 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 						Long.decode(dynExtContainerId));
 			}
 
-			linkEntities(request, staticEntityId, dynExtContainerId, staticRecordId);
+			linkEntities(staticEntityId, dynExtContainerId);
 		}
 	}
 
 	/**
-	 * @param request 
 	 * @param staticEntityId
 	 * @param dynExtContainerId
-	 * @param staticRecordIds
 	 * @throws UserNotAuthorizedException 
 	 * @throws BizLogicException 
 	 * @throws CacheException 
@@ -231,18 +228,18 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 	 * @throws DynamicExtensionsSystemException 
 	 * @throws DynamicExtensionsApplicationException 
 	 */
-	private void linkEntities(HttpServletRequest request, String staticEntityId,
-			String dynExtContainerId, String[] staticRecordIds) throws BizLogicException,
-			UserNotAuthorizedException, CacheException, DAOException,
+	private void linkEntities(String staticEntityId, String dynExtContainerId)
+			throws BizLogicException, UserNotAuthorizedException, CacheException, DAOException,
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		DEIntegration integrate = new DEIntegration();
 		if ((staticEntityId != null) && (dynExtContainerId != null))
 		{
+			DEIntegration integrate = new DEIntegration();
 			boolean iscategory = integrate.isCategory(Long.valueOf(dynExtContainerId));
 			integrate.addAssociation(Long.valueOf(staticEntityId), Long.valueOf(dynExtContainerId),
 					false, iscategory);
-			//AnnotationUtil.addAssociation(new Long(staticEntityId), new Long(dynExtContainerId), false);
+			//AnnotationUtil.addAssociation(new Long(staticEntityId), new Long(dynExtContainerId),
+			//		false);
 
 		}
 		else if (dynExtContainerId != null)
@@ -257,15 +254,13 @@ public class LoadAnnotationDefinitionAction extends SecureAction
 				//session = DBUtil.currentSession();
 				//session = dao.getCleanSession();
 				dao.openSession(null);
-				ContainerInterface dynamicContainer = null;
-				EntityInterface staticEntity = null;
 				/*staticEntity = (EntityInterface) session.load(Entity.class, Long
 						.valueOf(staticEntityId));*/
-				staticEntity = (EntityInterface) dao.retrieveById(Entity.class.getName(), Long
+				EntityInterface staticEntity = (EntityInterface) dao.retrieveById(Entity.class.getName(), Long
 						.valueOf(staticEntityId));
 				/*dynamicContainer = (Container) session.load(Container.class, Long
 						.valueOf(dynExtContainerId));*/
-				dynamicContainer = (Container) dao.retrieveById(Container.class.getName(), Long
+				ContainerInterface dynamicContainer = (Container) dao.retrieveById(Container.class.getName(), Long
 						.valueOf(dynExtContainerId));
 				AssociationInterface association = getAssociationForEntity(staticEntity,
 						(EntityInterface) dynamicContainer.getAbstractEntity());

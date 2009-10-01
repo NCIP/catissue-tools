@@ -346,6 +346,9 @@ This method used only to select the node in a given tree
 		remoteObj1.addEventListener("fault",faultHandler);
 		specimenTree.dataProvider = null;
 		spDetailsLabel.text = title;
+		spCombo = null;
+		var url : URLRequest = new URLRequest("javascript: clearFrame()");
+		    	navigateToURL(url,"_self"); 
 	}
 	
 	/*
@@ -393,7 +396,7 @@ This method used only to select the node in a given tree
 		    }
 		    // Jignesh : this case will ocur when user edit or register particpant so refresh dataprovider
 		    if(pCollection.length == tempCollection.length){
-		    	isRefresTree= false;
+		    //	isRefresTree= false;
 		    }
 		    pCollection=null;
 		    pCollection = tempCollection;
@@ -578,6 +581,7 @@ This method used only to select the node in a given tree
     */
     public function editParticipant(selectedParticipantId:String,treeNodeId:String):void 
     {
+    	newRegisteration=true;
     	// store participant id which is occurred by registering  or editing particpant selected by user
     	if(selectedParticipantId!=null && selectedParticipantId !="")
     	{

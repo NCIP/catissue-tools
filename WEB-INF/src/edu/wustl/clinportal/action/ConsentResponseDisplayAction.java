@@ -43,9 +43,12 @@ import edu.wustl.common.bizlogic.IBizLogic;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.factory.AbstractFactoryConfig;
 import edu.wustl.common.factory.IFactory;
+import edu.wustl.common.util.logger.Logger;
 
 public class ConsentResponseDisplayAction extends BaseAction
 {
+
+	private transient Logger logger = Logger.getCommonLogger(ConsentResponseDisplayAction.class);
 
 	//This will keep track of no of consents for a particular participant
 	int consentCounter;
@@ -188,8 +191,6 @@ public class ConsentResponseDisplayAction extends BaseAction
 	private ClinicalStudyRegistration getcsrObj(String csr_id) throws BizLogicException
 	{
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
-		/*ClinicalStudyRegistrationBizLogic csrBizLogic = (ClinicalStudyRegistrationBizLogic) BizLogicFactory
-				.getInstance().getBizLogic(Constants.CLINICALSTUDY_FORM_ID);*/
 		ClinicalStudyRegistrationBizLogic csrBizLogic = (ClinicalStudyRegistrationBizLogic) factory
 				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);
 		String colName = "id";
@@ -261,8 +262,7 @@ public class ConsentResponseDisplayAction extends BaseAction
 	public Collection getConsentList(String csID) throws NumberFormatException, BizLogicException
 	{
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
-		/*ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) BizLogicFactory.getInstance()
-				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);*/
+
 		ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) factory
 				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);
 		List csList = csBizLogic.retrieve(ClinicalStudy.class.getName(), Constants.ID, Long
@@ -284,7 +284,7 @@ public class ConsentResponseDisplayAction extends BaseAction
 	 */
 	private List getWitnessNameList(String csId) throws NumberFormatException, BizLogicException
 	{
-		System.out.println("ConsentResponseDisplayAction.getWitnessNameList()");
+		logger.info("ConsentResponseDisplayAction.getWitnessNameList()");
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
 		IBizLogic bizLogic = factory.getBizLogic(Constants.DEFAULT_BIZ_LOGIC);
 
@@ -316,5 +316,4 @@ public class ConsentResponseDisplayAction extends BaseAction
 		csentWitList.add(new NameValueBean(piFullName, pripalInvestor.getId()));
 		return csentWitList;
 	}
-
 }

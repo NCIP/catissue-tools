@@ -97,6 +97,11 @@ public class ClinicalStudyAction extends SecureAction
 
 		String isToDelete = request.getParameter(Constants.IS_TO_DELETE);
 		deleteValues(isToDelete, clinicalStudyForm, request);
+		if (isToDelete != null && isToDelete.trim().length() > 0)
+		{
+			request.setAttribute("delopr", true);
+
+		}
 
 		//check for recordEntrycollection of the studFormContext.
 		if (Long.valueOf(clinicalStudyForm.getId()) != null
@@ -138,7 +143,7 @@ public class ClinicalStudyAction extends SecureAction
 				getCatissueCPEvent(request, cpId);
 			}
 		}
-		if (clinicalStudyForm.getIsRelatedtoCP() && clinicalStudyForm.getColprotocolId() != -1)
+		if (clinicalStudyForm.getColprotocolId() != -1)
 		{
 			Long cpId = Long.valueOf(clinicalStudyForm.getColprotocolId());
 			getCatissueCPEvent(request, cpId);
@@ -418,7 +423,6 @@ public class ClinicalStudyAction extends SecureAction
 		 */
 	private void getCatissueCP(HttpServletRequest request) throws BizLogicException, DAOException
 	{
-		HttpSession session = request.getSession();
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
 		ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) factory
 				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);
@@ -439,7 +443,6 @@ public class ClinicalStudyAction extends SecureAction
 	private void getCatissueCPEvent(HttpServletRequest request, Long cpId) throws DAOException,
 			BizLogicException
 	{
-		HttpSession session = request.getSession();
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
 		ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) factory
 				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);

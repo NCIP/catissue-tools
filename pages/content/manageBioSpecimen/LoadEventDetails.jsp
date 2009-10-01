@@ -26,6 +26,7 @@
 <script
 	src="<%=request.getContextPath()%>/dhtml_comp/js/dhtmlXCommon.js"></script>
 <script src="<%=request.getContextPath()%>/dhtml_comp/js/dhtmlXGrid.js"></script>
+<script src="<%=request.getContextPath()%>/jss/breadcrumb.js"></script>
 <script
 	src="<%=request.getContextPath()%>/dhtml_comp/js/dhtmlXGridCell.js"></script>
 <script
@@ -88,6 +89,7 @@
 			encounterDate = form.getEncounterDate();			
 	}
 
+	String numberOfVisits = (String)request.getAttribute("numberOfVisits");
 %>
 <html>
 <head>
@@ -110,17 +112,58 @@
 <script language="JavaScript" src="<%=request.getContextPath()%>/dhtml_comp/jss/dhtmlXMenuBar.js"></script>
 
 <script>
+
+	function verifyVisitSelection()
+	{
+		var visit = document.forms[0].visitNumber.value;
+		if(visit == -1)
+		{
+			document.forms[0].visitNumber.value = "0";
+		}
+		return;
+	}
+
 			function initializeAnnotationsForm()
 			{
-			
+
+			<%
+			if (objectName != null && (objectName.equals("EventEntry")
+					|| objectName.equals(Constants.FORM_CONTEXT_OBJECT)
+					|| objectName.equals(Constants.FORM_ENTRY_OBJECT))
+				)
+			{
+			%>	
+
 			CSEntitiesGrid = new dhtmlXGridObject('gridForCSEntities');
 			CSEntitiesGrid.setImagePath("dhtml_comp/imgs/");
 			CSEntitiesGrid.enableAutoHeigth(true);
-			CSEntitiesGrid.setHeader("Serial No,Visit #,Study Form Label,Action");
-			CSEntitiesGrid.setInitWidthsP("15,30,40,15");
-			CSEntitiesGrid.setColAlign("left,left,left,left");
+			CSEntitiesGrid.setHeader("Study Form Label,<div style='width:100%; text-align:center;'>Action</div>");
+			CSEntitiesGrid.setInitWidthsP("*,30");
+			CSEntitiesGrid.setColAlign("left,center");
 			CSEntitiesGrid.setSkin("light");
-			CSEntitiesGrid.setColTypes("ro,link,ro,link");
+			CSEntitiesGrid.setColTypes("ro,link");
+			CSEntitiesGrid.enableAlterCss("even","uneven");
+			CSEntitiesGrid.enableRowsHover(true,'grid_hover');
+			CSEntitiesGrid.setColSorting("str,str");
+			CSEntitiesGrid.setOnLoadingEnd(deleteXml);			
+			CSEntitiesGrid.init();
+			
+			CSEntitiesGrid.loadXML("<%=XMLFileName%>");//,function(){CSEntitiesGrid.selectRow(0);  });
+
+			<%
+			}
+			else
+			{
+			%>
+				
+			CSEntitiesGrid = new dhtmlXGridObject('gridForCSEntities');
+			CSEntitiesGrid.setImagePath("dhtml_comp/imgs/");
+			CSEntitiesGrid.enableAutoHeigth(true);
+			CSEntitiesGrid.setHeader("<div style='width:100%; text-align:center;'>Visit #</div>,<div style='width:100%; text-align:center;'>Encountered Date</div>,Study Form Label,<div style='width:100%; text-align:center;'>Action</div>");
+			CSEntitiesGrid.setInitWidthsP("15,25,*,15");
+			CSEntitiesGrid.setColAlign("center,center,left,center");
+			CSEntitiesGrid.setSkin("light");
+			CSEntitiesGrid.setColTypes("ro,ro,ro,link");
 			CSEntitiesGrid.enableAlterCss("even","uneven");
 			CSEntitiesGrid.enableRowsHover(true,'grid_hover');
 			CSEntitiesGrid.setColSorting("str,str,str,str");
@@ -128,7 +171,9 @@
 			CSEntitiesGrid.init();
 		
 			CSEntitiesGrid.loadXML("<%=XMLFileName%>");//,function(){CSEntitiesGrid.selectRow(0);  });
-				
+		<%
+		}
+		%>				
 			<%
 			    if(objectName!= null && objectName.equals(Constants.FORM_ENTRY_OBJECT))
 			    {
@@ -148,7 +193,7 @@ function deleteXml(rowId)
 	var request = newXMLHTTPReq();	
 	request.open("POST","LoadEventDetails.do",true);
 	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	request.send("&operation=deleteXML");
+	request.send("&operation=deleteXML&XMLFileName=<%=XMLFileName%>");
 }
 
 
@@ -170,58 +215,69 @@ function deleteXml(rowId)
 				else
 				{
 			
-				var str = "<%=key%>";
-				var id =str;
-				var i = str.indexOf('_');
-				var obj1 = str.substring(0,i);
-				var id1 = str.substring(i+1);
-				var arr = id1.split('_');
-				var eventId = arr[0];
-				//alert('event: '+eventId);
-				var formId = arr[1];
-				var formContextId = arr[2];
-				//recordId = arr[3];
-			
-				var recordId = null; 
-				var recordIndex = id1.lastIndexOf('_')
+					var str = "<%=key%>";
+					var id =str;
+					var i = str.indexOf('_');
+					var obj1 = str.substring(0,i);
+					var id1 = str.substring(i+1);
+					var arr = id1.split('_');
+					var eventId = arr[0];
+					//alert('event: '+eventId);
+					var formId = arr[1];
+					var formContextId = arr[2];
+					//recordId = arr[3];
+				
+					var recordId = null; 
+					var recordIndex = id1.lastIndexOf('_')
 
-				if (recordIndex !=  -1)
-				{
-					recordId = id1.substring(recordIndex+1);					
-				}
-				else
-				{
-					formId = id1;
-					//alert("Object Name: "+obj1+" -:- EventId: "+formId);
-				}
-
-				 var btn = document.getElementById("addBtn");
-				 var str= btn.value;
-				 
-				 if(str == "Add Records")
-				{
-					 var action="";
-					 recordId="0";
-					 var urlString = "LoadDynamicExtentionsDataEntryPage.do?formId="+formId+"&<%=Constants.CP_SEARCH_PARTICIPANT_ID%>="+"<%=participantId%>"+"&<%=Constants.CP_SEARCH_CP_ID%>="+"<%=studyId%>"+"&"+"<%=Constants.FORWARD_CONTROLLER%>"+"=CSBasedSearch&formContextId="+formContextId+"&treeViewKey="+"<%=key%>"+"&<%=Constants.PROTOCOL_EVENT_ID%>=" + eventId+"&<%=Utility.attachDummyParam()%>";
-			
-			
-					if (recordId != "0")
+					if (recordIndex !=  -1)
 					{
-						urlString = urlString + "&recordId="+recordId;
+						recordId = id1.substring(recordIndex+1);					
 					}
-					//window.parent.frames[2].location = urlString;
-					document.forms[0].action = urlString;
-				    document.forms[0].submit();
+					else
+					{
+						formId = id1;
+						//alert("Object Name: "+obj1+" -:- EventId: "+formId);
+					}
 
-				}
-				else if(str == "Add Visit")
-				{
-				var action="LoadEventDetails.do?addEntry=true&"+"<%=Constants.PROTOCOL_EVENT_ID%>"+"="+"<%=eventId%>"+"&"+"<%=Constants.CP_SEARCH_CP_ID%>" + "=" + "<%=studyId%>" + "&" + "<%= Constants.CP_SEARCH_PARTICIPANT_ID%>" + "=" + "<%=participantId%>";
-				document.forms[0].action = action;
-				document.forms[0].submit();
-				}
-				}
+					 var btn = document.getElementById("addBtn");
+					 var str= btn.value;
+					 
+					 if(str == "Add Records")
+					 {
+						 var action="";
+						 recordId="0";
+						 var urlString = "LoadDynamicExtentionsDataEntryPage.do?formId="+formId+"&<%=Constants.CP_SEARCH_PARTICIPANT_ID%>="+"<%=participantId%>"+"&<%=Constants.CP_SEARCH_CP_ID%>="+"<%=studyId%>"+"&"+"<%=Constants.FORWARD_CONTROLLER%>"+"=CSBasedSearch&formContextId="+formContextId+"&treeViewKey="+"<%=key%>"+"&<%=Constants.PROTOCOL_EVENT_ID%>=" + eventId+"&<%=Utility.attachDummyParam()%>";
+				
+				
+						if (recordId != "0")
+						{
+							urlString = urlString + "&recordId="+recordId;
+						}
+						//window.parent.frames[2].location = urlString;
+						document.forms[0].action = urlString;
+						document.forms[0].submit();
 
+					}
+					else if(str == "GO")
+					{
+
+						var studyFormId = document.forms[0].studyForm.value;
+						if(studyFormId == "-1")
+						{
+							return;
+						}
+						else
+						{
+
+							//var action="LoadEventDetails.do?addEntry=true&"+"<%=Constants.PROTOCOL_EVENT_ID%>"+"="+"<%=eventId%>"+"&"+"<%=Constants.CP_SEARCH_CP_ID%>" + "=" + "<%=studyId%>" + "&" + "<%= Constants.CP_SEARCH_PARTICIPANT_ID%>" + "=" + "<%=participantId%>";
+							var action="LoadDynamicExtentionsDataEntryPage.do?formId="+formId+"&<%=Constants.CP_SEARCH_PARTICIPANT_ID%>="+"<%=participantId%>"+"&<%=Constants.CP_SEARCH_CP_ID%>="+"<%=studyId%>"+"&"+"<%=Constants.FORWARD_CONTROLLER%>"+"=CSBasedSearch&formContextId="+formContextId+"&treeViewKey="+"<%=key%>"+"&<%=Constants.PROTOCOL_EVENT_ID%>=" + eventId+"&<%=Utility.attachDummyParam()%>";
+
+							document.forms[0].action = action;
+							document.forms[0].submit();
+						}
+					}
+				}
 			}
 
 			function disableEvent()
@@ -273,6 +329,9 @@ function deleteXml(rowId)
 			}
 						
 		</script>
+<script>
+	breadCrumbrequest('<%=key%>',<%=participantId%>,<%=studyId%>,null,<%=eventId%>,null);
+</script>
 </head>
 
 <html:form styleId='eventEntryForm' action='EventEntryDateSubmit.do'>
@@ -310,9 +369,7 @@ function deleteXml(rowId)
 					</label>
 					</td>
 				
-					<!--<td class="formField"><html:text styleClass="formFieldSized15"
-						styleId="encounterDate" property="encounterDate" /> <!-- input type="text" class="formFieldSized15" name="date" value="MM-DD-YYYY"/ 
-					&nbsp; </td>-->
+				
 
 					<td class="formFieldNoBordersSimpleGrayBackground">
 						<%
@@ -329,6 +386,7 @@ function deleteXml(rowId)
 															  year= "<%=birthYear %>"
 															  day= "<%= birthDay %>" 
 															  value="<%=encounterDate %>"
+															  pattern="dd-MM-yyyy"
 															  styleClass="formDateSized10"
 																	 />		
 						<% 
@@ -339,6 +397,7 @@ function deleteXml(rowId)
 									<ncombo:DateTimeComponent name="encounterDate"
 															  id="encounterDate"
 															  formName="eventEntryForm"	
+															  pattern="dd-MM-yyyy"
 															  styleClass="formDateSized10" 
 																	 />		
 						<%
@@ -389,20 +448,59 @@ function deleteXml(rowId)
 					</table>
 					</td>
 				</tr>
+				<% 
+				if(!"disabled".equals(flag)) {
+					if(objectName!= null && objectName.equals(Constants.FORM_ENTRY_OBJECT)) {
+					
+				%>
 				<tr align="center">
-					<table align="center">
+					<table align="center" border='0'>
 						<tr>
 							<br>
 							<td align="center"><input type="button" name="addEntry" id="addBtn"
-								value="Add Visit" class="actionButton" onclick="onClickSubmit()"
-								<%=flag%> /></td>
-							<!-- td align="center"><input type="button" name="disable"
-								value="Disable Event" class="actionButton"
-								onclick="disableEvent()" disabled /--><!-- /td-->
+								value="Add Records" class="actionButton" onclick="onClickSubmit()"/>
+							</td>
 						</tr>
 					</table>
 				</tr>
+				<%
+					}
+					else
+					{
+						
+				%>
+				<tr>
+					<td > &nbsp;
+					</td>
+				</tr>
+				
+				
+				<tr align="center">
+					<td>
+						<%@ include file="/pages/content/manageBioSpecimen/AddVisit.jsp" %>
+					</td>
+				</tr>
 
+				<%
+					}
+				}
+				else if(objectName!= null && objectName.equals(Constants.CLINICAL_STUDY_EVENT_OBJECT))
+				{
+				%>
+					<tr>
+						<td > &nbsp;
+						</td>
+					</tr>
+					
+					
+					<tr align="center">
+						<td>
+							<%@ include file="/pages/content/manageBioSpecimen/AddVisit.jsp" %>
+						</td>
+					</tr>
+				<%
+				}
+				%>
 			</table>
 			</td>
 		</tr>
@@ -431,10 +529,9 @@ function deleteXml(rowId)
 <% if(isComingFromDE||isDateSubmitted||isToRefreshTree) {%>
 
 		top.frames["cpAndParticipantView"].editParticipant();
-//alert('e1');	
-refreshTree('<%=Constants.CP_AND_PARTICIPANT_VIEW%>','<%=Constants.CP_TREE_VIEW%>','<%=Constants.CP_SEARCH_CP_ID%>','<%=Constants.CP_SEARCH_PARTICIPANT_ID%>','<%=key%>');	
+		refreshTree('<%=Constants.CP_AND_PARTICIPANT_VIEW%>','<%=Constants.CP_TREE_VIEW%>','<%=Constants.CP_SEARCH_CP_ID%>','<%=Constants.CP_SEARCH_PARTICIPANT_ID%>','<%=key%>');	
 <%}else {%> 
-//	alert('e2');
+
 		selectTreeNodeOnly('<%=key%>');
 <%}%>
 		</script>

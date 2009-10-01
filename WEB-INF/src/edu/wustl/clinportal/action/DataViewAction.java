@@ -227,12 +227,15 @@ public class DataViewAction extends BaseAction
 			Logger.out.debug("selected node name in object view:" + name + "object");
 
 			// Check whether user has use permission to update this object  or not
-			edu.wustl.clinportal.security.SecurityManager securityManager = (edu.wustl.clinportal.security.SecurityManager)SecurityManagerFactory.getSecurityManager();
-			
+			edu.wustl.clinportal.security.SecurityManager securityManager = 
+				(edu.wustl.clinportal.security.SecurityManager) SecurityManagerFactory
+					.getSecurityManager();
+
 			/*if (!SecurityManager.getInstance(this.getClass()).isAuthorized(
 					getUserLoginName(request), Constants.PACKAGE_DOMAIN + "." + name,
 					Permissions.UPDATE))*/
-			if(securityManager.isAuthorized(getUserLoginName(request), Constants.PACKAGE_DOMAIN + "." + name, Permissions.UPDATE))
+			if (securityManager.isAuthorized(getUserLoginName(request), Constants.PACKAGE_DOMAIN
+					+ "." + name, Permissions.UPDATE))
 			{
 				ActionErrors errors = new ActionErrors();
 				ActionError error = new ActionError("access.edit.object.denied",
@@ -269,7 +272,7 @@ public class DataViewAction extends BaseAction
 	 * 
 	 * @param list
 	 */
-	private void updateInnerList(List list)
+	/*private void updateInnerList(List list)
 	{
 		for (int i = 0; i < list.size(); i++)
 		{
@@ -284,7 +287,7 @@ public class DataViewAction extends BaseAction
 				}
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * 
@@ -331,11 +334,9 @@ public class DataViewAction extends BaseAction
 	 * used as MarkUp data For Date 1-1-9999 is used as markUp data Also refer
 	 * bug 3576
 	 * 
-	 * @param data -
-	 *            String
+	 * @param data - String
 	 * @return - boolean
 	 */
-
 	private boolean isMarkupData(String data)
 	{
 		boolean returnVal = false;

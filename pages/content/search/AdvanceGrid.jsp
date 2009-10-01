@@ -215,9 +215,31 @@ function setEditableChkbox(checkAllPages)
 	mygrid.setHeader(columns);
 	//mygrid.setEditable("FALSE");
 	mygrid.enableAutoHeigth(false);
-	mygrid.setInitWidths(colWidth);
+	//mygrid.setInitWidths(colWidth);
 	mygrid.setColTypes(colDataTypes);
 	mygrid.enableMultiselect(true);
+
+	if(navigator.userAgent.toString().toLowerCase().indexOf("firefox")!= -1)
+    {
+       <% if(columnList.size()<=10) 
+		  { %>
+			var colWidthP = "<%=edu.wustl.query.util.global.Utility.getColumnWidthP(columnList)%>";
+			mygrid.setInitWidthsP(colWidthP);
+			mygrid.entBox.style.width="100%";
+		  <%}
+		  else
+		  { %>
+			mygrid.setInitWidths(colWidth);
+			//mygrid.entBox.style.width=gridWidth;
+        <%}%>
+    }
+  else
+  {
+	  
+     mygrid.setInitWidths(colWidth);
+     //mygrid.entBox.style.width=gridWidth;
+  }
+
 	mygrid.enableRowsHover(true,'grid_hover');
 	mygrid.enableAlterCss("even","uneven");
 	mygrid.setSkin("light");

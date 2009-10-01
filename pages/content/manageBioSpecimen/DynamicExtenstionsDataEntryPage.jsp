@@ -8,6 +8,10 @@ String participantId = session.getAttribute(AnnotationConstants.SELECTED_STATIC_
 String protocol = (String)session.getAttribute(Constants.CP_SEARCH_CP_ID);
 String 	treeViewKey = (String)session.getAttribute(AnnotationConstants.TREE_VIEW_KEY);
 
+String strRefreshTree = (String)request.getAttribute(Constants.IS_TO_REFRESH_TREE);
+boolean isToRefreshTree = Boolean.valueOf(strRefreshTree).booleanValue();
+request.removeAttribute(Constants.IS_TO_REFRESH_TREE);
+
 String dynExtRecordId = request.getParameter("recordId");
 String[] keyArray = treeViewKey.split("_");
 
@@ -41,7 +45,7 @@ if (dynEntContainerId != null)
 	treeViewUrl = treeViewUrl + "&nodeId=" + treeViewKey; 
 }
 String dynamicExtensionsDataEntryURL =(String) request.getAttribute(AnnotationConstants.DYNAMIC_EXTN_DATA_ENTRY_URL_ATTRIB);
-
+dynamicExtensionsDataEntryURL = dynamicExtensionsDataEntryURL +"&application=clinportal";
 %>
 <html>
 <table align="center">
@@ -66,11 +70,18 @@ String dynamicExtensionsDataEntryURL =(String) request.getAttribute(AnnotationCo
 </script>
 </head>
 <script src="jss/javaScript.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/jss/breadcrumb.js"></script>
+<script src="<%=request.getContextPath()%>/jss/ajax.js" type="text/javascript"></script>
 <script>
 	//window.parent.frames[1].location = "<%=treeViewUrl%>";
 //refreshTree('<%=Constants.CP_AND_PARTICIPANT_VIEW%>','<%=Constants.CP_TREE_VIEW%>','<%=Constants.CP_SEARCH_CP_ID%>','<%=Constants.CP_SEARCH_PARTICIPANT_ID%>','<%=treeViewKey%>');
-selectTreeNodeOnly('<%=treeViewKey%>');
+
+	breadCrumbrequest('<%=treeViewKey%>',<%=participantId%>,<%=protocol%>,null,<%=treeViewKey.split("_")[1]%>,null);
+	selectTreeNodeOnly('<%=treeViewKey%>');
 	document.location.href = "<%=dynamicExtensionsDataEntryURL%>";
+	<% if(isToRefreshTree) {%>
+		refreshTree('<%=Constants.CP_AND_PARTICIPANT_VIEW%>','<%=Constants.CP_TREE_VIEW%>','<%=Constants.CP_SEARCH_CP_ID%>','<%=Constants.CP_SEARCH_PARTICIPANT_ID%>','<%=treeViewKey%>');	
+	<% } %>
 </script>
 
 </html>

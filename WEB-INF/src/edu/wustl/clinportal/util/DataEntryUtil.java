@@ -8,6 +8,7 @@
 
 package edu.wustl.clinportal.util;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,10 +16,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.ehcache.CacheException;
+
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 
-import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.clinportal.bizlogic.AnnotationBizLogic;
@@ -30,17 +32,18 @@ import edu.wustl.clinportal.domain.ClinicalStudyRegistration;
 import edu.wustl.clinportal.domain.EventEntry;
 import edu.wustl.clinportal.domain.RecordEntry;
 import edu.wustl.clinportal.domain.StudyFormContext;
+import edu.wustl.clinportal.util.global.Utility;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.AbstractBizLogic;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
-import edu.wustl.dao.DAO;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Constants;
-import edu.wustl.security.exception.UserNotAuthorizedException;
+import edu.wustl.dao.DAO;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.security.exception.UserNotAuthorizedException;
 
 /**
  * @author falguni_sachde
@@ -118,15 +121,12 @@ public class DataEntryUtil
 			UserNotAuthorizedException, DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
 	{
-
 		SessionDataBean sessionBean = (SessionDataBean) request.getSession().getAttribute(
 				Constants.SESSION_DATA);
 
 		EventEntry eventEntry = new EventEntry();
 
 		AbstractBizLogic evntEntrybLogic = new EventEntryBizlogic();
-		RecordEntryBizLogic recEntryBLogic = new RecordEntryBizLogic();
-		AnnotationBizLogic annoBizLogic = new AnnotationBizLogic();
 		String eventEntryID = eventTreeObject.getEventEntryId();
 		String recordEntryId = eventTreeObject.getRecEntryId();
 
@@ -143,7 +143,7 @@ public class DataEntryUtil
 		recEntry.setStudyFormContext(frmCntxt);
 
 		// If EventEntry and RecordEntry doesn't exists 
-		if ((eventEntryID.equals("0") || eventEntryID.contains("-")) && recordEntryId.equals("0"))
+		if (("0".equals(eventEntryID) || eventEntryID.contains("-")) && "0".equals(recordEntryId))
 		{
 			Collection<RecordEntry> recEntryColn = new HashSet<RecordEntry>();
 			recEntryColn.add(recEntry);
@@ -152,8 +152,8 @@ public class DataEntryUtil
 					edu.wustl.clinportal.util.global.Constants.HIBERNATE_DAO);
 		}
 		//If EventEntry exists and RecordEntry doesn't exists 
-		else if ((!eventEntryID.equals("0") || !eventEntryID.contains("-"))
-				&& recordEntryId.equals("0"))
+		else if ((!"0".equals(eventEntryID) || !eventEntryID.contains("-"))
+				&& "0".equals(recordEntryId))
 		{
 			EventEntry entry = null;
 			eventEntry.setId(Long.valueOf(eventTreeObject.getEventEntryId()));
@@ -165,7 +165,9 @@ public class DataEntryUtil
 				entry = (EventEntry) objList.get(0);
 			}
 			recEntry.setEventEntry(entry);
-			recEntryBLogic.insert(recEntry, sessionBean, edu.wustl.clinportal.util.global.Constants.HIBERNATE_DAO);
+			RecordEntryBizLogic recEntryBLogic = new RecordEntryBizLogic();
+			recEntryBLogic.insert(recEntry, sessionBean,
+					edu.wustl.clinportal.util.global.Constants.HIBERNATE_DAO);
 		}
 		//both EventEntry and RecordEntry exists 
 		else
@@ -178,6 +180,7 @@ public class DataEntryUtil
 		eventTreeObject.setRecEntryId(String.valueOf(recEntry.getId()));
 		if (recordEntryId != null && recordEntryId.equals("0"))
 		{
+			AnnotationBizLogic annoBizLogic = new AnnotationBizLogic();
 			annoBizLogic.associateRecords(Long.valueOf(eventTreeObject.getContainerId()), recEntry
 					.getId(), Long.valueOf(dynExtRecordId));
 		}
@@ -220,7 +223,6 @@ public class DataEntryUtil
 		Object[] whereColumnValues = {event.getId(), clStudyRegtn.getId()};
 
 		DefaultBizLogic bizLogic = new DefaultBizLogic();
-
 		List<EventEntry> evntEntryColn = bizLogic.retrieve(EventEntry.class.getName(),
 				whereColumnNames, whereColCondns, whereColumnValues, Constants.AND_JOIN_CONDITION);
 
@@ -249,7 +251,6 @@ public class DataEntryUtil
 		Object[] whereColumnValues = {event.getId(), clStudyRegn.getId(), entryNum};
 
 		DefaultBizLogic bizLogic = new DefaultBizLogic();
-
 		List<EventEntry> evntEntryColn = bizLogic.retrieve(EventEntry.class.getName(),
 				whereColumnNames, whereColConds, whereColumnValues, Constants.AND_JOIN_CONDITION);
 		return evntEntryColn;
@@ -316,12 +317,12 @@ public class DataEntryUtil
 	 * @return
 	 * @throws BizLogicException
 	 */
-	public List<RecordEntry> getRecordEntry(Long eventEntryId, Long frmCntxtId) throws BizLogicException
+	public List<RecordEntry> getRecordEntry(Long eventEntryId, Long frmCntxtId)
+			throws BizLogicException
 	{
 		String[] whereColumnNames = {"eventEntry.id", "studyFormContext.id"};
 		String[] whrColConds = {"=", "="};
 		Object[] whereColumnValues = {eventEntryId, frmCntxtId};
-
 		DefaultBizLogic bizLogic = new DefaultBizLogic();
 
 		List<RecordEntry> recEntryColln = bizLogic.retrieve(RecordEntry.class.getName(),
@@ -335,23 +336,16 @@ public class DataEntryUtil
 	 * @throws DAOException
 	 */
 	public List executeQuery(String hql) throws DAOException
-	{
-		//HibernateDAO dao = (HibernateDAO) DAOFactory.getInstance().getDAO(Constants.HIBERNATE_DAO);
+	{		
 		String appName = CommonServiceLocator.getInstance().getAppName();
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-		DAO dao = daoFactory.getDAO ();
+		DAO dao = daoFactory.getDAO();
 		dao.openSession(null);
 		List list;
 		try
-		{
-			//list = dao.executeQuery(hql, null, false, null);
+		{			
 			list = dao.executeQuery(hql);
-		}
-		/*catch (ClassNotFoundException e)
-		{
-			//throw new DAOException(e.getMessage());
-			throw new DAOException(ErrorKey.getErrorKey("error.utility.queryExecute"), e, "Error while executing query");
-		}*/
+		}		
 		finally
 		{
 			dao.closeSession();
@@ -397,9 +391,9 @@ public class DataEntryUtil
 			String studyId, String regId) throws DAOException
 	{
 		String activityStatus = null;
-		Long partId = Long.valueOf(participantId);
-		String activityStatusHQL = "select cs.activityStatus from edu.wustl.clinportal.domain.ClinicalStudy "
-				+ "as cs where cs.id=" + studyId;
+		String activityStatusHQL = "select cs.activityStatus "
+				+ "from edu.wustl.clinportal.domain.ClinicalStudy " + "as cs where cs.id="
+				+ studyId;
 
 		List actStatusList = executeQuery(activityStatusHQL);
 		ActionErrors errors = new ActionErrors();
@@ -408,7 +402,8 @@ public class DataEntryUtil
 		{
 			activityStatus = (actStatusList.get(0)).toString();
 		}
-		if (activityStatus.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
+		if (activityStatus
+				.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
 		{
 			error = new ActionError("clinicalstudy.closed");
 			errors.add(ActionErrors.GLOBAL_ERROR, error);
@@ -416,14 +411,17 @@ public class DataEntryUtil
 		}
 		else
 		{
-			activityStatusHQL = "select part.activityStatus from edu.wustl.clinportal.domain.Participant "
-					+ "as part where part.id= " + partId;
+			Long partId = Long.valueOf(participantId);
+			activityStatusHQL = "select part.activityStatus "
+					+ "from edu.wustl.clinportal.domain.Participant " + "as part where part.id= "
+					+ partId;
 			actStatusList = executeQuery(activityStatusHQL);
 			if (actStatusList != null && !actStatusList.isEmpty())
 			{
 				activityStatus = (actStatusList.get(0)).toString();
 			}
-			if (activityStatus.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
+			if (activityStatus
+					.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
 			{
 				error = new ActionError("participant.closed");
 				errors.add(ActionErrors.GLOBAL_ERROR, error);
@@ -431,14 +429,16 @@ public class DataEntryUtil
 			}
 			else
 			{
-				activityStatusHQL = "select csr.activityStatus from edu.wustl.clinportal.domain.ClinicalStudyRegistration"
+				activityStatusHQL = "select csr.activityStatus "
+						+ "from edu.wustl.clinportal.domain.ClinicalStudyRegistration"
 						+ " as csr where csr.id=" + regId;
 				actStatusList = executeQuery(activityStatusHQL);
 				if (actStatusList != null && !actStatusList.isEmpty())
 				{
 					activityStatus = (actStatusList.get(0)).toString();
 				}
-				if (activityStatus.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
+				if (activityStatus
+						.equals(edu.wustl.clinportal.util.global.Constants.ACTIVITY_STATUS_CLOSED))
 				{
 					error = new ActionError("clinicalStudyReg.closed");
 					errors.add(ActionErrors.GLOBAL_ERROR, error);
@@ -447,6 +447,82 @@ public class DataEntryUtil
 			}
 		}
 		return errors;
+	}
+
+	/**
+	 * 
+	 * @param eventId
+	 * @param formContextId
+	 * @return
+	 * @throws DAOException
+	 */
+	public StudyFormContext getStudyFormContext(String eventId, String formContextId)
+			throws DAOException
+	{
+		StudyFormContext studyFormContext = null;
+		StringBuffer studyFormHQL = new StringBuffer(100);
+		studyFormHQL.append("from ").append(StudyFormContext.class.getName());
+		studyFormHQL.append(" as studyFrm where studyFrm.clinicalStudyEvent.id=");
+		studyFormHQL.append(eventId);
+		studyFormHQL.append(" and studyFrm.id=");
+		studyFormHQL.append(formContextId);
+		studyFormHQL.append(" order by studyFrm.id asc");
+		Collection<StudyFormContext> studyFormColl = (Collection<StudyFormContext>) Utility
+				.executeQuery(studyFormHQL.toString());
+		if (!studyFormColl.isEmpty())
+		{
+			studyFormContext = studyFormColl.iterator().next();
+		}
+		return studyFormContext;
+	}
+
+	/**
+	 * 
+	 * @param recEntryId
+	 * @param containerId
+	 * @param deEntityId
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws CacheException
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public Long getDERecordId(Long recEntryId, Long containerId, Long deEntityId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			CacheException, DAOException, SQLException
+	{
+		AnnotationBizLogic annoBizLogic = new AnnotationBizLogic();
+		Collection deIdList = annoBizLogic.getDynamicRecordFromStaticId(recEntryId.toString(),
+				containerId, deEntityId.toString());
+
+		Long dynamicRecId = Long.valueOf("0");
+		if (deIdList != null && !deIdList.isEmpty())
+		{
+			dynamicRecId = (Long) deIdList.iterator().next();
+		}
+		return dynamicRecId;
+	}
+
+	/**
+	 * @param cleanDAO
+	 * @param hql
+	 * @return
+	 * @throws BizLogicException
+	 * @throws DAOException
+	 */
+	private EventEntry getOldEventEntry(DAO cleanDAO, String hql) throws BizLogicException,
+			DAOException
+	{
+
+		EventEntry oldEventEntry = null;
+		List eventEntryList = cleanDAO.executeQuery(hql);
+		if (eventEntryList.size() > 0)
+		{
+			oldEventEntry = (EventEntry) eventEntryList.get(0);
+		}
+
+		return oldEventEntry;
 	}
 
 }

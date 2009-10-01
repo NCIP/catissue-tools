@@ -1,0 +1,42 @@
+<clinical-studies>
+<clinical-study>
+	<title>TS</title>  <!--Specify short title of CS -->
+<csUsers>
+		<participantRegistration>
+		<!-- these are users who are PI and coordinators of CS -->
+		<!--permissible values:  allowParticipantRegistration, disallowParticipantRegistration -->
+		<user>
+			<login-name>shital@clin.com</login-name>
+			<permission>allowParticipantRegistration</permission>
+		</user>
+		<user>
+			<login-name>falguni@clin.com</login-name>
+			<permission>disallowParticipantRegistration</permission>
+		</user>
+	</participantRegistration>
+
+	<event label="ALL">
+		<studyForm label="ALL">
+		<!-- these are users who are PI and coordinators of CS -->	
+		<!--permissible values: allowRead,allowReadWrite,disallowReadWrite -->
+			<user>
+				<login-name>ALL</login-name>
+				<permission>allowRead</permission>
+			</user>	
+			
+		</studyForm>
+		</event>
+
+ </csUsers>
+
+ <csNonUsers> 
+<!-- these are users who are not PI and coordinators of CS -->
+<!--permissible values: allow, deny -->
+		<user>			
+			<login-name>ALL</login-name>	<!-- All will consider current and future users	-->
+			<permission>deny</permission>  <!-- This permission applied while querying -->
+		</user>
+  </csNonUsers>
+
+</clinical-study>
+</clinical-studies>

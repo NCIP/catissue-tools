@@ -9,30 +9,27 @@ div.gridbox .xhdr{
 	background-Color:#D4D0C8;
 }
 div.gridbox table.hdr td {
-	font-family:tahoma;
-	font-size:11px;
-	background-Color:lightgrey;
+	font-family:arial;
+	font-size:12px;
+	background-Color:#D4D0C8;
 	border: 1px solid;
-	border-color :#FDFDFD #93AFBA #93AFBA #FDFDFD;
+	border-color : white Gray Gray white;
 	text-align: center;
 	margin:0px;
 	padding:5px 0px 5px 0px ;
-	font-weight:bold;
+	font-weight:normal;
 	-moz-user-select:none;    
     overflow:hidden;
     empty-cells:show;
 	}
-
 div.gridbox table.hdr td div.hdrcell{
 	overflow:hidden;
-	background-color : lightgrey;
-	
 }
 div.gridbox table.obj td {
 	border: 1px solid;
-	border-color : #FDFDFD #93AFBA #93AFBA #FDFDFD;
-	font-family:Tahoma;
-	font-size:11px;
+	border-color : white Gray Gray white;
+	font-family:Arial;
+	font-size:12px;
     -moz-user-select:none;
     overflow:hidden;
     padding-top:0px;
@@ -312,7 +309,6 @@ div.gridbox_light .xhdr{
 div.gridbox_light table.hdr{
 	background-image:url(imgs/skin_light_header.png);
 	background-color:lightgrey;
-	
 }
 
 div.gridbox_light table.hdr td {

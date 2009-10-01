@@ -115,12 +115,12 @@ public class EventEntryForm extends ActionForm
 		if (eventEntry.getEncounterDate() == null || eventEntry.getEncounterDate().equals(""))
 		{
 			this.encounterDate = edu.wustl.common.util.Utility.parseDateToString(new Date(System
-					.currentTimeMillis()), Constants.DATE_PATTERN_MM_DD_YYYY);
+					.currentTimeMillis()), Constants.DATE_PATTERN_DD_MM_YYYY);
 		}
 		else
 		{
 			this.encounterDate = edu.wustl.common.util.Utility.parseDateToString(eventEntry
-					.getEncounterDate(), Constants.DATE_PATTERN_MM_DD_YYYY);
+					.getEncounterDate(), Constants.DATE_PATTERN_DD_MM_YYYY);
 		}
 		this.entryNumber = eventEntry.getEntryNumber();
 	}

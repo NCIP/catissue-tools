@@ -81,7 +81,7 @@ function enableButton(formButton,countElement,checkName)
 
 function  deleteChecked(subdivtag,action,countElement,checkName,isOuterTable)
 {
-	selectPresentCoordinators();
+	//selectPresentCoordinators();
 	var r = new Array(); 
 	//alert('div tag: '+subdivtag);
 	/** element of tbody    **/

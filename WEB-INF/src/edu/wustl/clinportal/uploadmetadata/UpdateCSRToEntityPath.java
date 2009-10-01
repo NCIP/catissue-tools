@@ -62,7 +62,7 @@ public class UpdateCSRToEntityPath
 		try
 		{
 			String csrEntName = "edu.wustl.clinportal.domain.ClinicalStudyRegistration";
-			String eventEntryEntName = "edu.wustl.clinportal.domain.EventEntry";
+			String eventEntryEntName = "edu.wustl.clinportal.domain.EventVisit";
 			String recEntryEntName = "edu.wustl.clinportal.domain.RecordEntry";
 
 			EntityManagerInterface entityManager = EntityManager.getInstance();

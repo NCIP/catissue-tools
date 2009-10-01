@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -86,7 +87,7 @@ import gov.nih.nci.security.exceptions.CSTransactionException;
  * 
  * @author rukhsana_sameer
  */
-public class Utility //extends edu.wustl.common.util.Utility
+public class Utility
 {
 
 	/**
@@ -160,39 +161,6 @@ public class Utility //extends edu.wustl.common.util.Utility
 			PermissibleValue pvalue = (PermissibleValue) obj;
 			String tmpStr = pvalue.getValue();
 			speciClassTypeLst.add(tmpStr);
-
-		} // class and values set
-
-		return speciClassTypeLst;
-
-	}
-
-	/*
-	 * this Function gets the list of all Specimen Class Types as argument and
-	 * create a list in which nameValueBean is stored with Name and Identifier
-	 * of specimen Class Type. and returns this list
-	 */
-
-	/**
-	 * @return
-	 */
-	public static List getSpecimenClassTypeListWithAny()
-	{
-		CDE specimenClassCDE = CDEManager.getCDEManager().getCDE(Constants.CDE_NAME_SPECIMEN_CLASS);
-		Set setPV = specimenClassCDE.getPermissibleValues();
-		Iterator itr = setPV.iterator();
-
-		List speciClassTypeLst = new ArrayList();
-		speciClassTypeLst.add(new NameValueBean("--All--", "-1"));
-
-		while (itr.hasNext())
-		{
-			// List innerList = new ArrayList();
-			Object obj = itr.next();
-			PermissibleValue pvalue = (PermissibleValue) obj;
-			String tmpStr = pvalue.getValue();
-			Logger.out.info("specimen class:" + tmpStr);
-			speciClassTypeLst.add(new NameValueBean(tmpStr, tmpStr));
 
 		} // class and values set
 
@@ -398,10 +366,7 @@ public class Utility //extends edu.wustl.common.util.Utility
 		listOfResponces.add(new NameValueBean(Constants.NOT_SPECIFIED, Constants.NOT_SPECIFIED));
 		listOfResponces.add(new NameValueBean(Constants.BOOLEAN_YES, Constants.BOOLEAN_YES));
 		listOfResponces.add(new NameValueBean(Constants.BOOLEAN_NO, Constants.BOOLEAN_NO));
-		/*if (addeditOperation.equalsIgnoreCase(Constants.EDIT))
-		{
-			listOfResponces.add(new NameValueBean(Constants.WITHDRAWN, Constants.WITHDRAWN));
-		}*/
+
 		return listOfResponces;
 	}
 
@@ -754,14 +719,10 @@ public class Utility //extends edu.wustl.common.util.Utility
 		}
 		catch (DAOException daoExp)
 		{
-			//throw new DAOException(daoExp.getMessage(), daoExp);
+
 			throw new BizLogicException(daoExp);
 		}
-		/*catch (ClassNotFoundException classExp)
-		{
-			//throw new DAOException(classExp.getMessage(), classExp);
-			throw new BizLogicException(ErrorKey.getErrorKey("error.utility.pagenation"), classExp, "Error during pagenation");
-		}*/
+
 	}
 
 	/**
@@ -1158,31 +1119,6 @@ public class Utility //extends edu.wustl.common.util.Utility
 	}
 
 	/**
-	 * @param requestURL URL generated from the request.
-	 * Sets the application URL in the Variables class after generating it in proper format.
-	 */
-	/*public static void setApplicationURL(String requestURL)
-	{
-		String ourUrl = TextConstants.EMPTY_STRING;
-		try
-		{
-			URL aURL = new URL(requestURL);
-			ourUrl = aURL.getProtocol() + "://" + aURL.getAuthority() + aURL.getPath();
-			ourUrl = ourUrl.substring(0, ourUrl.lastIndexOf('/'));
-			logger.debug("Application URL Generated : " + ourUrl);
-		}
-		catch (MalformedURLException urlExp)
-		{
-			logger.error(urlExp.getMessage(), urlExp);
-		}
-		if (Variables.catissueURL != null && Variables.catissueURL.trim().length() == 0)
-		{
-			Variables.catissueURL = ourUrl;
-			logger.debug("Application URL set: " + Variables.catissueURL);
-		}
-	}*/
-
-	/**
 	 * @param selectedMenuID Menu that is clicked
 	 * @param currentMenuID Menu that is being checked
 	 * @param normalMenuClass style class for normal menu
@@ -1383,6 +1319,11 @@ public class Utility //extends edu.wustl.common.util.Utility
 		return privileges;
 	}
 
+	/**
+	 * @param nameValuePairs
+	 * @param id
+	 * @return
+	 */
 	public static String getNameValue(List nameValuePairs, String id)
 	{
 		Iterator itr = nameValuePairs.iterator();
@@ -1401,4 +1342,56 @@ public class Utility //extends edu.wustl.common.util.Utility
 		return returnValue;
 	}
 
+	/**
+	 * @param strValue
+	 * @param regxExpr
+	 * @return
+	 */
+	public static boolean isSpecialCharStr(String strValue)
+	{
+		boolean flag = false;
+
+		String strModified = strValue.replaceAll("[^a-zA-Z0-9-_ #()*/ ,]", "");
+		if (!strModified.equals(strValue))
+		{
+			flag = true;
+		}
+		return flag;
+
+	}
+
+	/**
+	 * @param strValue
+	 * @param regxExpr
+	 * @return
+	 */
+	public static String trim(String strValue)
+	{
+		if (strValue != null)
+			strValue = strValue.trim();
+		return strValue;
+	}
+
+	/**
+	 * This method populates name value beans list as per query,
+	 * i.e. word typed into the auto-complete drop-down text field.
+	 * @param querySpecificNVBeans
+	 * @param cplist
+	 * @param query
+	 */
+	public static synchronized void populateQuerySpecificNameValueBeansList(
+			List<NameValueBean> querySpecificNVBeans, List cplist, String query)
+	{
+		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+
+		for (Object obj : cplist)
+		{
+			NameValueBean nvb = (NameValueBean) obj;
+
+			if (nvb.getName().toLowerCase(locale).contains(query.toLowerCase(locale)))
+			{
+				querySpecificNVBeans.add(nvb);
+			}
+		}
+	}
 }

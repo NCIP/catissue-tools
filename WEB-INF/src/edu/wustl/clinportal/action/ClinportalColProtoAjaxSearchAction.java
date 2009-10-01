@@ -15,17 +15,19 @@ import org.apache.struts.action.ActionMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import edu.wustl.clinportal.bizlogic.UserBizLogic;
+import edu.wustl.clinportal.bizlogic.ClinicalStudyBizLogic;
 import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.clinportal.util.global.Utility;
+import edu.wustl.clinportal.util.global.Variables;
 import edu.wustl.common.action.BaseAction;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.factory.AbstractFactoryConfig;
 import edu.wustl.common.factory.IFactory;
 import edu.wustl.common.util.global.CommonServiceLocator;
+import edu.wustl.dao.exception.DAOException;
 
-public class ClinportalAjaxSearchAction extends BaseAction
+public class ClinportalColProtoAjaxSearchAction extends BaseAction
 {
 
 	@Override
@@ -35,7 +37,7 @@ public class ClinportalAjaxSearchAction extends BaseAction
 		String limit = request.getParameter("limit");
 		String query = request.getParameter("query");
 		String start = request.getParameter("start");
-
+		String selcpid = request.getParameter("selcpId");
 		Integer limitFetch = Integer.parseInt(limit);
 		Integer startFetch = Integer.parseInt(start);
 
@@ -43,11 +45,18 @@ public class ClinportalAjaxSearchAction extends BaseAction
 		JSONObject mainJsonObject = new JSONObject();
 
 		Integer total = limitFetch + startFetch;
+		List dataList = new ArrayList();
+		if (Variables.isCatissueModelAvailable && selcpid == null)
+		{
+			dataList = getCProtocols();
 
-		List users = getUsers("add");
-
+		}
+		else if (Variables.isCatissueModelAvailable && selcpid != null)
+		{
+			dataList = getCPEvents(Long.valueOf(selcpid));
+		}
 		List<NameValueBean> querySpecificNVBeans = new ArrayList<NameValueBean>();
-		Utility.populateQuerySpecificNameValueBeansList(querySpecificNVBeans, users, query);
+		Utility.populateQuerySpecificNameValueBeansList(querySpecificNVBeans, dataList, query);
 		mainJsonObject.put("totalCount", querySpecificNVBeans.size());
 
 		for (int i = startFetch; i < total && i < querySpecificNVBeans.size(); i++)
@@ -74,16 +83,27 @@ public class ClinportalAjaxSearchAction extends BaseAction
 	}
 
 	/**
-	 * returns the user list present in the system
-	 * @param operation
-	 * @return
-	 * @throws BizLogicException 
+	 * 
+	 * @return returns the user list present in the system
+	 * @throws DAOException
+	 * @throws BizLogicException
 	 */
-	private List getUsers(String operation) throws BizLogicException //throws DAOException
+	private List getCProtocols() throws DAOException, BizLogicException
 	{
 		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
-		UserBizLogic userBizLogic = (UserBizLogic) factory.getBizLogic(Constants.USER_FORM_ID);
-		return userBizLogic.getUsers(operation);
+		ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) factory
+				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);
+		List cpCollection = csBizLogic.getCatissueCP();
+		return cpCollection;
+	}
+
+	private List getCPEvents(Long cpId) throws DAOException, BizLogicException
+	{
+		IFactory factory = AbstractFactoryConfig.getInstance().getBizLogicFactory();
+		ClinicalStudyBizLogic csBizLogic = (ClinicalStudyBizLogic) factory
+				.getBizLogic(Constants.CLINICALSTUDY_FORM_ID);
+		List cpCollection = csBizLogic.getCatissueCPEvent(cpId);
+		return cpCollection;
 	}
 
 }
