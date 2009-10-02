@@ -223,7 +223,18 @@ function participantRegRow(subdivtag)
 
 </script>
 <!-- sneha: deleted html:errors and message tags completely,included actionerrors.jsp in later part -->
-
+<input type="hidden" name="participantId" value="<%=participantId%>"/>
+<input type="hidden" name="cpId" id="cpId"/>
+<input type="hidden" name="radioValue"/>
+<html:hidden property="<%=Constants.OPERATION%>" value="<%=operation%>"/>
+<html:hidden property="submittedFor" value="<%=submittedFor%>"/>
+<html:hidden property="forwardTo" value="<%=forwardTo%>"/>
+<html:hidden property="valueCounter"/>
+<html:hidden property="collectionProtocolRegistrationValueCounter"/>
+<html:hidden property="onSubmit" />
+<html:hidden property="id" />
+<html:hidden property="redirectTo"/>
+<html:hidden property="pageOf" value="<%=pageOf%>"/>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"
 	class="maintable" height="100%"><!-- sneha:-->
 <logic:notEqual name="<%=Constants.PAGEOF%>"
@@ -310,10 +321,10 @@ function participantRegRow(subdivtag)
 			  	</logic:notEqual>
 			  </logic:notEqual--%>
 
-			  	<table width="985" border="0" cellpadding="3" cellspacing="0"
+			  	<table width="985" border="0" cellpadding="0" cellspacing="0"
 				class="whitetable_bg" height="95%"><!-- sneha: complete <table> tag not the contents as per catissue -->
 				<tr>
-				<td colspan="2" align="left" class="bottomtd"><%@ include file="/pages/content/common/ActionErrors.jsp" %></td>
+				<td align="left"><%@ include file="/pages/content/common/ActionErrors.jsp" %></td>
 			</tr><!-- sneha: complete <tr> as per catissue -->
 
 
@@ -321,21 +332,6 @@ function participantRegRow(subdivtag)
 		<tr>
 			<td>
 			 <table summary="" cellpadding="3" cellspacing="0" border="0" width="100%"><!-- sneha: complete <table> tag as per catissue contents unchaged -->
-				 <tr>
-					<td>
-						<input type="hidden" name="participantId" value="<%=participantId%>"/>
-						<input type="hidden" name="cpId" id="cpId"/>
-						<input type="hidden" name="radioValue"/>
-						<html:hidden property="<%=Constants.OPERATION%>" value="<%=operation%>"/>
-						<html:hidden property="submittedFor" value="<%=submittedFor%>"/>
-						<html:hidden property="forwardTo" value="<%=forwardTo%>"/>
-					</td>
-					<td><html:hidden property="valueCounter"/></td>
-					<td><html:hidden property="collectionProtocolRegistrationValueCounter"/></td>
-					<td class="blue_ar_b"><html:hidden property="onSubmit" /></td>
-					<td><html:hidden property="id" /><html:hidden property="redirectTo"/></td>
-					<td><html:hidden property="pageOf" value="<%=pageOf%>"/></td>
-				 </tr>
 				<logic:notEqual name="<%=Constants.OPERATION%>" value="<%=edu.wustl.simplequery.global.Constants.SEARCH%>">
 				 		
 				 <%--<tr>
