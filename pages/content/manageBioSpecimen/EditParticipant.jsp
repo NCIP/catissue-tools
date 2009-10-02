@@ -711,6 +711,33 @@ function participantRegRow(subdivtag)
 				 
 
 				 <!-------------- New Fields -->
+				 
+				 <!-- activitystatus -->	
+							<% if(activityStatusPrivilege) {%>
+				<logic:equal name="<%=Constants.OPERATION%>" value="<%=Constants.EDIT%>">
+				<tr>
+				<td class="black_new" >
+					<!--<td  class="black_ar_new"> -->
+					<span
+								class="blue_ar_b"><img
+								src="images/uIEnhancementImages/star.gif" alt="Mandatory"
+								 height="6" hspace="0" vspace="0" /></span>
+								 
+					
+						<label for="activityStatus">
+							<bean:message key="participant.activityStatus" />
+						</label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<!-- Mandar : 434 : for tooltip -->
+						<html:select property="activityStatus" styleClass="formFieldSized10" styleId="activityStatus" size="1" onchange="<%=strCheckStatus%>">
+							<html:options name="<%=Constants.ACTIVITYSTATUSLIST%>" labelName="<%=Constants.ACTIVITYSTATUSLIST%>" />
+						</html:select>
+					</td>
+				</tr>
+				</logic:equal>
+				<%} %>
+	
 					</table>
 				</div>
 				</td>
