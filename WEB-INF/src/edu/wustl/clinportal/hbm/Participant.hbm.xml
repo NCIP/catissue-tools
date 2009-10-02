@@ -52,6 +52,24 @@
             column="MIDDLE_NAME"
             length="255"
         />
+        
+        <property
+            name="familyName"
+            type="string"
+            update="true"
+            insert="true"
+            column="FAMILY_NAME"
+            length="255"
+        />
+        
+        <property
+            name="businessField"
+            type="string"
+            update="true"
+            insert="true"
+            column="BUSINESS_FIELD"
+            length="255"
+        />
 
         <property
             name="birthDate"

@@ -123,6 +123,38 @@ public class Participant extends AbstractDomainObject
 
 	protected Collection clinicalStudyRegistrationCollection = new HashSet();
 
+	protected String familyName;
+	protected String businessField;	
+	
+
+	
+	
+	public String getFamilyName()
+	{
+		return familyName;
+	}
+
+	
+	public void setFamilyName(String familyName)
+	{
+		this.familyName = familyName;
+	}
+
+	
+	
+	public String getBusinessField()
+	{
+		return businessField;
+	}
+
+
+	
+	public void setBusinessField(String businessField)
+	{
+		this.businessField = businessField;
+	}
+
+
 	/**
 	* Returns collection registrations of this participant.
 	* @return collection of registrations of this participant.
@@ -570,6 +602,8 @@ public class Participant extends AbstractDomainObject
 			this.firstName = form.getFirstName();
 			this.middleName = form.getMiddleName();
 			this.lastName = form.getLastName();
+			this.familyName = form.getFamilyName();
+			this.businessField = form.getBusinessField();
 
 			populateGenderAndGenotype(form, validator);
 

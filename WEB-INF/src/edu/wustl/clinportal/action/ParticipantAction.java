@@ -362,6 +362,8 @@ public class ParticipantAction extends SecureAction
 		List genderList = CDEManager.getCDEManager().getPermissibleValueList(
 				Constants.CDE_NAME_GENDER, null);
 		genderList.remove(0);
+		genderList.remove(genderList.size()-1);
+		genderList.remove(genderList.size()-1);
 		request.setAttribute(Constants.GENDER_LIST, genderList);
 		if (participantForm.getGender() == null || participantForm.getGender().equals(""))
 		{

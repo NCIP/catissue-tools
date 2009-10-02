@@ -445,6 +445,11 @@ function participantRegRow(subdivtag)
 									<bean:message key="participant.middleName"/>
 								</label>
 							 </td>
+							 <td class="black_new">
+								<label for="familyName">
+									<bean:message key="participant.familyName"/>
+								</label>
+							 </td>
 						</tr>
 					 	<tr>
 							
@@ -453,8 +458,8 @@ function participantRegRow(subdivtag)
 									<label for="Name">
 										<bean:message key="participant.name"/>
 									</label>
-								</td>
-								 <td class="black_new">
+							</td>
+							<td class="black_new">
 					     		<html:text styleClass="black_new" maxlength="255" size="15" styleId="firstName" property="firstName" readonly="<%=readOnlyForAll%>" onkeyup="moveToNext(this,this.value,'lastName')"/>
 							</td>
 				
@@ -464,18 +469,34 @@ function participantRegRow(subdivtag)
 					     	 <td class="black_new">
 					     		<html:text styleClass="black_new" maxlength="255" size="15" styleId="middleName" property="middleName" readonly="<%=readOnlyForAll%>"/>
 							</td>
+							<td class="black_new">
+					     		<html:text styleClass="black_new" maxlength="255" size="15" styleId="familyName" property="familyName" readonly="<%=readOnlyForAll%>"/>
+							</td>
 						</tr>
 					 </table>
 				    </td>
 				 </tr>
-				
+				 <tr>
+		         	  <td align="left" class="black_new"><label 
+		         	  for="businessField"><bean:message key="participant.businessField" /></label>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				  		<html:text styleClass="black_new" maxlength="255" size="30" styleId="businessField" property="businessField" readonly="<%=readOnlyForAll%>"/>
+				  	</td>
+				 </tr>
 				 
 				 <tr>
 					<td class="black_new">
+					<label for="gender"><bean:message key="participant.gender"/></label>
+		         	  	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<!-- Mandar : 434 : for tooltip -->
+						<logic:iterate id="nvb" name="<%=Constants.GENDER_LIST%>">
+						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
+						<html:radio property="gender" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
+						</logic:iterate>				
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
 						<label for="birthDate">
 							<bean:message key="participant.birthDate"/>
 						</label>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%
 	 if(currentBirthDate.trim().length() > 0)
 	{
@@ -510,32 +531,13 @@ function participantRegRow(subdivtag)
 <bean:message key="page.dateFormat" />&nbsp;
 					 </td>
 				 </tr>			
-				 
-
-				 <tr>
-					<td class="formFieldNoBordersSimple">
-				     	<label for="gender"><bean:message key="participant.gender"/></label>
-				   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!-- Mandar : 434 : for tooltip -->
-				     	<%--<html:select property="gender" styleClass="formFieldSized" styleId="gender" size="1" disabled="<%=readOnlyForAll%>"
-						 onmouseover="showTip(this.id)" onmouseout="hideTip(this.id)">
-							<html:options collection="<%=Constants.GENDER_LIST%>" labelProperty="name" property="value"/>
-						</html:select>--%>
-						<logic:iterate id="nvb" name="<%=Constants.GENDER_LIST%>">
-						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
-						<html:radio property="gender" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
-						</logic:iterate>
-						
-		        	  </td>
-				 </tr>
-
 				 <tr>
 				
-					<td class="formFieldNoBordersSimple">
+					<td class="black_new">
 				     	<label for="vitalStatus">
 				     		<bean:message key="participant.vitalStatus"/>
 				     	</label>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<%--
 				     	<html:select property="vitalStatus" styleClass="formFieldSized" styleId="vitalStatus" size="1" disabled="<%=readOnlyForAll%>"
 						 onmouseover="showTip(this.id)" onmouseout="hideTip(this.id)">
@@ -545,61 +547,57 @@ function participantRegRow(subdivtag)
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="vitalStatus" onclick="onVitalStatusRadioButtonClick(this)" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
 						</logic:iterate>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<label for="deathDate">
+							<bean:message key="participant.deathDate"/>
+								</label>
+						<%
 						
+							ParticipantForm form = (ParticipantForm) request.getAttribute("participantForm");
+							Boolean deathDisable = new Boolean("false");
+							if(form.getVitalStatus()!= null && !form.getVitalStatus().trim().equals("Dead"))
+							{
+								deathDisable = new Boolean("true");
+							}
+							 if(currentDeathDate.trim().length() > 0)
+							{
+									Integer deathYear = new Integer(Utility.getYear(currentDeathDate ));
+									Integer deathMonth = new Integer(Utility.getMonth(currentDeathDate ));
+									Integer deathDay = new Integer(Utility.getDay(currentDeathDate ));
+						%>
+									<ncombo:DateTimeComponent name="deathDate"
+															  id="deathDate"
+						 									  formName="participantForm"	
+															  month= "<%=deathMonth %>"
+															  year= "<%=deathYear %>"
+															  day= "<%= deathDay %>" 
+															  value="<%=currentDeathDate %>"
+															  styleClass="formDateSized10"
+															  disabled="<%=deathDisable%>"
+															  pattern="dd-MM-yyyy"
+																	 />		
+						<% 
+							}
+							else
+							{  
+						 %>
+									<ncombo:DateTimeComponent name="deathDate"
+															  id="deathDate"
+						 									  formName="participantForm"	
+															  styleClass="formDateSized10" 
+															  disabled="<%=deathDisable%>"
+															  pattern="dd-MM-yyyy"
+																	 />		
+						<%
+							}
+						%>
+						<bean:message key="page.dateFormat" />&nbsp;
+								
 		        	  </td>
 				 </tr>
 				 
 				
 				<%-- added by chetan for death date --%>
- <tr>
-	<td class="formFieldNoBordersSimple">
-		<label for="deathDate">
-			<bean:message key="participant.deathDate"/>
-		</label>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%
-
-	ParticipantForm form = (ParticipantForm) request.getAttribute("participantForm");
-	Boolean deathDisable = new Boolean("false");
-	if(form.getVitalStatus()!= null && !form.getVitalStatus().trim().equals("Dead"))
-	{
-		deathDisable = new Boolean("true");
-	}
-	 if(currentDeathDate.trim().length() > 0)
-	{
-			Integer deathYear = new Integer(Utility.getYear(currentDeathDate ));
-			Integer deathMonth = new Integer(Utility.getMonth(currentDeathDate ));
-			Integer deathDay = new Integer(Utility.getDay(currentDeathDate ));
-%>
-			<ncombo:DateTimeComponent name="deathDate"
-									  id="deathDate"
- 									  formName="participantForm"	
-									  month= "<%=deathMonth %>"
-									  year= "<%=deathYear %>"
-									  day= "<%= deathDay %>" 
-									  value="<%=currentDeathDate %>"
-									  styleClass="formDateSized10"
-									  disabled="<%=deathDisable%>"
-									  pattern="dd-MM-yyyy"
-											 />		
-<% 
-	}
-	else
-	{  
- %>
-			<ncombo:DateTimeComponent name="deathDate"
-									  id="deathDate"
- 									  formName="participantForm"	
-									  styleClass="formDateSized10" 
-									  disabled="<%=deathDisable%>"
-									  pattern="dd-MM-yyyy"
-											 />		
-<%
-	}
-%>
-<bean:message key="page.dateFormat" />&nbsp;
-	</td>
-</tr> 
 				 
 				 
 				<!-- Sex Genotype, Race and Ethnicity
@@ -649,7 +647,12 @@ function participantRegRow(subdivtag)
 				 <!-------------- New Fields -->
 
 		<!-- Street and City --> 
-				
+				<tr>
+				<td colspan="10" align="left" class="tr_bg_blue1"><span
+							class="blue_ar_b">&nbsp						     
+						     <bean:message key="participant.address"/>
+				</td>
+				 </tr>
 				 <tr>
 		             <td align="left" class="black_ar_new">
                    		<label for="street"><bean:message key="site.street" /> </label>
@@ -708,33 +711,6 @@ function participantRegRow(subdivtag)
 				 
 
 				 <!-------------- New Fields -->
-				 
-				 <!-- activitystatus -->	
-							<% if(activityStatusPrivilege) {%>
-				<logic:equal name="<%=Constants.OPERATION%>" value="<%=Constants.EDIT%>">
-				<tr>
-				<td class="black_new" >
-					<!--<td  class="black_ar_new"> -->
-					<span
-								class="blue_ar_b"><img
-								src="images/uIEnhancementImages/star.gif" alt="Mandatory"
-								 height="6" hspace="0" vspace="0" /></span>
-								 
-					
-						<label for="activityStatus">
-							<bean:message key="participant.activityStatus" />
-						</label>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-<!-- Mandar : 434 : for tooltip -->
-						<html:select property="activityStatus" styleClass="formFieldSized10" styleId="activityStatus" size="1" onchange="<%=strCheckStatus%>">
-							<html:options name="<%=Constants.ACTIVITYSTATUSLIST%>" labelName="<%=Constants.ACTIVITYSTATUSLIST%>" />
-						</html:select>
-					</td>
-				</tr>
-				</logic:equal>
-				<%} %>
-	
 					</table>
 				</div>
 				</td>

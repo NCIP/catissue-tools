@@ -138,6 +138,34 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 	 * Phone number of the site.
 	 * */
 	private String phoneNumber;
+	
+	protected String familyName;
+	protected String businessField;	
+	
+	public String getFamilyName()
+	{
+		return familyName;
+	}
+
+	
+	public void setFamilyName(String familyName)
+	{
+		this.familyName = familyName;
+	}
+
+	
+	
+	public String getBusinessField()
+	{
+		return businessField;
+	}
+
+	
+	public void setBusinessField(String businessField)
+	{
+		this.businessField = businessField;
+	}
+
 
 	public String getRegistrationDate() {
 		return registrationDate;
@@ -317,6 +345,9 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 		this.lastName = edu.wustl.common.util.Utility.toString(participant.getLastName());
 		this.firstName = edu.wustl.common.util.Utility.toString(participant.getFirstName());
 		this.middleName = edu.wustl.common.util.Utility.toString(participant.getMiddleName());
+		this.familyName = edu.wustl.common.util.Utility.toString(participant.getFamilyName());
+		this.businessField = edu.wustl.common.util.Utility.toString(participant.getBusinessField());
+		
 		this.birthDate = edu.wustl.common.util.Utility.parseDateToString(
 				participant.getBirthDate(), Constants.DATE_PATTERN_DD_MM_YYYY);
 		this.gender = participant.getGender();
