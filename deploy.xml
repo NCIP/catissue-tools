@@ -753,11 +753,22 @@
 	</target>
 
 	<!--Target call for both Deployment and Database Creation-->
-	<target name="upgrade_all_with_config_from_CP_1.0_to_CP_1.1">
+	<target name="upgrade_all">
 		<antcall target="deploy_app_with_config" />
-		<antcall target="upgrade_db_from_CP_1.0_to_CP_1.1" />
+		<antcall target="upgrade_db_from_PFD_1.5_to_CP_0.6" />
 	</target>
-
+	<target name="upgrade_db_from_PFD_1.5_to_CP_0.6">
+		<sql driver="${mysql.driver.string}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
+			<transaction src="${dbupgrade.sql.dir}/MySql/DBUpgrade_pfd_0.5_to_0.6.sql" />
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
+		</target>
+	
 	<!--Target for  Database Upgrade from ClinPortal 1.0  to ClinPortal 1.1-->
 	<target name="upgrade_db_from_CP_1.0_to_CP_1.1">
 		<if>
@@ -1022,7 +1033,9 @@
 			</fileset>
 		</classpath>
 	</sql>
+	<antcall target="upgrade_db_from_PFD_1.5_to_CP_0.6" />
 	<antcall target="upgrade_db_demodel_mysql" />
+		
 	
 	<antcall target="insertQueryMetadata" />
 

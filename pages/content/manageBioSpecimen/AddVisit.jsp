@@ -49,12 +49,12 @@ if(studyFormMap != null)
 		</td>
 		<td align="right" >
 				<ncombo:DateTimeComponent name="encounterDate"
-					id="encounterDate" formName="eventEntryForm"	
+					id="encounterDate" formName="eventEntryForm" pattern="dd-MM-yyyy"	
 					styleClass="black_new" />		
 			
 			<!--<bean:message key="page.dateFormat" />-->
 		 </td>
-		<td align="left" style='font-family:Tahoma;font-size:11px;'>[MM-DD-YYYY]</td>
+		<td align="left" style='font-family:Tahoma;font-size:11px;'>[DD-MM-YYYY]</td>
 	</tr>
 	<tr>
 		 <td width="80" align="left" style='font-family:Tahoma;font-size:11px;font-weight:bold;'> 
