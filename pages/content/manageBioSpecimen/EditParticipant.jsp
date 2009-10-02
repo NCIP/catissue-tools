@@ -445,11 +445,6 @@ function participantRegRow(subdivtag)
 									<bean:message key="participant.middleName"/>
 								</label>
 							 </td>
-							 <td class="black_new">
-								<label for="familyName">
-									<bean:message key="participant.familyName"/>
-								</label>
-							 </td>
 						</tr>
 					 	<tr>
 							
@@ -469,13 +464,17 @@ function participantRegRow(subdivtag)
 					     	 <td class="black_new">
 					     		<html:text styleClass="black_new" maxlength="255" size="15" styleId="middleName" property="middleName" readonly="<%=readOnlyForAll%>"/>
 							</td>
-							<td class="black_new">
-					     		<html:text styleClass="black_new" maxlength="255" size="15" styleId="familyName" property="familyName" readonly="<%=readOnlyForAll%>"/>
-							</td>
 						</tr>
 					 </table>
 				    </td>
 				 </tr>
+				 <tr>
+		         	  <td align="left" class="black_new"><label 
+		         	  for="familyName"><bean:message key="participant.familyName" /></label>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				  		<html:text styleClass="black_new" maxlength="255" size="30" styleId="familyName" property="familyName" readonly="<%=readOnlyForAll%>"/>
+				  	</td>
+				 </tr>		
 				 <tr>
 		         	  <td align="left" class="black_new"><label 
 		         	  for="businessField"><bean:message key="participant.businessField" /></label>
@@ -493,10 +492,10 @@ function participantRegRow(subdivtag)
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="gender" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
 						</logic:iterate>				
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
 						<label for="birthDate">
 							<bean:message key="participant.birthDate"/>
-						</label>
+						</label>&nbsp;
 <%
 	 if(currentBirthDate.trim().length() > 0)
 	{
@@ -528,7 +527,7 @@ function participantRegRow(subdivtag)
 <%
 	}
 %>
-<bean:message key="page.dateFormat" />&nbsp;
+<bean:message key="page.dateFormat" />
 					 </td>
 				 </tr>			
 				 <tr>
@@ -591,11 +590,37 @@ function participantRegRow(subdivtag)
 						<%
 							}
 						%>
-						<bean:message key="page.dateFormat" />&nbsp;
+						<bean:message key="page.dateFormat" />
 								
 		        	  </td>
 				 </tr>
-				 
+				 <tr>
+				 				 <!-- activitystatus -->	
+							<% if(activityStatusPrivilege) {%>
+				<logic:equal name="<%=Constants.OPERATION%>" value="<%=Constants.EDIT%>">
+				<tr>
+				<td class="black_new" >
+					<!--<td  class="black_ar_new"> -->
+					<span
+								class="blue_ar_b"><img
+								src="images/uIEnhancementImages/star.gif" alt="Mandatory"
+								 height="6" hspace="0" vspace="0" /></span>
+								 
+					
+						<label for="activityStatus">
+							<bean:message key="participant.activityStatus" />
+						</label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<!-- Mandar : 434 : for tooltip -->
+						<html:select property="activityStatus" styleClass="formFieldSized10" styleId="activityStatus" size="1" onchange="<%=strCheckStatus%>">
+							<html:options name="<%=Constants.ACTIVITYSTATUSLIST%>" labelName="<%=Constants.ACTIVITYSTATUSLIST%>" />
+						</html:select>
+					</td>
+				</tr>
+				</logic:equal>
+				<%} %>
+				 </tr>
 				
 				<%-- added by chetan for death date --%>
 				 
@@ -647,6 +672,12 @@ function participantRegRow(subdivtag)
 				 <!-------------- New Fields -->
 
 		<!-- Street and City --> 
+				<tr>
+				<td colspan="10" align="left" class="black_ar_new"><span
+							class="blue_ar_b">&nbsp						     
+				</td>
+				 </tr>
+
 				<tr>
 				<td colspan="10" align="left" class="tr_bg_blue1"><span
 							class="blue_ar_b">&nbsp						     
@@ -711,33 +742,6 @@ function participantRegRow(subdivtag)
 				 
 
 				 <!-------------- New Fields -->
-				 
-				 <!-- activitystatus -->	
-							<% if(activityStatusPrivilege) {%>
-				<logic:equal name="<%=Constants.OPERATION%>" value="<%=Constants.EDIT%>">
-				<tr>
-				<td class="black_new" >
-					<!--<td  class="black_ar_new"> -->
-					<span
-								class="blue_ar_b"><img
-								src="images/uIEnhancementImages/star.gif" alt="Mandatory"
-								 height="6" hspace="0" vspace="0" /></span>
-								 
-					
-						<label for="activityStatus">
-							<bean:message key="participant.activityStatus" />
-						</label>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-<!-- Mandar : 434 : for tooltip -->
-						<html:select property="activityStatus" styleClass="formFieldSized10" styleId="activityStatus" size="1" onchange="<%=strCheckStatus%>">
-							<html:options name="<%=Constants.ACTIVITYSTATUSLIST%>" labelName="<%=Constants.ACTIVITYSTATUSLIST%>" />
-						</html:select>
-					</td>
-				</tr>
-				</logic:equal>
-				<%} %>
-	
 					</table>
 				</div>
 				</td>
