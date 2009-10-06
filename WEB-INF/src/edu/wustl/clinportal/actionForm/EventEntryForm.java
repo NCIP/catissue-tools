@@ -4,7 +4,13 @@
 
 package edu.wustl.clinportal.actionForm;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +23,7 @@ import edu.wustl.clinportal.domain.EventEntry;
 import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.common.domain.AbstractDomainObject;
 import edu.wustl.common.util.global.ApplicationProperties;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Validator;
 
 /**
@@ -90,7 +97,7 @@ public class EventEntryForm extends ActionForm
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request)
 	{
 
-		Validator validator = new Validator();
+		edu.wustl.clinportal.util.global.Validator validator = new edu.wustl.clinportal.util.global.Validator();
 		ActionErrors errors = new ActionErrors();
 		if (validator.isEmpty(this.getEncounterDate()))
 		{

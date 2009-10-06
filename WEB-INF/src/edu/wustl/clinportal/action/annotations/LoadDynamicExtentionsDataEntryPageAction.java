@@ -290,7 +290,7 @@ public class LoadDynamicExtentionsDataEntryPageAction extends BaseAction
 	private boolean validateEncounteredDate(String encounterDate, HttpServletRequest request)
 			throws BizLogicException
 	{
-		Validator validator = new Validator();
+		edu.wustl.clinportal.util.global.Validator validator = new edu.wustl.clinportal.util.global.Validator();
 		String errorKey = validator.validateDate(encounterDate, true);
 		if (errorKey.length() > 0)
 		{
