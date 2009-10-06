@@ -122,6 +122,14 @@ public class Participant extends AbstractDomainObject
 	protected Collection collectionProtocolRegistrationCollection = new HashSet();
 
 	protected Collection clinicalStudyRegistrationCollection = new HashSet();
+	/**
+	 * The Health Insurance of the participant.
+	 */
+	protected String healthInsurance;
+	/**
+	 * Patient referred by
+	 */
+	protected String refBy;
 
 	protected String familyName;
 	protected String businessField;	
@@ -152,6 +160,47 @@ public class Participant extends AbstractDomainObject
 	public void setBusinessField(String businessField)
 	{
 		this.businessField = businessField;
+	}
+
+
+	/**
+	 * The Emergency contact No of the participant.
+	 */
+	protected String emgContactNo;
+	
+	public String getHealthInsurance()
+	{
+		return healthInsurance;
+	}
+
+	
+	public void setHealthInsurance(String healthInsurance)
+	{
+		this.healthInsurance = healthInsurance;
+	}
+
+	
+	public String getRefBy()
+	{
+		return refBy;
+	}
+
+	
+	public void setRefBy(String refBy)
+	{
+		this.refBy = refBy;
+	}
+
+	
+	public String getEmgContactNo()
+	{
+		return emgContactNo;
+	}
+
+	
+	public void setEmgContactNo(String emgContactNo)
+	{
+		this.emgContactNo = emgContactNo;
 	}
 
 
@@ -605,8 +654,9 @@ public class Participant extends AbstractDomainObject
 			this.familyName = form.getFamilyName();
 			this.businessField = form.getBusinessField();
 
-			populateGenderAndGenotype(form, validator);
-
+			populateGenderGenotypeAndInsurance(form, validator);
+			this.emgContactNo = form.getEmgContactNo();
+			this.refBy=form.getRefBy();
 			if (validator.isValidOption(form.getEthnicity()))
 			{
 				this.ethnicity = form.getEthnicity();
@@ -656,7 +706,7 @@ public class Participant extends AbstractDomainObject
 	 * @param form
 	 * @param validator
 	 */
-	private void populateGenderAndGenotype(ParticipantForm form, Validator validator)
+	private void populateGenderGenotypeAndInsurance(ParticipantForm form, Validator validator)
 	{
 		if (validator.isValidOption(form.getGender()))
 		{
@@ -674,6 +724,15 @@ public class Participant extends AbstractDomainObject
 		else
 		{
 			this.sexGenotype = null;
+		}
+
+		if (validator.isValidOption(form.getHealthInsurance()))
+		{
+			this.healthInsurance = form.getHealthInsurance();
+		}
+		else
+		{
+			this.healthInsurance = null;
 		}
 	}
 

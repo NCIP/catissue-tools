@@ -277,7 +277,7 @@
 	
 	<property>
 		<name>defaultGender</name>
-		<value>Unspecified</value>
+		<value>Female</value>
 	</property>
 	
 	<property>
@@ -377,7 +377,7 @@
 	
 	<property>
 		<name>defaultVitalStatus</name>
-		<value>Unknown</value>
+		<value>Alive</value>
 	</property>
 	
 

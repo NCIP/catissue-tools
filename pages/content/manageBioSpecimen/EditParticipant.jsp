@@ -474,8 +474,10 @@ function participantRegRow(subdivtag)
 				 <tr>
 		         	  <td align="left" class="black_new"><label 
 		         	  for="businessField"><bean:message key="participant.businessField" /></label>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				  		<html:text styleClass="black_new" maxlength="255" size="30" styleId="businessField" property="businessField" readonly="<%=readOnlyForAll%>"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<html:select property="businessField" styleClass="formFieldSized10" styleId="businessField" size="1" onchange="<%=strCheckStatus%>">
+							<html:options name="<%=Constants.EMPLOYMENT%>" labelName="<%=Constants.EMPLOYMENT%>" />
+						</html:select>
 				  	</td>
 				 </tr>
 				 
@@ -483,12 +485,11 @@ function participantRegRow(subdivtag)
 					<td class="black_new">
 					<label for="gender"><bean:message key="participant.gender"/></label>
 		         	  	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<!-- Mandar : 434 : for tooltip -->
 						<logic:iterate id="nvb" name="<%=Constants.GENDER_LIST%>">
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="gender" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
 						</logic:iterate>				
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
 						<label for="birthDate">
 							<bean:message key="participant.birthDate"/>
 						</label>&nbsp;
@@ -668,6 +669,38 @@ function participantRegRow(subdivtag)
 				 <!-------------- New Fields -->
 
 		<!-- Street and City --> 
+				
+				<tr>
+                  <td align="left" class="black_ar_new">
+				  <label for="refBy">
+											<bean:message key="participant.refby" /> </label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="50" size="30" styleId="refBy" property="refBy" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+                  
+				     <label for="emgContactNo">
+											<bean:message key="participant.emgcontactno" /> </label>
+				&nbsp;&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="30" size="30" styleId="emgContactNo"
+												property="emgContactNo"  style="text-align:right"/>
+                  </td>
+				</tr>
+
+				<tr>
+					<td class="black_new" >
+						<label for="healthInsurance">
+							<bean:message key="participant.healthinsurance" />
+						</label>
+						&nbsp;
+
+						<html:select property="healthInsurance" styleClass="formFieldSized10" styleId="healthInsurance" size="1" onchange="<%=strCheckStatus%>">
+							<html:options name="<%=Constants.HEALTH_INSURANCE%>" labelName="<%=Constants.HEALTH_INSURANCE%>" />
+						</html:select>
+					</td>
+				</tr>
+
 				<tr>
 				<td colspan="10" align="left" class="black_ar_new"><span
 							class="blue_ar_b">&nbsp						     

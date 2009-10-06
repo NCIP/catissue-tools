@@ -212,6 +212,30 @@
             insert="true"
             column="ADDRESS_ID"
         />
+        <property
+            name="healthInsurance"
+            type="string"
+            update="true"
+            insert="true"
+            column="INSURANCE"
+            length="20"
+        />
+        <property
+            name="refBy"
+            type="string"
+            update="true"
+            insert="true"
+            column="REF_BY"
+            length="50"
+        />
+        <property
+            name="emgContactNo"
+            type="string"
+            update="true"
+            insert="true"
+            column="CONTACT_NO"
+            length="50"
+        />
     </class>
 
 </hibernate-mapping>

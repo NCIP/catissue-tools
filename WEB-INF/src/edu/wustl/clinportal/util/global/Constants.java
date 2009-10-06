@@ -64,7 +64,7 @@ public class Constants
 	//Consent tracking
 	public static final String SHOW_CONSENTS = "showConsents";
 	public static final String SPECIMEN_CONSENTS = "specimenConsents";
-	public static final String YES = "yes";
+	public static final String YES = "Yes";
 	public static final String CP_ID = "cpID";
 	public static final String BARCODE_LABLE = "barcodelabel";
 	public static final String DISTRIBUTION_ON = "labelBarcode";
@@ -2277,4 +2277,15 @@ public class Constants
 	{
 	        return "FUTURE_USERS_FOR_CS_"+csId;	        
 	}
+	public static final String DEFAULT_STATE = "Maharashtra";
+	public static final String DEF_COUNTRY = "India";
+	public static final String NO = "No";
+	public static final String HEALTH_INSURANCE = "healthinsurance";
+	
+	public static final String SELFEMP = "Self Employed";
+    public static final String JOB = "Job";
+    public static final String RETIRED = "Retired";
+    public static final String STUDENT = "Student";
+    public static final String UNEMP = "Unemployed";
+    public static final String EMPLOYMENT = "employment";
 }

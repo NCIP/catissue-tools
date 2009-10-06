@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -99,8 +100,8 @@ public class ParticipantAction extends SecureAction
 	   //Added by Virender
 		participantForm.setRegistrationDate(edu.wustl.common.util.Utility.parseDateToString(Calendar
 				.getInstance().getTime(), Constants.DATE_PATTERN_DD_MM_YYYY));
-		participantForm.setState("Maharashtra");
-		participantForm.setCountry("India");
+		participantForm.setState(Constants.DEFAULT_STATE);
+		participantForm.setCountry(Constants.DEF_COUNTRY);
 		if (participantForm.getOperation().equals(Constants.ADD)
 				&& pageOf.equalsIgnoreCase(Constants.PAGE_OF_PARTICIPANT_CP_QUERY))
 		{
@@ -376,7 +377,22 @@ public class ParticipantAction extends SecureAction
 			}
 
 		}
-
+		
+		LinkedList<String> healthInsu = new LinkedList<String>();
+		healthInsu.add(Constants.YES);
+		healthInsu.add(Constants.NO);
+		request.setAttribute(Constants.HEALTH_INSURANCE, healthInsu);
+		
+		
+		LinkedList<String> employment = new LinkedList<String>();
+		employment.add(Constants.SELECT_OPTION);
+		employment.add(Constants.SELFEMP);
+		employment.add(Constants.JOB);
+		employment.add(Constants.STUDENT);
+		employment.add(Constants.UNEMP);
+		employment.add(Constants.RETIRED);
+		request.setAttribute(Constants.EMPLOYMENT, employment);
+		
 	}
 
 	/**

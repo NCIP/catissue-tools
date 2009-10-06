@@ -133,6 +133,55 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 	 * The zip code of city where the site is.
 	 */
 	private String zipCode;
+	
+	/**
+	 * The Health Insurance of the participant.
+	 */
+	protected String healthInsurance;
+	/**
+	 * Patient referred by
+	 */
+	protected String refBy;
+
+	/**
+	 * The Emergency contact No of the participant.
+	 */
+	protected String emgContactNo;
+	
+	public String getHealthInsurance()
+	{
+		return healthInsurance;
+	}
+
+	
+	public void setHealthInsurance(String healthInsurance)
+	{
+		this.healthInsurance = healthInsurance;
+	}
+
+	
+	public String getRefBy()
+	{
+		return refBy;
+	}
+
+	
+	public void setRefBy(String refBy)
+	{
+		this.refBy = refBy;
+	}
+
+	
+	public String getEmgContactNo()
+	{
+		return emgContactNo;
+	}
+
+	
+	public void setEmgContactNo(String emgContactNo)
+	{
+		this.emgContactNo = emgContactNo;
+	}
 
 	/**
 	 * Phone number of the site.
@@ -360,7 +409,9 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 		this.zipCode = participant.getAddress().getZipCode();
 		this.phoneNumber = participant.getAddress().getPhoneNumber();
 		this.faxNumber = participant.getAddress().getFaxNumber();
-
+		this.healthInsurance = participant.getHealthInsurance();
+		this.emgContactNo=participant.getEmgContactNo();
+		this.refBy=participant.getRefBy();
 		Collection raceCollection = participant.getRaceCollection();
 		if (raceCollection != null)
 		{
