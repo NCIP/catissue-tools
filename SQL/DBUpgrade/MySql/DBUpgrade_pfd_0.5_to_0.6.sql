@@ -7,3 +7,4 @@ Alter table CATISSUE_PARTICIPANT add (CONTACT_NO varchar(50));
 delete from CATISSUE_PERMISSIBLE_VALUE where identifier = 2641;
 delete from CATISSUE_PERMISSIBLE_VALUE where IDENTIFIER = 60;
 delete from CATISSUE_PERMISSIBLE_VALUE where IDENTIFIER = 2636;
+alter table catissue_address modify STREET text

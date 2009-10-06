@@ -413,7 +413,7 @@ function participantRegRow(subdivtag)
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<label for="registrationDate">
 											<bean:message key="participant.cpr.msg" /> </label>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
                   <html:text styleClass="black_ar_new"
 												maxlength="50" size="30" styleId="registrationDate" property="registrationDate" /></td>
                   </tr>
@@ -469,17 +469,15 @@ function participantRegRow(subdivtag)
 		         	  for="familyName"><bean:message key="participant.familyName" /></label>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				  		<html:text styleClass="black_new" maxlength="255" size="30" styleId="familyName" property="familyName" readonly="<%=readOnlyForAll%>"/>
-				  	</td>
-				 </tr>		
-				 <tr>
-		         	  <td align="left" class="black_new"><label 
+				&nbsp;&nbsp;
+						<label 
 		         	  for="businessField"><bean:message key="participant.businessField" /></label>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;
 						<html:select property="businessField" styleClass="formFieldSized10" styleId="businessField" size="1" onchange="<%=strCheckStatus%>">
 							<html:options name="<%=Constants.EMPLOYMENT%>" labelName="<%=Constants.EMPLOYMENT%>" />
 						</html:select>
 				  	</td>
-				 </tr>
+				 </tr>		
 				 
 				 <tr>
 					<td class="black_new">
@@ -492,7 +490,7 @@ function participantRegRow(subdivtag)
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;						         	
 						<label for="birthDate">
 							<bean:message key="participant.birthDate"/>
-						</label>&nbsp;
+						</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <%
 	 if(currentBirthDate.trim().length() > 0)
 	{
@@ -546,7 +544,7 @@ function participantRegRow(subdivtag)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<label for="deathDate">
 							<bean:message key="participant.deathDate"/>
-								</label>
+								</label>&nbsp;&nbsp;&nbsp;&nbsp;
 						<%
 						
 							ParticipantForm form = (ParticipantForm) request.getAttribute("participantForm");
@@ -591,6 +589,26 @@ function participantRegRow(subdivtag)
 								
 		        	  </td>
 				 </tr>
+				
+				 <tr>
+					<td class="black_new" >
+						<label for="healthInsurance">
+							<bean:message key="participant.healthinsurance" />
+						</label>
+						&nbsp;
+						<logic:iterate id="nvb" name="<%=Constants.HEALTH_INSURANCE%>">
+						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
+						<html:radio property="healthInsurance" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
+						</logic:iterate>	
+					&nbsp;&nbsp;&nbsp;&nbsp;
+						 <label for="refBy">
+											<bean:message key="participant.refby" /> </label>
+			&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="50" size="30" styleId="refBy" property="refBy" />
+					</td>
+				</tr>
+
 				 <tr>
 				 				 <!-- activitystatus -->	
 							<% if(activityStatusPrivilege) {%>
@@ -668,38 +686,6 @@ function participantRegRow(subdivtag)
 
 				 <!-------------- New Fields -->
 
-		<!-- Street and City --> 
-				
-				<tr>
-                  <td align="left" class="black_ar_new">
-				  <label for="refBy">
-											<bean:message key="participant.refby" /> </label>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="50" size="30" styleId="refBy" property="refBy" />
-				&nbsp;&nbsp;&nbsp;&nbsp;
-                  
-				     <label for="emgContactNo">
-											<bean:message key="participant.emgcontactno" /> </label>
-				&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="30" size="30" styleId="emgContactNo"
-												property="emgContactNo"  style="text-align:right"/>
-                  </td>
-				</tr>
-
-				<tr>
-					<td class="black_new" >
-						<label for="healthInsurance">
-							<bean:message key="participant.healthinsurance" />
-						</label>
-						&nbsp;
-
-						<html:select property="healthInsurance" styleClass="formFieldSized10" styleId="healthInsurance" size="1" onchange="<%=strCheckStatus%>">
-							<html:options name="<%=Constants.HEALTH_INSURANCE%>" labelName="<%=Constants.HEALTH_INSURANCE%>" />
-						</html:select>
-					</td>
-				</tr>
 
 				<tr>
 				<td colspan="10" align="left" class="black_ar_new"><span
@@ -715,46 +701,13 @@ function participantRegRow(subdivtag)
 				 </tr>
 				 <tr>
 		             <td align="left" class="black_ar_new">
-                   		<label for="street"><bean:message key="site.street" /> </label>
+                   		<label for="street"><bean:message key="participant.address" /> </label>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				  <html:textarea property="street" rows="2" styleClass="black_new"  styleId="street" cols="27" />
+				  <html:textarea property="street" rows="2" styleClass="black_new"  styleId="street" cols="50" />
 				  </td>
 				 </tr>
 
-				 <tr>
-                  <td align="left" class="black_ar_new">
-					<label for="city">
-											<bean:message key="site.city" /> </label>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<html:text styleClass="black_ar_new"
-												maxlength="50" size="30" styleId="city" property="city" />
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				 <label for="state"><bean:message key="site.state" /> </label>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"	maxlength="50" size="30" styleId="state" property="state" />
-					</td>
-                 </tr>
-				
                 <!-- Country and Phone No -->
-				<tr>
-                  <td align="left" class="black_ar_new">
-				  <label for="country">
-											<bean:message key="site.country" /> </label>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="50" size="30" styleId="country" property="country" />
-				&nbsp;&nbsp;&nbsp;&nbsp;
-                  
-				     <label for="zipCode">
-											<bean:message key="site.zipCode" /> </label>
-				&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="30" size="30" styleId="zipCode"
-												property="zipCode"  style="text-align:right"/>
-                  </td>
-                </tr>
-				
 				<tr>
                   <td align="left" class="black_ar_new"><label
 												for="phoneNumber"> <bean:message
@@ -764,11 +717,21 @@ function participantRegRow(subdivtag)
                   <html:text styleClass="black_ar_new"
 												maxlength="50" size="30" styleId="phoneNumber"
 												property="phoneNumber" style="text-align:right"/>
+&nbsp;&nbsp;
+					  <label for="emgContactNo">
+											<bean:message key="participant.emgcontactno" /> </label>
+				&nbsp;&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="30" size="30" styleId="emgContactNo"
+												property="emgContactNo"  style="text-align:right"/>
                   </td>
 
                 </tr>
 
-				 
+				<tr>
+				<td>
+				</td>
+				</tr>
 
 				 <!-------------- New Fields -->
 					</table>

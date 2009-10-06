@@ -363,6 +363,8 @@ public class ParticipantAction extends SecureAction
 		List genderList = CDEManager.getCDEManager().getPermissibleValueList(
 				Constants.CDE_NAME_GENDER, null);
 		genderList.remove(0);
+		genderList.remove(genderList.size()-1);
+		genderList.remove(genderList.size()-1);
 		request.setAttribute(Constants.GENDER_LIST, genderList);
 		if (participantForm.getGender() == null || participantForm.getGender().equals(""))
 		{
@@ -375,10 +377,10 @@ public class ParticipantAction extends SecureAction
 			}
 
 		}
-		
-		LinkedList<String> healthInsu = new LinkedList<String>();
-		healthInsu.add(Constants.YES);
-		healthInsu.add(Constants.NO);
+
+		List<NameValueBean> healthInsu = new ArrayList<NameValueBean>();
+		healthInsu.add(new NameValueBean(Constants.YES, Constants.YES));
+		healthInsu.add(new NameValueBean(Constants.NO, Constants.NO));
 		request.setAttribute(Constants.HEALTH_INSURANCE, healthInsu);
 		
 		

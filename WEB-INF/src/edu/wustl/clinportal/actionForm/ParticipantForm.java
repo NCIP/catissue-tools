@@ -137,7 +137,7 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 	/**
 	 * The Health Insurance of the participant.
 	 */
-	protected String healthInsurance;
+	protected String healthInsurance = "Yes";
 	/**
 	 * Patient referred by
 	 */
