@@ -16,7 +16,7 @@
 				<td width="50%" valign="middle"><span class="wh_ar_b"><bean:message
 					key="app.welcomeNote"
 					arg0="PaperFreeDoctor"
-					arg1="v0.5"
+					arg1="v0.6"
 					arg2="" /> </span></td>
 				<td width="50%" align="right" valign="top"><a
 					href="ReportProblem.do?operation=add" class="white"> <img

@@ -99,7 +99,7 @@ table#browserDetailsContainer
 										}
 										%> <bean:message key="app.welcomeNote"
 									arg0="PaperFreeDoctor"
-									arg1="v0.5"
+									arg1="v0.6"
 									arg2="" /></TD>
 							</tr>
 						</logic:notEmpty></td>
