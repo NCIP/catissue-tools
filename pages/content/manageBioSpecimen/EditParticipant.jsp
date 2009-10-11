@@ -560,7 +560,7 @@ function participantRegRow(subdivtag)
 						<label for="healthInsurance">
 							<bean:message key="participant.healthinsurance" />
 						</label>
-						&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<logic:iterate id="nvb" name="<%=Constants.HEALTH_INSURANCE%>">
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="healthInsurance" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
