@@ -495,7 +495,7 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 					
 					this.clinicalStudyId=clStudyRegn.getClinicalStudyParticipantIdentifier();
 					this.registrationDate=edu.wustl.common.util.Utility.parseDateToString(
-							clStudyRegn.getRegistrationDate(), Constants.DATE_PATTERN_MM_DD_YYYY);
+							clStudyRegn.getRegistrationDate(), Constants.DATE_PATTERN_DD_MM_YYYY);
 					this.cpId=clStudyRegn.getClinicalStudy().getId();
 				}
 			

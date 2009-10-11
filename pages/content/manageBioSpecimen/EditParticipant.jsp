@@ -60,7 +60,7 @@ function participantRegRow(subdivtag)
 			cprParticipantId.innerHTML="" + sname;
 			
 			<%
-				String registrationDate = edu.wustl.common.util.Utility.parseDateToString(Calendar.getInstance().getTime(), Constants.DATE_PATTERN_MM_DD_YYYY);
+				String registrationDate = edu.wustl.common.util.Utility.parseDateToString(Calendar.getInstance().getTime(), Constants.DATE_PATTERN_DD_MM_YYYY);
     		%>
     		
 			//Third Cell
@@ -414,8 +414,38 @@ function participantRegRow(subdivtag)
 								<label for="registrationDate">
 											<bean:message key="participant.cpr.msg" /> </label>
 &nbsp;&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="50" size="30" styleId="registrationDate" property="registrationDate" /></td>
+												  <%
+									 if(registrationDate.trim().length() > 0)
+									{
+											Integer birthYear = new Integer(Utility.getYear(registrationDate ));
+											Integer birthMonth = new Integer(Utility.getMonth(registrationDate ));
+											Integer birthDay = new Integer(Utility.getDay(registrationDate ));
+								%>
+											<ncombo:DateTimeComponent name="registrationDate"
+																	  id="registrationDate"
+																	  formName="participantForm"	
+																	  month= "<%=birthMonth %>"
+																	  year= "<%=birthYear %>"
+																	  day= "<%= birthDay %>" 
+																	  value="<%=registrationDate %>"
+																	  pattern="dd-MM-yyyy"
+																	  styleClass="formDateSized10"
+																	  />		
+								<% 
+									}
+									else
+									{  
+								 %>
+											<ncombo:DateTimeComponent name="registrationDate"
+																	  id="registrationDate"
+																	  formName="participantForm"	
+																	  pattern="dd-MM-yyyy"
+																	  styleClass="formDateSized10" 
+																			 />		
+								<%
+									}
+								%>
+								<bean:message key="page.dateFormat" />
                   </tr>
 					
 
@@ -526,71 +556,6 @@ function participantRegRow(subdivtag)
 					 </td>
 				 </tr>			
 				 <tr>
-				
-					<td class="black_new">
-				     	<label for="vitalStatus">
-				     		<bean:message key="participant.vitalStatus"/>
-				     	</label>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<%--
-				     	<html:select property="vitalStatus" styleClass="formFieldSized" styleId="vitalStatus" size="1" disabled="<%=readOnlyForAll%>"
-						 onmouseover="showTip(this.id)" onmouseout="hideTip(this.id)">
-							<html:options collection="<%=Constants.VITAL_STATUS_LIST%>" labelProperty="name" property="value"/>
-						</html:select>--%>
-						<logic:iterate id="nvb" name="<%=Constants.VITAL_STATUS_LIST%>">
-						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
-						<html:radio property="vitalStatus" onclick="onVitalStatusRadioButtonClick(this)" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
-						</logic:iterate>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<label for="deathDate">
-							<bean:message key="participant.deathDate"/>
-								</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						<%
-						
-							ParticipantForm form = (ParticipantForm) request.getAttribute("participantForm");
-							Boolean deathDisable = new Boolean("false");
-							if(form.getVitalStatus()!= null && !form.getVitalStatus().trim().equals("Dead"))
-							{
-								deathDisable = new Boolean("true");
-							}
-							 if(currentDeathDate.trim().length() > 0)
-							{
-									Integer deathYear = new Integer(Utility.getYear(currentDeathDate ));
-									Integer deathMonth = new Integer(Utility.getMonth(currentDeathDate ));
-									Integer deathDay = new Integer(Utility.getDay(currentDeathDate ));
-						%>
-									<ncombo:DateTimeComponent name="deathDate"
-															  id="deathDate"
-						 									  formName="participantForm"	
-															  month= "<%=deathMonth %>"
-															  year= "<%=deathYear %>"
-															  day= "<%= deathDay %>" 
-															  value="<%=currentDeathDate %>"
-															  styleClass="formDateSized10"
-															  disabled="<%=deathDisable%>"
-															  pattern="dd-MM-yyyy"
-																	 />		
-						<% 
-							}
-							else
-							{  
-						 %>
-									<ncombo:DateTimeComponent name="deathDate"
-															  id="deathDate"
-						 									  formName="participantForm"	
-															  styleClass="formDateSized10" 
-															  disabled="<%=deathDisable%>"
-															  pattern="dd-MM-yyyy"
-																	 />		
-						<%
-							}
-						%>
-						<bean:message key="page.dateFormat" />
-								
-		        	  </td>
-				 </tr>
-				
-				 <tr>
 					<td class="black_new" >
 						<label for="healthInsurance">
 							<bean:message key="participant.healthinsurance" />
@@ -600,10 +565,10 @@ function participantRegRow(subdivtag)
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="healthInsurance" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
 						</logic:iterate>	
-					&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						 <label for="refBy">
 											<bean:message key="participant.refby" /> </label>
-			&nbsp;
+			&nbsp;&nbsp;&nbsp;
                   <html:text styleClass="black_ar_new"
 												maxlength="50" size="30" styleId="refBy" property="refBy" />
 					</td>
@@ -639,52 +604,6 @@ function participantRegRow(subdivtag)
 				
 				<%-- added by chetan for death date --%>
 				 
-				 
-				<!-- Sex Genotype, Race and Ethnicity
-				 <tr>
-					<td class="black_new">
-						<label for="genotype"><bean:message key="participant.genotype"/></label>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					  <autocomplete:AutoCompleteTag property="genotype"
-										  optionsList = "<%=request.getAttribute(Constants.GENOTYPE_LIST)%>"
-										  initialValue="<%=form.getGenotype()%>"
-										  styleClass="black_new" size="27"
-									    />
-
-		        	  </td>
-				 </tr>
-
-				 
-
-				 <tr>
-					<td class="formFieldNoBordersSimple">
-					     <label for="race"><bean:message key="participant.race"/></label>
-				     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!-- Mandar : 434 : for tooltip 
-				     	<html:select property="raceTypes" styleClass="formFieldSized" styleId="race" size="4" multiple="true" disabled="<%=readOnlyForAll%>"
-						 onmouseover="showTip(this.id)" onmouseout="hideTip(this.id)">
-							<html:options collection="<%=Constants.RACELIST%>" labelProperty="name" property="value"/>
-						</html:select>
-		        	  </td>
-				 </tr>
-				 <tr>
-					<td class="black_new">
-				     	<label for="ethnicity">
-				     		<bean:message key="participant.ethnicity"/>
-				     	</label>
-				    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					   <autocomplete:AutoCompleteTag property="ethnicity"
-										  optionsList = "<%=request.getAttribute(Constants.ETHNICITY_LIST)%>"
-										  initialValue="<%=form.getEthnicity()%>"
-										  styleClass="black_new" size="27"
-									    />
-
-		        	  </td>
-				 </tr>
-
-				 -->
-
-				 <!-------------- New Fields -->
 
 
 				<tr>
@@ -702,7 +621,7 @@ function participantRegRow(subdivtag)
 				 <tr>
 		             <td align="left" class="black_ar_new">
                    		<label for="street"><bean:message key="participant.address" /> </label>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				  <html:textarea property="street" rows="2" styleClass="black_new"  styleId="street" cols="50" />
 				  </td>
 				 </tr>
@@ -742,6 +661,7 @@ function participantRegRow(subdivtag)
 	<tr>
 
 	<%
+				ParticipantForm form = (ParticipantForm) request.getAttribute("participantForm");
 				long csId = form.getCpId();
 				System.out.println("CS ID:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+ csId);
 	%>
