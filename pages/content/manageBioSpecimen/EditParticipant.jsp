@@ -508,7 +508,26 @@ function participantRegRow(subdivtag)
 						</html:select>
 				  	</td>
 				 </tr>		
-				 
+				 <!-- Blood Group and  and Email -->
+<tr>
+                  <td align="left" class="black_ar_new"><label
+												for="emailAddress"> <bean:message
+												key="user.emailAddress" /> </label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  <html:text styleClass="black_ar_new"
+												maxlength="50" size="30" styleId="emailAddress"
+												property="emailAddress" style="text-align:right"/>
+&nbsp;&nbsp;
+					  <label for="bloodGroup">
+											<bean:message key="participant.bloodGroup" /> </label>
+				&nbsp;&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="10" size="5" styleId="bloodGroup"
+												property="bloodGroup"  style="text-align:right"/>
+                  </td>
+
+                </tr>
 				 <tr>
 					<td class="black_new">
 					<label for="gender"><bean:message key="participant.gender"/></label>
@@ -560,7 +579,7 @@ function participantRegRow(subdivtag)
 						<label for="healthInsurance">
 							<bean:message key="participant.healthinsurance" />
 						</label>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<logic:iterate id="nvb" name="<%=Constants.HEALTH_INSURANCE%>">
 						<%	NameValueBean nameValueBean=(NameValueBean)nvb;%>
 						<html:radio property="healthInsurance" value="<%=nameValueBean.getValue()%>"><%=nameValueBean.getName()%> </html:radio>
@@ -646,29 +665,6 @@ function participantRegRow(subdivtag)
                   </td>
 
                 </tr>
-				  <!-- Blood Group and  and Email -->
-<tr>
-                  <td align="left" class="black_ar_new"><label
-												for="emailAddress"> <bean:message
-												key="user.emailAddress" /> </label>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                  <html:text styleClass="black_ar_new"
-												maxlength="50" size="30" styleId="emailAddress"
-												property="emailAddress" style="text-align:right"/>
-&nbsp;&nbsp;
-					  <label for="bloodGroup">
-											<bean:message key="participant.bloodGroup" /> </label>
-				&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="30" size="30" styleId="bloodGroup"
-												property="bloodGroup"  style="text-align:right"/>
-                  </td>
-
-                </tr>
-
-
-
 				<tr>
 				<td>
 				</td>
