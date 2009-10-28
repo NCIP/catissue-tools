@@ -245,7 +245,7 @@
             length="50"
         />
         <property
-            name="emailAddress"
+            name="bloodGroup"
             type="string"
             update="true"
             insert="true"
