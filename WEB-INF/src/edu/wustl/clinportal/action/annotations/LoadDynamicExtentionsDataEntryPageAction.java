@@ -201,7 +201,7 @@ public class LoadDynamicExtentionsDataEntryPageAction extends BaseAction
 					EventEntry newEntry =  eventEntryCollection.get(0);
 					
 					newEntry.setEncounterDate(edu.wustl.common.util.Utility
-							.parseDate(request.getParameter("encounterDate")));
+							.parseDate(request.getParameter("encounterDate"),Constants.DATE_PATTERN_DD_MM_YYYY));
 					AbstractBizLogic eventEntryBizLogic = new EventEntryBizlogic();
 					SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
 							Constants.SESSION_DATA);
@@ -366,7 +366,7 @@ public class LoadDynamicExtentionsDataEntryPageAction extends BaseAction
 		if (encounterDate != null && !"".equals(encounterDate))
 		{
 			eventEntry.setEncounterDate(edu.wustl.common.util.Utility.parseDate(request
-					.getParameter("encounterDate")));
+					.getParameter("encounterDate"),Constants.DATE_PATTERN_DD_MM_YYYY));
 		}
 
 		bizLogic.insert(eventEntry, sessionDataBean, Constants.HIBERNATE_DAO);
