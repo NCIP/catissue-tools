@@ -338,7 +338,7 @@ public class LoadEventDetailsAction extends BaseAction
 						eventEntryOld = entry;
 					}
 					eventEntry.setEncounterDate(edu.wustl.common.util.Utility
-							.parseDate(encounterDate));
+							.parseDate(encounterDate,Constants.DATE_PATTERN_DD_MM_YYYY));
 					bizlogic.update(eventEntry, eventEntryOld, Constants.HIBERNATE_DAO,
 							sessionDataBean);
 
@@ -353,7 +353,7 @@ public class LoadEventDetailsAction extends BaseAction
 					eventEntry.setClinicalStudyEvent(event);
 					eventEntry.setClinicalStudyRegistration(csRegn);
 					eventEntry.setEncounterDate(edu.wustl.common.util.Utility
-							.parseDate(encounterDate));
+							.parseDate(encounterDate,Constants.DATE_PATTERN_DD_MM_YYYY));
 					eventEntry.setEntryNumber(Integer.parseInt(entryNumber));
 					bizlogic.insert(eventEntry, sessionDataBean, Constants.HIBERNATE_DAO);
 					errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionError(
