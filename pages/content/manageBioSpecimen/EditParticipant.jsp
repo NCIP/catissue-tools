@@ -646,6 +646,28 @@ function participantRegRow(subdivtag)
                   </td>
 
                 </tr>
+				  <!-- Blood Group and  and Email -->
+<tr>
+                  <td align="left" class="black_ar_new"><label
+												for="emailAddress"> <bean:message
+												key="user.emailAddress" /> </label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  <html:text styleClass="black_ar_new"
+												maxlength="50" size="30" styleId="emailAddress"
+												property="emailAddress" style="text-align:right"/>
+&nbsp;&nbsp;
+					  <label for="bloodGroup">
+											<bean:message key="participant.bloodGroup" /> </label>
+				&nbsp;&nbsp;
+                  <html:text styleClass="black_ar_new"
+												maxlength="30" size="30" styleId="bloodGroup"
+												property="bloodGroup"  style="text-align:right"/>
+                  </td>
+
+                </tr>
+
+
 
 				<tr>
 				<td>
