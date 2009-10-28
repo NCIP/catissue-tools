@@ -236,6 +236,22 @@
             column="CONTACT_NO"
             length="50"
         />
+        <property
+            name="emailAddress"
+            type="string"
+            update="true"
+            insert="true"
+            column="EMAIL_ADDRESS"
+            length="50"
+        />
+        <property
+            name="emailAddress"
+            type="string"
+            update="true"
+            insert="true"
+            column="BLOOD_GROUP"
+            length="20"
+        />
     </class>
 
 </hibernate-mapping>

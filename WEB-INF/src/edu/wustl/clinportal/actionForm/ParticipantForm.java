@@ -148,6 +148,40 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 	 */
 	protected String emgContactNo;
 	
+protected String emailAddress;
+	
+	public String getEmailAddress()
+	{
+		return emailAddress;
+	}
+
+
+	
+	public void setEmailAddress(String emailAddress)
+	{
+		this.emailAddress = emailAddress;
+	}
+
+
+	
+	public String getBloodGroup()
+	{
+		return bloodGroup;
+	}
+
+
+	
+	public void setBloodGroup(String bloodGroup)
+	{
+		this.bloodGroup = bloodGroup;
+	}
+
+
+	/**
+	 * bloodGroup name of the participant.
+	 */
+	protected String bloodGroup;
+	
 	public String getHealthInsurance()
 	{
 		return healthInsurance;
@@ -500,6 +534,9 @@ public class ParticipantForm extends AbstractActionForm implements Serializable
 				}
 			
 			}
+			this.setBloodGroup(edu.wustl.common.util.Utility.toString(participant.getBloodGroup()));
+			this.setEmailAddress(edu.wustl.common.util.Utility.toString(participant.getEmailAddress()));
+			
 		
 			/*collectionProtocolRegistrationValues = new LinkedHashMap();
 			if (consentResponseHashTable == null)

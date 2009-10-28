@@ -134,7 +134,42 @@ public class Participant extends AbstractDomainObject
 	protected String familyName;
 	protected String businessField;	
 	
+	/**
+	 * emailAddress name of the participant.
+	 */
+	protected String emailAddress;
+	
+	public String getEmailAddress()
+	{
+		return emailAddress;
+	}
 
+
+	
+	public void setEmailAddress(String emailAddress)
+	{
+		this.emailAddress = emailAddress;
+	}
+
+
+	
+	public String getBloodGroup()
+	{
+		return bloodGroup;
+	}
+
+
+	
+	public void setBloodGroup(String bloodGroup)
+	{
+		this.bloodGroup = bloodGroup;
+	}
+
+
+	/**
+	 * bloodGroup name of the participant.
+	 */
+	protected String bloodGroup;
 	
 	
 	public String getFamilyName()
@@ -695,6 +730,8 @@ public class Participant extends AbstractDomainObject
 			this.address.setZipCode(form.getZipCode());
 			this.address.setPhoneNumber(form.getPhoneNumber());
 			this.address.setFaxNumber(form.getFaxNumber());
+			this.setBloodGroup(edu.wustl.common.util.Utility.toString(form.getBloodGroup()));
+			this.setEmailAddress(edu.wustl.common.util.Utility.toString(form.getEmailAddress()));
 		}
 		catch (Exception excp)
 		{
