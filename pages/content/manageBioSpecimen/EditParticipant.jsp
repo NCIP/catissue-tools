@@ -522,9 +522,9 @@ function participantRegRow(subdivtag)
 					  <label for="bloodGroup">
 											<bean:message key="participant.bloodGroup" /> </label>
 				&nbsp;&nbsp;
-                  <html:text styleClass="black_ar_new"
-												maxlength="10" size="5" styleId="bloodGroup"
-												property="bloodGroup"  style="text-align:right"/>
+					<html:select property="bloodGroup" styleClass="formFieldSized5" styleId="bloodGroup" size="1" onchange="<%=strCheckStatus%>">
+							<html:options name="<%=Constants.BLOOD_GROUP%>" labelName="<%=Constants.BLOOD_GROUP%>" />
+						</html:select>
                   </td>
 
                 </tr>

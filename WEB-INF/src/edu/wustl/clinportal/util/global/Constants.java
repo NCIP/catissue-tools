@@ -2288,4 +2288,15 @@ public class Constants
     public static final String STUDENT = "Student";
     public static final String UNEMP = "Unemployed";
     public static final String EMPLOYMENT = "employment";
+    
+    public static final String APOS = "A+";
+    public static final String ANEG = "A-";
+    public static final String BPOS = "B+";
+    public static final String BNEG = "B-";
+    public static final String ABPOS = "AB+";
+    public static final String ABNEG = "AB-";
+    public static final String ONEG = "0-";
+    public static final String OPOS = "0+";
+    public static final String BLOOD_GROUP = "BLOOD_GROUP";
+    
 }

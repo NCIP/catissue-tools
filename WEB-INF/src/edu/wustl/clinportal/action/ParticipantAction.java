@@ -383,6 +383,14 @@ public class ParticipantAction extends SecureAction
 		healthInsu.add(new NameValueBean(Constants.NO, Constants.NO));
 		request.setAttribute(Constants.HEALTH_INSURANCE, healthInsu);
 		
+		LinkedList<String> bloodGroup = new LinkedList<String>();
+		bloodGroup.add(Constants.APOS);
+		bloodGroup.add(Constants.ANEG);
+		bloodGroup.add(Constants.BPOS);
+		bloodGroup.add(Constants.BNEG);
+		bloodGroup.add(Constants.OPOS);
+		bloodGroup.add(Constants.ONEG);
+		request.setAttribute(Constants.BLOOD_GROUP, bloodGroup);
 		
 		LinkedList<String> employment = new LinkedList<String>();
 		employment.add(Constants.SELECT_OPTION);
