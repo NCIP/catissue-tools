@@ -19,10 +19,10 @@
 			<tr>
 			<!--report probles tab-->
 				<td width="86%" align="right" valign="top">
-					<a href="ReportProblem.do?operation=add" class="white"> <img
+					<a href="RetrieveQueryAction.do" class="white"> <img
 					src="images/uIEnhancementImages/ic_report.gif" width="15"
 					height="12" hspace="2" vspace="0" border="0"><bean:message
-					key="reportProblem.title" /> </a> &nbsp;
+					key="reports.title" /> </a> &nbsp;
 					<!--contact us tab-->
 					<a	href="ContactUs.do?PAGE_TITLE_KEY=app.contactUs&FILE_NAME_KEY=app.contactUs.file"
 					class="white"><img

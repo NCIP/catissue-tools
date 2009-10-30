@@ -1,5 +1,10 @@
 Please send questions or comments to the email address listed below:
 <font style="font-family: arial,sans-serif;" size="2">For sales inquiry or product support, please call us at (0) 98815 20147 or email us at <a href="mailto:gogreen@paperfreedoctor.com">gogreen@paperfreedoctor.com</a>.<br>
- <span style="font-size: 32px; font-style: italic;"><span
-style="font-style: normal;"><span style="font-size: large;"><a href="mailto:GoGreen@paperfreedoctor.com" style="text-decoration: 
-none;"></a></span></span></span></font>
+	<span style="font-size: 32px; font-style: italic;">
+		<span style="font-style: normal;">
+			<span style="font-size: large;">
+				<a href="mailto:GoGreen@paperfreedoctor.com" style="text-decoration:none;"></a>
+			</span>
+		</span>
+	</span>
+</font>
