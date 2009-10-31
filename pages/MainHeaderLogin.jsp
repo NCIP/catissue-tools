@@ -18,11 +18,8 @@
 					arg0="PaperFreeDoctor"
 					arg1="v0.6"
 					arg2="" /> </span></td>
-				<td width="50%" align="right" valign="top"><a
-					href="ReportProblem.do?operation=add" class="white"> <img
-					src="images/uIEnhancementImages/ic_report.gif" alt="Report Problems" width="15"
-					height="12" border="0" hspace="2" vspace="0"><bean:message
-					key="reportProblem.title" /></a>&nbsp; <a
+				<td width="50%" align="right" valign="top">
+					<a
 					href="ContactUs.do?PAGE_TITLE_KEY=app.contactUs&FILE_NAME_KEY=app.contactUs.file"
 					class="white"> <img
 					src="images/uIEnhancementImages/ic_mail.gif" alt="Summary"
