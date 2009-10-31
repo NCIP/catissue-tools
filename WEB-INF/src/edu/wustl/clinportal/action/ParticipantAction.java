@@ -384,6 +384,7 @@ public class ParticipantAction extends SecureAction
 		request.setAttribute(Constants.HEALTH_INSURANCE, healthInsu);
 		
 		LinkedList<String> bloodGroup = new LinkedList<String>();
+		bloodGroup.add(Constants.SELECT_OPTION);
 		bloodGroup.add(Constants.APOS);
 		bloodGroup.add(Constants.ANEG);
 		bloodGroup.add(Constants.BPOS);
