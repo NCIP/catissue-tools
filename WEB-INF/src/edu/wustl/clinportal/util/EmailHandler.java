@@ -15,8 +15,6 @@ import edu.wustl.clinportal.domain.ReportedProblem;
 import edu.wustl.clinportal.domain.User;
 import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.clinportal.util.global.Variables;
-import edu.wustl.security.manager.SecurityManagerFactory;
-import edu.wustl.security.exception.SMException;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.XMLPropertyHandler;
@@ -25,6 +23,8 @@ import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.EmailDetails;
 import edu.wustl.common.util.global.SendEmail;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.security.exception.SMException;
+import edu.wustl.security.manager.SecurityManagerFactory;
 
 /**
  * EmailHandler is used to send emails during user signup, creation, forgot password.
@@ -119,6 +119,41 @@ public class EmailHandler
 				+ Constants.SEPARATOR + user.getDepartment().getName());
 		userDetailsBody.append("\n" + ApplicationProperties.getValue("user.cancerResearchGroup")
 				+ Constants.SEPARATOR + user.getCancerResearchGroup().getName());
+
+		return userDetailsBody.toString();
+	}
+	
+	/**
+	 * Returns the users details to be incorporated in the email.
+	 * @param parti The user object.
+	 * @return the users details to be incorporated in the email.
+	 */
+	private String getParticipantDetailsEmailBody(edu.wustl.clinportal.domain.Participant parti)
+	{
+		StringBuffer userDetailsBody = new StringBuffer();
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.crn")
+				+ Constants.SEPARATOR + parti.getLastName());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.fn")
+				+ Constants.SEPARATOR + parti.getFirstName());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.ln")
+				+ Constants.SEPARATOR + parti.getLastName());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emp")
+				+ Constants.SEPARATOR + parti.getBusinessField());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.bg")
+				+ Constants.SEPARATOR + parti.getBloodGroup());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.gender")
+				+ Constants.SEPARATOR + parti.getGender());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.bd")
+				+ Constants.SEPARATOR + parti.getBirthDate());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.medi")
+				+ Constants.SEPARATOR + parti.getHealthInsurance());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.add")
+				+ Constants.SEPARATOR + parti.getAddress());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.phone")
+				+ Constants.SEPARATOR + parti.getEmgContactNo());
+		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emg")
+				+ Constants.SEPARATOR + parti.getEmgContactNo());
+
 
 		return userDetailsBody.toString();
 	}
@@ -331,6 +366,35 @@ public class EmailHandler
 		return email.sendMail(emailDetails);
 
 	}
+	
+	/**
+	 * Creates and sends the user signup request received email to the user and the administrator.
+	 * @param user The user registered for the membership.
+	 * @throws BizLogicException 
+	 */
+	public void sendParticipantRegEmail(edu.wustl.clinportal.domain.Participant participant,
+			String PI, String shortTitle) throws BizLogicException
+	{
+		String thanks = "Thanks," + PI;
+		String subject = ApplicationProperties.getValue("participantRegistration.request.subject") +" "+ shortTitle;
+		String body = "Dear " + participant.getLastName() + "," + participant.getFirstName() + "\n\n"
+				+ ApplicationProperties.getValue("participantDetails") + "\n\n"
+				+ getParticipantDetailsEmailBody(participant)+"\n\n\t"
+				+ thanks +"\n\n"
+				+ ApplicationProperties.getValue("participantenddetails");
+		boolean emailStatus = sendEmailToParticipantAndAdministrator(participant.getEmailAddress(), subject,
+				body, true);
+		if (emailStatus)
+		{
+			Logger.out.info(ApplicationProperties.getValue("userRegistration.email.success")
+					+ participant.getLastName() + " " + participant.getFirstName());
+		}
+		else
+		{
+			Logger.out.info(ApplicationProperties.getValue("userRegistration.email.failure")
+					+ participant.getLastName() + " " + participant.getFirstName());
+		}
+	}
 
 	/**
 	 * Sends email to the administrator and user with the email address passed.
@@ -362,6 +426,54 @@ public class EmailHandler
 		/*SendEmail email = new SendEmail();
 		return email.sendmail(userEmailAddress, adminEmailAddress, null, sendFromEmailId,
 				mailServer, subject, bodyValue.toString());*/
+
+		EmailDetails emailDetails = new EmailDetails();
+
+		if (toUser)
+		{
+			emailDetails.addToAddress(userEmailAddress);
+			emailDetails.addCcAddress(adminEmailAddress);
+		}
+		else
+		{
+			emailDetails.addToAddress(adminEmailAddress);
+			emailDetails.addCcAddress(userEmailAddress);
+		}
+		emailDetails.setSubject(subject);
+		emailDetails.setBody(bodyValue.toString());
+
+		SendEmail email;
+		try
+		{
+			email = new SendEmail(mailServer, sendFromEmailId);
+		}
+		catch (MessagingException e)
+		{
+			throw new BizLogicException(ErrorKey.getErrorKey("error.common.emailHandler"), e,
+					"Error in email setup");
+		}
+		return email.sendMail(emailDetails);
+	}
+	/**
+	 * Sends email to the administrator and user with the email address passed.
+	 * Returns true if the email is successfully sent else returns false.
+	 * @param userEmailAddress Email address of the user.
+	 * @param subject The subject of the email. 
+	 * @param body The body of the email.
+	 * @param toUser
+	 * @return true if the email is successfully sent else returns false.
+	 * @throws BizLogicException 
+	 */
+	private boolean sendEmailToParticipantAndAdministrator(String userEmailAddress, String subject,
+			String body, boolean toUser) throws BizLogicException
+	{
+		String adminEmailAddress = XMLPropertyHandler.getValue("email.administrative.emailAddress");
+		String sendFromEmailId = XMLPropertyHandler.getValue(EMAIL_FROM_ADDR);
+		String mailServer = XMLPropertyHandler.getValue(EMAIL_SERVER);
+
+		StringBuffer bodyValue = new StringBuffer();
+		bodyValue.append(body);
+		bodyValue.append("\n\n");
 
 		EmailDetails emailDetails = new EmailDetails();
 
@@ -551,4 +663,5 @@ public class EmailHandler
 					"Error in sending user account closure mail");
 		}
 	}
+	
 }

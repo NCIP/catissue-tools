@@ -31,6 +31,7 @@ import edu.wustl.clinportal.domain.Race;
 import edu.wustl.clinportal.domain.Site;
 import edu.wustl.clinportal.util.ApiSearchUtil;
 import edu.wustl.clinportal.util.CatissueCoreCacheManager;
+import edu.wustl.clinportal.util.EmailHandler;
 import edu.wustl.clinportal.util.ParticipantRegistrationCacheManager;
 import edu.wustl.clinportal.util.global.Constants;
 import edu.wustl.common.audit.AuditManager;
@@ -85,7 +86,8 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 		{
 			AuditManager auditManager = getAuditManager(sessionDataBean);
 			Participant participant = (Participant) obj;
-
+			String csST = null;
+			String csPI =  null;
 			if (isPartServEnabled.equals(Constants.TRUE))
 			{
 
@@ -153,6 +155,9 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 				cStudyRegId.setParticipant(participant);
 				cStudyRegId.setActivityStatus(Constants.ACTIVITY_STATUS_ACTIVE);
 				clStudyRegBlogic.insert(cStudyRegId, dao, sessionDataBean);
+				
+				csPI = cStudyRegId.getClinicalStudy().getPrincipalInvestigator().getFirstName()+ "," + cStudyRegId.getClinicalStudy().getPrincipalInvestigator().getLastName();
+				csST = cStudyRegId.getClinicalStudy().getShortTitle();
 			}
 
 			Set protectionObjects = new HashSet();
@@ -162,6 +167,8 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 			PrivilegeManager privilegeManager = PrivilegeManager.getInstance();
 			privilegeManager.insertAuthorizationData(null, protectionObjects, null, participant
 					.getObjectId());
+			EmailHandler email = new EmailHandler();
+			email.sendParticipantRegEmail(participant, csPI, csST);
 		}
 		catch (SMException e)
 		{

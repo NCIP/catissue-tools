@@ -56,7 +56,8 @@ import edu.wustl.common.util.logger.Logger;
 
 public class ParticipantForm extends AbstractActionForm implements Serializable
 {
-
+	private static final String invalidValueError = "errors.item.invalid.values";
+	
 	private static final long serialVersionUID = 1234567890L;
 
 	/**
@@ -1093,6 +1094,23 @@ protected String emailAddress;
 					- count;
 			//Getting ConsentRegistrationBean from the  session and creating consent response map.
 			setConsentResponse(session);
+			
+			
+			if (validator.isEmpty(emailAddress))
+			{
+				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+						invalidValueError, ApplicationProperties
+								.getValue("user.emailAddress")));
+			}
+			else
+			{
+				if (!validator.isValidEmailAddress(emailAddress))
+				{
+					errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+							invalidValueError, ApplicationProperties
+									.getValue("user.emailAddress")));
+				}
+			}
 
 		}
 		catch (Exception excp)
