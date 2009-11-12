@@ -65,7 +65,6 @@ public class EmailUtility
         catch (Exception e)
         {
 	       e.printStackTrace();
-	       throw new BizLogicException(null, null, "Email not set to participant");
 	    }
 	    
 	}
@@ -78,13 +77,23 @@ public class EmailUtility
 	public static String getParticipantDetailsEmailBody(edu.wustl.clinportal.domain.Participant parti, String hospRegId)
 	{
 		StringBuffer userDetailsBody = new StringBuffer();
-		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.crn")
-				+ Constants.SEPARATOR + hospRegId);
+		if("".equals(hospRegId))
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.crn")
+					+ Constants.SEPARATOR + "NA");	
+		}
+		else
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.crn")
+					+ Constants.SEPARATOR + hospRegId);
+			
+		}
+		
 		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.fn")
 				+ Constants.SEPARATOR + parti.getFirstName());
 		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.ln")
 				+ Constants.SEPARATOR + parti.getLastName());
-		if(parti.getBloodGroup().equals("--Select--"))
+		if(parti.getBloodGroup().equals(Constants.SELECT_OPTION))
 		{
 			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.bg")
 					+ Constants.SEPARATOR + "NA");
@@ -95,7 +104,7 @@ public class EmailUtility
 					+ Constants.SEPARATOR + parti.getBloodGroup());
 		}
 		
-		if(parti.getBusinessField().equals("--Select--"))
+		if(parti.getBusinessField().equals(Constants.SELECT_OPTION))
 		{
 			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emp")
 					+ Constants.SEPARATOR + "NA");
@@ -117,19 +126,50 @@ public class EmailUtility
 		}
 		else
 		{
-			Integer bData = parti.getBirthDate().getDate();
+			String birthDate = edu.wustl.common.util.Utility.parseDateToString(
+					parti.getBirthDate(), Constants.DATE_PATTERN_DD_MM_YYYY);
 			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.bd")
-				+ Constants.SEPARATOR + bData);
+				+ Constants.SEPARATOR + birthDate);
 		}
+		
 		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.medi")
-				+ Constants.SEPARATOR + parti.getHealthInsurance());
-		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.add")
-				+ Constants.SEPARATOR + parti.getAddress().getStreet());
-		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.phone")
-				+ Constants.SEPARATOR + parti.getEmgContactNo());
-		userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emg")
-				+ Constants.SEPARATOR + parti.getEmgContactNo());
+					+ Constants.SEPARATOR + parti.getHealthInsurance());
+		
+		if("".equals(parti.getAddress().getStreet()))
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.add")
+					+ Constants.SEPARATOR + "NA");
+		}
+		else
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.add")
+					+ Constants.SEPARATOR + parti.getAddress().getStreet());
+		}
+		
+		if("".equals(parti.getAddress().getPhoneNumber()))
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.phone")
+					+ Constants.SEPARATOR + "NA");
+		}
+		else
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.phone")
+				+ Constants.SEPARATOR + parti.getAddress().getPhoneNumber());
+			
+		}
+		
+		if("".equals( parti.getEmgContactNo()))
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emg")
+					+ Constants.SEPARATOR + "NA");
 
+		}
+		else
+		{
+			userDetailsBody.append("\n" + ApplicationProperties.getValue("participant.emg")
+					+ Constants.SEPARATOR + parti.getEmgContactNo());
+
+		}
 
 		return userDetailsBody.toString();
 	}

@@ -174,14 +174,14 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 					.getObjectId());
 			if(!"".equals(participant.getEmailAddress()))
 			{
-				String thanks = "Thanks," + csPI + "\n";
+				String thanks = "Thanks " + csPI + "\n";
 				String body = "Dear " + participant.getLastName() + "," + participant.getFirstName() +"," +  "\n\n"
 				+ ApplicationProperties.getValue("participantDetails") + "\n\n"
 				+ EmailUtility.getParticipantDetailsEmailBody(participant, hospRegId)+"\n"
 				+ csLT +"\n\n"
 				+ thanks +"\n\n"
 				+ ApplicationProperties.getValue("participantenddetails");
-				String sub = ApplicationProperties.getValue("participantRegistration.request.subject") +" "+ csST;
+				String sub = ApplicationProperties.getValue("participantRegistration.request.subject") +""+ csST;
 				EmailUtility.sendmail(body, participant.getEmailAddress(), sub);
 			}
 		}
