@@ -34,6 +34,7 @@ import edu.wustl.clinportal.util.CatissueCoreCacheManager;
 import edu.wustl.clinportal.util.EmailHandler;
 import edu.wustl.clinportal.util.ParticipantRegistrationCacheManager;
 import edu.wustl.clinportal.util.global.Constants;
+import edu.wustl.clinportal.util.global.EmailUtility;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.IBizLogic;
@@ -87,7 +88,9 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 			AuditManager auditManager = getAuditManager(sessionDataBean);
 			Participant participant = (Participant) obj;
 			String csST = null;
+			String csLT = null;
 			String csPI =  null;
+			String hospRegId = null;
 			if (isPartServEnabled.equals(Constants.TRUE))
 			{
 
@@ -158,6 +161,8 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 				
 				csPI = cStudyRegId.getClinicalStudy().getPrincipalInvestigator().getFirstName()+ "," + cStudyRegId.getClinicalStudy().getPrincipalInvestigator().getLastName();
 				csST = cStudyRegId.getClinicalStudy().getShortTitle();
+				csLT = cStudyRegId.getClinicalStudy().getTitle();
+				hospRegId = cStudyRegId.getClinicalStudyParticipantIdentifier();
 			}
 
 			Set protectionObjects = new HashSet();
@@ -167,8 +172,18 @@ public class ParticipantBizLogic extends ClinportalDefaultBizLogic
 			PrivilegeManager privilegeManager = PrivilegeManager.getInstance();
 			privilegeManager.insertAuthorizationData(null, protectionObjects, null, participant
 					.getObjectId());
-			EmailHandler email = new EmailHandler();
-			email.sendParticipantRegEmail(participant, csPI, csST);
+			if(!"".equals(participant.getEmailAddress()))
+			{
+				String thanks = "Thanks," + csPI + "\n";
+				String body = "Dear " + participant.getLastName() + "," + participant.getFirstName() +"," +  "\n\n"
+				+ ApplicationProperties.getValue("participantDetails") + "\n\n"
+				+ EmailUtility.getParticipantDetailsEmailBody(participant, hospRegId)+"\n"
+				+ csLT +"\n\n"
+				+ thanks +"\n\n"
+				+ ApplicationProperties.getValue("participantenddetails");
+				String sub = ApplicationProperties.getValue("participantRegistration.request.subject") +" "+ csST;
+				EmailUtility.sendmail(body, participant.getEmailAddress(), sub);
+			}
 		}
 		catch (SMException e)
 		{

@@ -1096,13 +1096,7 @@ protected String emailAddress;
 			setConsentResponse(session);
 			
 			
-			if (validator.isEmpty(emailAddress))
-			{
-				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
-						invalidValueError, ApplicationProperties
-								.getValue("user.emailAddress")));
-			}
-			else
+			if (!validator.isEmpty(emailAddress))
 			{
 				if (!validator.isValidEmailAddress(emailAddress))
 				{
