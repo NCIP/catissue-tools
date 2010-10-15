@@ -45,6 +45,13 @@
 	<property name="test.lib.dir" location="${test.dir}/lib" />
 	<property name="test.logs.dir" location="${test.dir}/logs" />
 	<property name="test.project.jar" location="${build.jars.dir}/${project.jar.prefix}tests-${project.version}.jar" />
+
+	<loadfile property="dist.revision" srcFile="./.svn/entries">
+		<filterchain>
+			<headfilter lines="1" skip="4" />
+		</filterchain>
+	</loadfile>
+
 	<import file="test/test.xml" />
 
 	<!-- =============================================================== -->
@@ -122,6 +129,7 @@
 
 	<!-- jars the classes -->
 	<target name="jar" depends="compile" description="Builds the jar file">
+		<tstamp />
 		<jar destfile="${project.jar.file}">
 			<fileset dir="${build.dest}">
 				<include name="**/*.class" />
@@ -129,6 +137,14 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.java" />
 			</fileset>
+			<manifest>
+				<section name="${sqkQuery32.jar.details}">
+					<attribute name="Version" value="${project.version}" />
+					<attribute name="Built-At-Time" value="${TODAY} ${TSTAMP}" />
+					<attribute name="SVN-URL" value="${dist.revision}" />
+				</section>
+			</manifest>
+
 		</jar>
 	</target>
 
