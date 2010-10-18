@@ -136,7 +136,10 @@
 			</fileset>
 			<fileset dir="${src.dir}">
 				<include name="**/*.java" />
+				<include name="caTissueModel.properties"/>
+				<include name="remoteService.xml"/>
 			</fileset>
+			
 			<manifest>
 				<section name="${sqkQuery32.jar.details}">
 					<attribute name="Version" value="${project.version}" />

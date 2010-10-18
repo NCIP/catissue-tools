@@ -50,12 +50,16 @@ public class CQL2HQL {
 		boolean avoidSubclasses, boolean caseInsensitive) throws QueryProcessingException {
 		// create a string builder to build up the HQL
 		StringBuilder hql = new StringBuilder();
-		processTarget(query.getTarget(), hql, avoidSubclasses, caseInsensitive);
 		if (query.getQueryModifier() != null) {
-			handleQueryModifier(query.getQueryModifier(), hql);
+			throw new QueryProcessingException("caTissue doenot support modifier queries");
 		}
+		processTarget(query.getTarget(), hql, avoidSubclasses, caseInsensitive);
+//		if (query.getQueryModifier() != null) {
+//			handleQueryModifier(query.getQueryModifier(), hql);
+//		}
 		return hql.toString();
 	}
+	
 	
 	
 	/**
