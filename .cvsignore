@@ -1,0 +1,5 @@
+bin
+build
+ext
+cobertura.ser
+junit*.properties

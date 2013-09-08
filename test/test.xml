@@ -1,0 +1,115 @@
+<!-- ======================================================================= -->
+<!-- caGrid Data Services Extensions test build file                         -->
+<!-- ======================================================================= -->
+<project name="caGrid-dataExtensions_tests_harness" basedir=".">
+	<property name="junit.results.dir" value="${test.logs.dir}/junit" />
+
+	<property name="introduce.dir" location="../introduce" />
+	<property name="halt.on.error" value="false" />
+	<property name="failed.message" value="Tests failed! Check test reports." />
+
+	<!-- using ant contrib for contidionals, looping, and runtarget -->
+	<target name="init">
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="ant-contrib*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+	</target>
+
+
+	<target name="prepareClasspaths">
+		<path id="Introduce.test.classpath">
+			<fileset dir="${introduce.dir}/lib">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${introduce.dir}/ext/dependencies/jars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${introduce.dir}/build/jars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${introduce.dir}/test/lib">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${introduce.dir}/ext/dependencies/test/jars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${ant.library.dir}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${globus.dir}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+		<path id="all.test.classpath">
+			<path refid="test.classpath" />
+			<path refid="Introduce.test.classpath" />
+		</path>
+	</target>
+
+
+
+	<target name="test" depends="init, testCore, testStyles" description="Tests the data extension">
+		<fail message="Data Extensions Core ${failed.message}" if="core.test.failed" />
+		<for list="${data.service.styles}" parallel="false" param="style.name" trim="true">
+			<sequential>
+				<fail message="Data Service Style @{style.name} ${failed.message}" if="@{style.name}.style.test.failed" />
+			</sequential>
+		</for>
+	</target>
+
+
+	<target name="testCore" depends="prepareClasspaths" description="tests the extension core">
+		<mkdir dir="${junit.results.dir}" />
+		<junit dir="${basedir}" printsummary="yes" haltonerror="${halt.on.error}" haltonfailure="${halt.on.error}" errorproperty="core.test.failed" failureproperty="core.test.failed" showoutput="true" fork="yes" forkmode="once">
+			<jvmarg value="-Dintroduce.base.dir=../introduce" />
+			<jvmarg value="-Dbuild.dir=${test.core.classes.dir}" />
+			<classpath refid="all.test.classpath" />
+			<classpath>
+				<pathelement path="${test.core.classes.dir}" />
+			</classpath>
+			<formatter type="xml" />
+			<test if="testcase" name="${testcase}" fork="no" todir="${junit.results.dir}" />
+			<batchtest unless="testcase" fork="yes" todir="${junit.results.dir}">
+				<fileset dir="${test.core.src.dir}">
+					<include name="**/*TestCase.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+
+	<target name="testStyles" depends="init, prepareClasspaths" description="Tests service styles">
+		<mkdir dir="${junit.results.dir}" />
+		<for list="${data.service.styles}" parallel="false" param="style.name" trim="true">
+			<sequential>
+				<echo message="Testing service style @{style.name}" />
+				<var name="style.test.lib.file" value="${build.jars.dir}/${project.jar.prefix}style${cagrid.master.jar.separator}tests${cagrid.master.jar.separator}@{style.name}.jar" />
+				<junit dir="${introduce.dir}" printsummary="yes" haltonerror="${halt.on.error}" haltonfailure="${halt.on.error}" errorproperty="@{style.name}.style.test.failed" failureproperty="@{style.name}.style.test.failed" showoutput="true" fork="yes" forkmode="once">
+					<jvmarg value="-Dintroduce.base.dir=${introduce.dir}" />
+					<jvmarg value="-Dbuild.dir=${test.core.classes.dir}" />
+					<classpath refid="all.test.classpath" />
+					<classpath>
+						<pathelement path="${test.core.classes.dir}" />
+					</classpath>
+					<classpath>
+						<pathelement path="${style.test.lib.file}" />
+						<pathelement path="${build.dir}/@{style.name}/classes" />
+					</classpath>
+					<formatter type="xml" />
+					<test if="testcase" name="${testcase}" fork="no" todir="${junit.results.dir}" />
+					<batchtest unless="testcase" fork="yes" todir="${junit.results.dir}">
+						<fileset dir="${test.src.dir}/style/@{style.name}">
+							<include name="**/*TestCase.java" />
+							<include name="**/*Story.java" />
+						</fileset>
+					</batchtest>
+				</junit>
+			</sequential>
+		</for>
+	</target>
+
+</project>

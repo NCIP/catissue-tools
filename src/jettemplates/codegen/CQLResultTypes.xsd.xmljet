@@ -1,0 +1,62 @@
+<%@ jet package="gov.nih.nci.cagrid.data.codegen.templates" class="CQLResultTypesTemplate" 
+imports="gov.nih.nci.cagrid.data.extension.CadsrInformation gov.nih.nci.cagrid.data.extension.CadsrPackage gov.nih.nci.cagrid.data.extension.ClassMapping gov.nih.nci.cagrid.introduce.beans.namespace.NamespaceType gov.nih.nci.cagrid.introduce.beans.service.ServiceType gov.nih.nci.cagrid.introduce.common.CommonTools gov.nih.nci.cagrid.introduce.common.ServiceInformation" %>
+<% 
+	gov.nih.nci.cagrid.data.codegen.ResultTypeGeneratorInformation info = (gov.nih.nci.cagrid.data.codegen.ResultTypeGeneratorInformation) argument;
+  	ServiceInformation serviceInfo = info.getServiceInfo();
+	ServiceType service = serviceInfo.getServices().getService(0);
+	CadsrInformation cadsrInfo = info.getCadsrInfo();
+	
+%><?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="<%=service.getNamespace()%>/CQLResultTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <!-- Exposed Objects' schemas are imported here -->
+
+<%
+		if (cadsrInfo != null) {
+			CadsrPackage[] packages = cadsrInfo.getPackages();
+			if (packages != null) {
+				for (int i = 0; i < packages.length; i++) {
+					CadsrPackage pack = packages[i];
+					String psNS = pack.getMappedNamespace();
+					NamespaceType ns = CommonTools.getNamespaceType(serviceInfo.getNamespaces(), psNS);
+					String location ="";
+					if (ns != null){
+						location = ns.getLocation();
+					}
+					stringBuffer.append("\t<xs:import namespace=\"" + psNS 
+						+ "\" schemaLocation=\"" + location + "\"/>\n");
+				}
+			}
+		}
+	%>
+
+
+    <xs:group name="PermissibleCQLObjectResults">
+        <xs:choice>        
+        <!-- element references to exposed objects -->
+
+<%
+		if (cadsrInfo != null) {
+			CadsrPackage[] packages = cadsrInfo.getPackages();
+			if (packages != null) {
+				for (int i = 0; i < packages.length; i++) {
+					CadsrPackage pack = packages[i];
+					String psNS = pack.getMappedNamespace();
+					ClassMapping[] packClasses = pack.getCadsrClass();
+					if (packClasses != null) {
+						for (int j = 0; j < packClasses.length; j++) {
+							if (packClasses[j].isTargetable() && packClasses[j].getElementName() != null) {
+								stringBuffer.append("\t\t<xs:element ref=\"ns0:");
+								stringBuffer.append(packClasses[j].getElementName());
+								stringBuffer.append("\" xmlns:ns0=\"");
+								stringBuffer.append(psNS);
+								stringBuffer.append("\"/>\n");
+							}
+						}
+					}
+				}
+			}
+		}%> 
+        </xs:choice>
+    </xs:group>
+</xs:schema>
