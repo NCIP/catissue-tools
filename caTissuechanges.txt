@@ -1,0 +1,12 @@
+This is a caGrid1.2 project named 'sdkQuery32'. 
+The code has bed modified to support caCORE API authentication.
+Changed Files : 
+HQLCoreQueryProcessor.java
+SubclassCheckCache.java
+
+To Build.
+1. After changing code.
+2. copy the contents back to caGrid1.2/projects/sdkQuery32 folder
+3. run command ant all from caGrid1.2/projects/sdkQuery32 folder
+4. the command will create caGrid-sdkQuery32-core-1.2.jar in folder 
+	caGrid1.2/projects/sdkQuery32/build/lib 
