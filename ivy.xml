@@ -9,40 +9,97 @@
   </info>
 
   <configurations>
-    <conf name="authz" visibility="private"/>
-    <conf name="impl-test" visibility="private"/>
-
-    <!-- Public Configurations-->
-    <conf name="default" visibility="public"/>
-    <conf name="test" visibility="public" extends="default,impl-test"/>
+    <conf name="authz"/>
+    <conf name="impl"/>    
+    <conf name="test"/>    
+    <conf name="lib"/>
   </configurations>
 
-
-  <publications>
-    <artifact name="caGrid-${ivy.module}-core" conf="default" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-tests" conf="test" type="jar"/>
-  </publications>
-
   <dependencies>
-    <dependency rev="latest.integration" org="caGrid" name="core"
-      conf="default->default;impl-test->test"/>
-    <dependency rev="latest.integration" org="caGrid" name="data"
-      conf="default->service;impl-test->cql-examples"/>
-    <dependency rev="latest.integration" org="caGrid" name="grape" conf="default->default"/>
+    <dependency org="cagridsdkquery32" 
+                name="cacore32-client" 
+                rev="1.0"
+                conf="lib->master"/> 
 
-    <!-- TODO: note, these currently aren't being copied into services correctly, but I'm maintaining the current behavior... might want to just change this to conf="default->default" -->
-    <dependency rev="latest.integration" org="caGrid" name="authz" conf="authz->default"/>
 
-    <dependency rev="3.1.3" org="hibernate" name="hibernate" conf="default->full"/>
-
-    <!--
-      NOTE: these are what the project used to compile against, but they aren't really used.
-      
-      <dependency rev="1.5.3" org="objectweb" name="asm" conf="default->default"/>
-      <dependency rev="2.1_3" org="cglib" name="cglib" conf="default->default"/>       
-      <dependency rev="3.1.3" org="hibernate" name="hibernate" conf="default->full"/>
-      <dependency rev="1.2.7" org="springframework" name="spring" conf="default->full"/>
-    -->
+    <dependency org="org.hibernate" 
+                name="hibernate" 
+                rev="3.1.3"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-common" 
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-cql-cql-1.0" 
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-cql" 
+                rev="1.2"
+                conf="impl->master"/>      
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-service" 
+                rev="1.2"
+                conf="impl->master"/>
+                
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-stubs" 
+                rev="1.2"
+                conf="impl->master"/>  
+                
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-utils" 
+                rev="1.2"
+                conf="impl->master"/>   
+                
+                
+    <dependency org="cagrid" 
+                name="cagrid-grape" 
+                rev="1.2"
+                conf="impl->master"/>   
+                
+                
+    <dependency org="cagrid" 
+                name="cagrid-authz-common" 
+                rev="1.2"
+                conf="authz->master"/>           
+                
+    <dependency org="cagrid" 
+                name="cagrid-core" 
+                rev="1.2"
+                conf="authz, test->master"/>           
+                  
+                
+    <dependency org="catissuesuitegridtest" 
+                name="csmapi" 
+                rev="1.0"
+                conf="authz->master"/>             
+                
+    <dependency org="castor" 
+                name="castor" 
+                rev="0.9.9"
+                conf="test->master"/>
+                
+    <dependency org="cagrid" 
+                name="cagrid-core-tests" 
+                rev="1.2"
+                conf="test->master"/>   
+                
+    <dependency org="clarkware" 
+                name="jdepend" 
+                rev="2.7"
+                conf="test->default"/>  
+                
+    <dependency org="jdom" 
+                name="jdom" 
+                rev="1.0"
+                conf="test->master"/>                   
 
   </dependencies>
 </ivy-module>

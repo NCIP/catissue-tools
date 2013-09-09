@@ -2,6 +2,8 @@
 <!-- caGrid 1.0 SDK (3.2) Query Processor build file                         -->
 <!-- ======================================================================= -->
 <project name="caGrid-sdkQuery32" default="all" basedir=".">
+  <import file="ivy-targets.xml"/>
+  
 	<!-- Environment -->
 	<property environment="env" />
 	<property file="${basedir}/project.properties" />
@@ -85,7 +87,7 @@
 	</target>
 
 	<!-- compiles the query processor source code -->
-	<target name="compile" depends="init">
+	<target name="compile" depends="init, ivy-lib, ivy-authz, ivy-impl">
 		<javac srcdir="${src.dir}" destdir="${build.dest}" debug="${java.debug}" source="${java.source}">
 			<classpath>
 				<fileset dir="${ext.lib.dir}">
@@ -106,7 +108,7 @@
 	</target>
 
 	<!-- compiles the testing source code -->
-	<target name="compileTests" depends="compile">
+	<target name="compileTests" depends="compile, ivy-test">
 		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="${java.debug}" source="${java.source}">
 			<classpath>
 				<pathelement path="${build.dest}" />
