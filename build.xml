@@ -1,16 +1,18 @@
 <?xml version ="1.0"?>
 <project name="catissue_container_cache" default="compile">
 
+  <import file="ivy-targets.xml"/>
+  
 	<property name="base.dir" value="." />
 	<property name="target.dir" value="WEB-INF/classes" />
-	<property name="src.dir" value="src" />
+	<property name="src.dir" value="WEB-INF/src" />
 	<property name="lib.dir" value="${base.dir}/WEB-INF/lib" />
 
-	<target name="compile">
+	<target name="compile" depends="ivy-compile">
 		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
 			<src path="${src.dir}" />
 			<classpath>
-				<fileset dir="${lib.dir}">
+        <fileset dir="${lib.dir}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
