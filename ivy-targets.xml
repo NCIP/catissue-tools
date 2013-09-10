@@ -1,0 +1,129 @@
+<?xml version ="1.0"?>
+<project name="DynamicExtensions-ivy" 
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+            
+  <property name="ivy.install.version" value="2.2.0"/>
+  <property name="ivy.jar.dir" location="ivylib"/>
+  <property name="ivy.jar.file" location="${ivy.jar.dir}/ivy-${ivy.install.version}.jar"/>
+  <property name="ivy.jar.url"
+            value="https://ncimvn.nci.nih.gov/nexus/content/groups/public/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"/>
+  
+  <path id="ivy.classpath">
+    <fileset dir="${ivy.jar.dir}">
+      <include name="ivy-*.jar" />
+    </fileset>
+  </path>
+
+  <target name="download-ivy" unless="skip.download">
+    <mkdir dir="${ivy.jar.dir}"/>
+    <echo message="Installing ivy..."/>
+    <get src="${ivy.jar.url}"
+         dest="${ivy.jar.file}" 
+         usetimestamp="true" 
+         verbose="true"/>
+  </target>
+
+  <target name="init-ivy" depends="download-ivy">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" 
+             uri="antlib:org.apache.ivy.ant" 
+             classpathref="ivy.classpath" />                         
+  </target>
+                 
+  <target name="ivy-settings" depends="init-ivy">
+    <ivy:settings file="ivysettings.xml"/>
+  </target>
+  
+  
+  <target name="ivy-clinportal_cacoreclient" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="clinportal_cacoreclient" />
+    <ivy:retrieve conf="clinportal_cacoreclient"
+                  pattern="clinportal_caCORE_Client/lib/[artifact]-[revision].[ext]" />
+  </target> 
+
+  <target name="ivy-deintegrationclient" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="deintegrationclient" />
+    <ivy:retrieve conf="deintegrationclient"
+                  pattern="catissue_de_integration_client/lib/[artifact]-[revision].[ext]" />
+  </target>
+  
+  <target name="ivy-clinportalcsm" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="clinportalcsm" />
+    <ivy:retrieve conf="clinportalcsm"
+                  pattern="[artifact]-[revision].[ext]" />
+  </target>  
+        
+  <target name="ivy-extra" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="extra" />
+    <ivy:retrieve conf="extra"
+                  pattern="extra_lib/[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-mainlib" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="mainlib" />
+    <ivy:retrieve conf="mainlib"
+                  pattern="lib/[artifact]-[revision].[ext]" />
+  </target> 
+  <target name="ivy-web" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="web" />
+    <ivy:retrieve conf="web"
+                  pattern="WEB-INF/lib/[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-buildreportjars" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="buildreportjars" />
+    <ivy:retrieve conf="buildreportjars"
+                  pattern="WEB-INF/lib/[conf]/[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-pmd" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="pmd" />
+    <ivy:retrieve conf="pmd"
+                  pattern="pmd-3.8/lib/[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-flexjars" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="flexjars" />
+    <ivy:retrieve conf="flexjars"
+                  pattern="WEB-INF/flex/jars/[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-cobertura" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="cobertura" />
+    <ivy:retrieve conf="cobertura"
+                  pattern="cobertura/[artifact]-[revision].[ext]" />
+  </target>
+  
+  <target name="ivy-coberturadeps" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="coberturadeps" />
+    <ivy:retrieve conf="coberturadeps"
+                  pattern="cobertura/lib/[artifact]-[revision].[ext]" />
+  </target>  
+  
+  <target name="ivy-catissuexmi" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="catissuexmi" />
+    <ivy:retrieve conf="catissuexmi"
+                  pattern="catissuexmi/[artifact]-[revision].[ext]" />
+  </target>  
+  
+  <target name="ivy-zips" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="zips" />
+    <ivy:retrieve conf="zips"
+                  pattern="[artifact]-[revision].[ext]" />
+  </target>  
+</project>  

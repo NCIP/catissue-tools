@@ -1,0 +1,1088 @@
+<ivy-module version="1.0">
+  <info organisation="ncicb"
+        module="catissue" />
+  <configurations>
+    <conf name="default" />
+
+    
+    <conf name="client" />
+    <conf name="web" />
+    <conf name="extra" />
+    
+    <conf name="antcontrib" />   
+    
+    <conf name="mainlib"/>
+    
+    
+    <conf name="pmd"/>
+        
+    <conf name="buildreportjars"/>
+    
+        
+    <conf name="flexjars"/>
+    <conf name="cobertura"/>
+    <conf name="coberturadeps"/>     
+    <conf name="catissuexmi"/>
+    <conf name="clinportalcsm"/>
+    <conf name="zips"/>
+    
+    <conf name="deintegrationclient"/>
+    <conf name="clinportal_cacoreclient"/>
+  </configurations>
+
+  <dependencies>
+    <dependency org="clinportalcsm"
+                name="clinportalcsm"
+                rev="1.0"
+                conf="clinportalcsm->*">
+      <artifact name="clinportalcsm" type="war"/>
+    </dependency>
+                
+    <dependency org="dynamicextensions"
+                name="dynamicextensions-dist"
+                rev="1.2.0.rc2"
+                conf="zips->master"/> 
+                
+    <dependency org="AdvanceQuery_Installable"
+                name="AdvanceQuery_Installable"
+                rev="1.0"
+                conf="zips->master"/>
+                
+    <dependency org="deintegration"
+                name="deintegration"
+                rev="1.0"
+                conf="zips->*"/> 
+                
+    <dependency org="cps"
+                name="oldDynamicExtensions"
+                rev="1.0"
+                conf="catissuexmi->master"/>  
+                
+    <dependency org="cps"
+                name="oldcommonpackage"
+                rev="1.0"
+                conf="catissuexmi->master"/>  
+                
+    <dependency org="edu.wustl"
+                name="cpexception"
+                rev="1.0"
+                conf="catissuexmi->master"/>  
+                
+                
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="cobertura->master"/>  
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="coberturadeps->default">  
+      <exclude org="cobertura" module="cobertura"/>
+    </dependency>
+                
+    <dependency org="mxmlc"
+                name="mxmlc"
+                rev="1.0"
+                conf="flexjars->master"/>  
+                
+    <dependency org="xercespatch"
+                name="xercespatch"
+                rev="1.0"
+                conf="flexjars->master"/>
+                
+    <dependency org="swfkit"
+                name="swfkit"
+                rev="1.0"
+                conf="flexjars->master"/>
+                
+    <dependency org="opensymphony"
+                name="oscache"
+                rev="2.2"
+                conf="flexjars->master"/>
+                
+    <dependency org="flextasks"
+                name="flextasks"
+                rev="1.0"
+                conf="flexjars->default"/>
+                
+    <dependency org="batik"
+                name="batik-dom"
+                rev="1.6-1"
+                conf="flexjars->master"/>  <!-- default pulls in alot of what we'd need, but more rogue jars in this directory instead ... -->
+    <dependency org="batik"
+                name="batik-awt-util"
+                rev="1.0"
+                conf="flexjars->master"/>   
+    <dependency org="batik"
+                name="batik-bridge"
+                rev="1.0"
+                conf="flexjars->master"/>  
+    <dependency org="batik"
+                name="batik-css"
+                rev="1.0"
+                conf="flexjars->master"/> 
+    <dependency org="batik"
+                name="batik-ext"
+                rev="1.0"
+                conf="flexjars->master"/>     
+    <dependency org="batik"
+                name="batik-gvt"
+                rev="1.0"
+                conf="flexjars->master"/>     
+    <dependency org="batik"
+                name="batik-parser"
+                rev="1.0"
+                conf="flexjars->master"/> 
+    <dependency org="batik"
+                name="batik-script"
+                rev="1.0"
+                conf="flexjars->master"/>      
+    <dependency org="batik"
+                name="batik-svg-dom"
+                rev="1.0"
+                conf="flexjars->master"/> 
+    <dependency org="batik"
+                name="batik-svggen"
+                rev="1.0"
+                conf="flexjars->master"/>  
+    <dependency org="batik"
+                name="batik-transcoder"
+                rev="1.0"
+                conf="flexjars->master"/>  
+    <dependency org="batik"
+                name="batik-util"
+                rev="1.0"
+                conf="flexjars->master"/>
+    <dependency org="batik"
+                name="batik-xml"
+                rev="1.0"
+                conf="flexjars->master"/>                
+    <dependency org="cps"
+                name="xercesImpl"
+                rev="2.4.0"
+                conf="flexjars->master"/>
+    <dependency org="cps"
+                name="xmlParserAPIs"
+                rev="1.0"
+                conf="flexjars->master"/>                
+    <dependency org="com.adobe"
+                name="asc"
+                rev="1.0"
+                conf="flexjars->master"/>      
+               
+    <dependency org="cps"
+                name="commons-collections"
+                rev="2.1"
+                conf="flexjars->master"/>                
+                   
+    <dependency org="commons-discovery"
+                name="commons-discovery"
+                rev="0.2"
+                conf="flexjars->master"/> 
+                
+    <dependency org="com.adobe"
+                name="flex-messaging-common"
+                rev="2.5.166921"
+                conf="flexjars->master"/>  
+                
+    <dependency org="com.adobe"
+                name="flex-webtier"
+                rev="2.0.166921"
+                conf="flexjars->master"/> 
+           
+    <dependency org="com.adobe"
+                name="flex-webtier-jsp"
+                rev="2.0.1669211"
+                conf="flexjars->master"/>   
+                
+  
+
+    <dependency org="com.adobe"
+                name="license"
+                rev="1.0"
+                conf="flexjars->master"/> 
+
+    <dependency org="mm-velocity"
+                name="mm-velocity"
+                rev="1.4"
+                conf="flexjars->master"/>
+                
+    <!-- begin buildreportjars -->
+    <dependency org="asm"
+                name="asm"
+                rev="1.5.3"
+                conf="buildreportjars->master"/>
+                
+    <dependency org="asm"
+                name="asm-attrs"
+                rev="1.5.3"
+                conf="buildreportjars->master"/>                
+    <!-- end buildreportjars -->
+  
+    <!-- begin pmd -->
+    <dependency org="pmd"
+                name="pmd"
+                rev="3.8"
+                conf="pmd->default; buildreportjars->master"/>
+    <!-- end pmd -->
+    
+    <dependency org="catissuesuite"
+                name="catissuesuite"
+                rev="1.0"
+                conf="mainlib->master"/>
+                
+    <dependency org="ant-contrib"
+                name="ant-contrib"
+                rev="1.0b2"
+                conf="mainlib,extra->master"/>
+                            
+    <dependency org="dom4j"
+                name="dom4j"
+                rev="1.6"
+                conf="mainlib->master"/>
+                
+    <dependency org="javax.j2ee"
+                name="j2ee"
+                rev="1.4"
+                conf="mainlib->master"/>
+                
+    <dependency org="log4j" 
+                name="log4j" 
+                rev="1.2.9"
+                conf="mainlib->master"/> 
+                
+    <dependency org="mysql" 
+                name="mysql-connector-java" 
+                rev="5.0.8"
+                conf="mainlib, extra, web->master"/>   
+
+    <dependency org="com.oracle" 
+                name="ojdbc14" 
+                rev="9.0.2.0.0"
+                conf="mainlib, web->master"/> 
+             
+             
+   <!-- end main lib -->
+   
+   <!-- extra lib -->
+ 
+    <dependency org="msv"
+                name="xsdlib"
+                rev="20031010"
+                conf="extra,web->master"/>
+                
+    <dependency org="org.hibernate"
+                name="hibernate"
+                rev="3.1.3"
+                conf="extra->master"/>
+    
+   <dependency org="org.hibernate"
+                name="hibernate-tools"
+                rev="2.0.1-21"
+                conf="extra->default"/> 
+                
+    <dependency org="commons-net"
+                name="commons-net"
+                rev="1.2.2"
+                conf="extra->master"/>   
+                
+     <dependency org="com.oracle" 
+                 name="ojdbc14" 
+                 rev="10.2.0.1.0"
+                conf="extra->master"/> 
+                
+    <dependency org="xdoclet"
+                name="xdoclet"
+                rev="1.2"
+                conf="extra->master"/>
+                
+    <dependency org="xdoclet"
+                name="xdoclet-xdoclet-module"
+                rev="1.2"
+                conf="extra->master"/>  
+                
+    <dependency org="xdoclet"
+                name="xdoclet-hibernate-module"
+                rev="1.2"
+                conf="extra->master"/>  
+                
+    <dependency org="xdoclet"
+                name="xjavadoc"
+                rev="1.0.2"
+                conf="extra->master"/>                   
+                
+    <dependency org="javax.servlet"
+                name="servlet-api"
+                rev="2.4"
+                conf="extra->master"/>
+                
+    <dependency org="checkstyle" 
+                name="checkstyle-all" 
+                rev="4.2"
+                conf="extra->master"/> 
+                
+   <dependency org="xerces" 
+                name="xerces" 
+                rev="1.4.4"
+                conf="extra->master"/>                 
+    <!-- end extra lib -->
+    
+    <!-- begin web lib -->
+    <dependency org="c3p0" 
+                name="c3p0" 
+                rev="0.9.0"
+                conf="web->master"/>
+                
+    <dependency org="org.omg" 
+                name="uml" 
+                rev="1.4"
+                conf="web->master"/>
+                
+    <dependency org="struts"
+                name="struts"
+                rev="1.1"
+                conf="web->default"> 
+      <!-- use the digester3 thing that we have direct dependencies on. the different name mucks things up -->          
+      <exclude org="commons-digester" module="commons-digester"/>
+      <exclude org="commons-beanutils" module="commons-beanutils"/>
+    </dependency>   
+    
+    <dependency org="taglibs" 
+                name="standard" 
+                rev="1.1.0-D13"
+                conf="web->default"/>
+                
+
+    <dependency org="org.netbeans" 
+                name="graph" 
+                rev="1.0"
+                conf="web->default"/>  
+                
+    <dependency org="org.netbeans" 
+                name="graph-vmd" 
+                rev="1.0"
+                conf="web->default"/> 
+                
+    <dependency org="org.andromda.thirdparty.jmi" 
+                name="jmi" 
+                rev="20030918"
+                conf="web->master"/>    
+                
+    <dependency org="ant-jmeter" 
+                name="ant-jmeter" 
+                rev="2.3nci"
+                conf="web, buildreportjars->master"/>   
+                
+                
+    <dependency org="AdvancedQuery" 
+                name="AdvancedQuery" 
+                rev="1.1.1rc6"
+                conf="web->master"/>   
+                
+    <dependency org="edu.wustl" 
+                name="cde" 
+                rev="1.0"
+                conf="web->master"/>   
+                
+    <dependency org="org.hibernate"
+                name="hibernate"
+                rev="3.1.3"
+                conf="web->master"/>
+    
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="web->master"/>   
+                
+    <dependency org="gov.nih.nci"
+                name="codegen"
+                rev="1.0"
+                conf="web->master"/>          
+                
+    <dependency org="clinportal-client"
+                name="clinportal-client"
+                rev="1.0"
+                conf="web, buildreportjars->master"/> 
+                
+    <!-- what is sitting in webinf/lib doesnt match anything in nexus.  hibernate 3.1.3 wants this version so go with this -->             
+    <dependency org="cglib"
+                name="cglib"
+                rev="2.1_3"
+                conf="web->master"/>    
+                
+    <dependency org="edu.wustl" 
+                name="commonpackage" 
+                rev="1.1.2"
+                conf="web->default"/>
+                
+    <dependency org="commons-beanutils"
+                name="commons-beanutils"
+                rev="1.6"
+                conf="web->master"/>             
+                
+    <dependency org="commons-collections"
+                name="commons-collections"
+                rev="3.2"
+                conf="web->master"/>      
+                
+    <dependency org="commons-digester"
+                name="commons-digester"
+                rev="1.5"
+                conf="web->master"/>  
+                
+    <dependency org="commons-fileupload"
+                name="commons-fileupload"
+                rev="1.1"
+                conf="web->master"/>       
+                
+    <dependency org="commons-io"
+                name="commons-io"
+                rev="1.2"
+                conf="web->master"/>      
+                
+    <dependency org="commons-lang"
+                name="commons-lang"
+                rev="2.3"
+                conf="web->master"/>    
+                
+    <dependency org="commons-logging"
+                name="commons-logging"
+                rev="1.0.4"
+                conf="web,flexjars->master"/> 
+                
+    <dependency org="commons-validator"
+                name="commons-validator"
+                rev="1.0.2"
+                conf="web->master"/>    
+                
+    <dependency org="advancedquery"
+                name="csmapi"
+                rev="1.0b"
+                conf="web->master"/> 
+                
+    <dependency org="edu.wustl"
+                name="DAO"
+                rev="1.1.2"
+                conf="web->master"/>    
+                
+    <dependency org="dom4j"
+                name="dom4j"
+                rev="1.6"
+                conf="web->master"/>
+                
+                
+    <dependency org="net.sf.ehcache" 
+                name="ehcache" 
+                rev="1.2.3"
+                conf="web->master"/>  
+                
+    
+    <dependency org="ext"
+                name="ext"
+                rev="1.1.1"
+                conf="web->master"/>   
+                
+    <dependency org="DynamicExtensions"
+                name="DynamicExtensions"
+                rev="1.2.0.rc2"
+                conf="web->master"/>      
+                
+                
+    <dependency org="DynamicExtensionsCommunication"
+                name="DynamicExtensionsCommunication"
+                rev="1.30"
+                conf="web->master"/>   
+                
+    <dependency org="com.adobe" 
+                name="flex-messaging" 
+                rev="2.5.166921"
+                conf="web->master"/>    
+                
+    <dependency org="com.adobe" 
+                name="flex-acrobat" 
+                rev="2.5.166921"
+                conf="web->master"/>        
+                
+    <dependency org="com.adobe" 
+                name="flex-bootstrap" 
+                rev="2.5.166921"
+                conf="web->master"/>    
+                
+    <dependency org="com.adobe" 
+                name="flex-bootstrap-jsp" 
+                rev="2.5.166921"
+                conf="web->master"/>  
+                
+    <dependency org="com.adobe" 
+                name="flex-messaging-common" 
+                rev="2.5.166921"
+                conf="web->master"/>
+                
+    <dependency org="com.adobe" 
+                name="flex-messaging-opt" 
+                rev="2.5.166921"
+                conf="web->master"/>      
+                
+    <dependency org="com.adobe" 
+                name="flex-messaging-req" 
+                rev="2.5.166921"
+                conf="web->master"/>   
+                
+    <dependency org="edu.wustl" 
+                name="idpjar" 
+                rev="1.0"
+                conf="web->master"/>      
+         
+                                                           
+    <dependency org="javax.security"
+                name="jaas"
+                rev="1.0fcs-r"
+                conf="web->master"/>  
+                
+    <dependency org="org.jdom"
+                name="saxpath"
+                rev="1.0-FCS"
+                conf="web->master"/> 
+                
+    <dependency org="org.jdom"
+                name="jaxen-core"
+                rev="1.0-FCS"
+                conf="web->master"/> 
+                
+    <dependency org="org.jdom"
+                name="jaxen-jdom"
+                rev="1.0-FCS"
+                conf="web->master"/> 
+                
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="web->master"/>                 
+                
+    <dependency org="javax.xml"
+                name="jax-qname"
+                rev="1.1"
+                conf="web->master"/>   
+                
+    <dependency org="javax.xml"
+                name="jaxb-api"
+                rev="1.0.1"
+                conf="web->master"/> 
+                
+    <dependency org="com.sun.xml"
+                name="jaxb-impl"
+                rev="1.0.4"
+                conf="web->master"/>   
+                
+    <dependency org="jaxb-libs"
+                name="jaxb-libs"
+                rev="20041122"
+                conf="web->master"/>       
+                
+    <dependency org="com.sun.xml"
+                name="jaxb-xjc"
+                rev="1.0.4"
+                conf="web->master"/> 
+                
+    <dependency org="cagridtestframework"
+                name="jaxrpc"
+                rev="1.1"
+                conf="web->master"/>   
+                
+    <dependency org="jce-jdk"
+                name="jce-jdk"
+                rev="1.3_1.25nci"
+                conf="web->master"/> 
+                
+    <dependency org="jep" 
+                name="jep" 
+                rev="2.4.1"
+                conf="web->master"/>
+                
+    <dependency org="org.andromda.thirdparty.netbeans.mdr" 
+                name="jmiutils" 
+                rev="20050711"
+                conf="web->master"/>    
+                
+    <dependency org="json" 
+                name="json" 
+                rev="1.0"
+                conf="web->master"/>  
+     
+    <dependency org="javax.servlet" 
+                name="jstl" 
+                rev="1.0.5"
+                conf="web->default"/>
+                
+    <dependency org="junit"
+                name="junit"
+                rev="4.1"
+                conf="web->master"/> 
+                
+                    
+    <dependency org="log4j" 
+                name="log4j" 
+                rev="1.2.9"
+                conf="web->master"/>    
+                
+    <dependency org="org.apache.lucene"
+                name="lucene-core"
+                rev="2.0.0"
+                conf="web->master"/> 
+                
+    <dependency org="javax.mail" 
+                name="mail" 
+                rev="1.2"
+                conf="web->master"/>  
+                
+    <dependency org="org.andromda.thirdparty.netbeans.mdr" 
+                name="mdrapi" 
+                rev="20050711"
+                conf="web->master"/>     
+                
+    <dependency org="edu.wustl" 
+                name="metadata" 
+                rev="1.0"
+                conf="web->master"/>   
+                
+    <dependency org="org.andromda.thirdparty.jmi" 
+                name="mof" 
+                rev="20030918"
+                conf="web->master"/>   
+                
+    <dependency org="javax.xml" 
+                name="namespace" 
+                rev="1.0.1"
+                conf="web->master"/>  
+                
+    <dependency org="net.sf.opencsv"
+                name="opencsv"
+                rev="1.8"
+                conf="web->master"/>   
+                
+    <dependency org="msv"
+                name="relaxngDatatype"
+                rev="1.0"
+                conf="web->master"/>   
+                
+    <dependency org="struts"
+                name="struts"
+                rev="1.1"
+                conf="web->master"/>   
+                
+    <dependency org="org.andromda.thirdparty.netbeans.mdr" 
+                name="openide-util" 
+                rev="1.0"
+                conf="web->master"/> 
+                
+    <dependency org="edu.wustl"
+                name="query"
+                rev="1.0b"
+                conf="web->master"/>    
+                
+    <dependency org="edu.wustl"
+                name="securitymanager"
+                rev="1.1.2"
+                conf="web->master"/>  
+                
+    <dependency org="edu.wustl"
+                name="SimpleQuery"
+                rev="1.1.2"
+                conf="web->master"/> 
+                
+    <dependency org="scrubber-runtime"
+                name="scrubber-runtime"
+                rev="1.0"
+                conf="web->master"/>  
+                
+    
+    <dependency org="csp"
+                name="servlet"
+                rev="1.0"
+                conf="web->master"/>  
+                
+                
+    <dependency org="taglibs" 
+                name="standard" 
+                rev="1.1.0-D13"
+                conf="web->master"/>  
+                
+    <dependency org="swingx" 
+                name="swingx" 
+                rev="2006_10_08"
+                conf="web->master"/> 
+                
+    <dependency org="edu.wustl"
+                name="washu-commons"
+                rev="1.1.2"
+                conf="web->master"/>      
+                
+    <dependency org="xalan"
+                name="xalan"
+                rev="2.6.0"
+                conf="web->master"/>       
+                
+    <dependency org="xerces"
+                name="xercesImpl"
+                rev="2.6.1"
+                conf="web->master"/>       
+                
+    <dependency org="org.apache.xmlbeans"
+                name="xmlbeans"
+                rev="2.1.0-r330131"
+                conf="web->master"/>  
+                
+    <dependency org="org.apache.xmlbeans"
+                name="xmlpublic"
+                rev="2.1.0-r330131"
+                conf="web->master"/>   
+                
+    <dependency org="xml-apis"
+                name="xml-apis"
+                rev="1.0"
+                conf="web->master"/>                 
+    <!-- end web lib -->
+                              
+                              
+    <dependency org="edu.wustl"
+                name="commonpackage"
+                rev="1.0b"
+                conf="deintegrationclient->master"/>
+    
+    <dependency org="javax.activation"
+                name="activation"
+                rev="1.0"
+                conf="deintegrationclient->master"/>
+  
+    <dependency org="org.hibernate"
+                name="hibernate"
+                rev="3.1.3"
+                conf="deintegrationclient->master"/>
+                
+    <dependency org="org.hibernate"
+                name="antlr"
+                rev="2.7.5H3"
+                conf="deintegrationclient->master"/>
+  
+    <dependency org="aspectj"
+                name="aspectjrt"
+                rev="1.2rc1"
+                conf="deintegrationclient->master"/>
+  
+    <dependency org="axis"
+                name="axis"
+                rev="1.2"
+                conf="deintegrationclient->master"/> 
+
+    <dependency org="c3p0"
+                name="c3p0"
+                rev="0.9.0"
+                conf="deintegrationclient->master"/>       
+                  
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="deintegrationclient->master"/> 
+                
+    <dependency org="cglib"
+                name="cglib-full"
+                rev="2.0.1"
+                conf="deintegrationclient->master"/> 
+                
+    <dependency org="clinportal"
+                name="clinportal"
+                rev="1.0"
+                conf="deintegrationclient->master"/>
+
+    <dependency org="clinportal-client"
+                name="clinportal-client"
+                rev="1.0"
+                conf="deintegrationclient->master"/>
+
+    <dependency org="commons-codec"
+                name="commons-codec"
+                rev="1.3"
+                conf="deintegrationclient->master"/>   
+
+    <dependency org="commons-collections"
+                name="commons-collections"
+                rev="2.1.1"
+                conf="deintegrationclient->master"/>   
+    <dependency org="commons-discovery"
+                name="commons-discovery"
+                rev="0.2"
+                conf="deintegrationclient->master"/> 
+    <dependency org="commons-httpclient"
+                name="commons-httpclient"
+                rev="3.1"
+                conf="deintegrationclient->master"/>  
+
+
+    <dependency org="commons-logging"
+                name="commons-logging"
+                rev="1.0.3"
+                conf="deintegrationclient->master"/> 
+
+    <dependency org="edu.wustl" 
+                name="DAO" 
+                rev="1.1.2"
+                conf="deintegrationclient->master"/>
+                
+                
+    <dependency org="dedemo-client" 
+                name="dedemo-client" 
+                rev="1.0"
+                conf="deintegrationclient->master"/>     
+                
+                
+    <dependency org="deintegration-client" 
+                name="deintegration-client" 
+                rev="1.0"
+                conf="deintegrationclient->master"/> 
+
+
+    <dependency org="dom4j"
+                name="dom4j"
+                rev="1.6"
+                conf="deintegrationclient->master"/>  
+
+                
+    <dependency org="DynamicExtensions"
+                name="DynamicExtensions"
+                rev="1.2.0.rc2b"
+                conf="deintegrationclient->master"/> 
+
+    <dependency org="ehcache" 
+                name="ehcache" 
+                rev="1.1"
+                conf="deintegrationclient->master"/> 
+    
+    <dependency org="cps"
+                name="jaxrpc"
+                rev="1.1"
+                conf="deintegrationclient->master"/>
+                
+    <dependency org="log4j" 
+                name="log4j" 
+                rev="1.2.8"
+                conf="deintegrationclient->master"/> 
+                
+    <dependency org="javax.transaction"
+                name="jta"
+                rev="1.0.1B"
+                conf="deintegrationclient->master"/>
+
+    <dependency org="mysql" 
+                name="mysql-connector-java" 
+                rev="5.0.8"
+                conf="deintegrationclient->master"/>
+                
+    <dependency org="odmg" 
+                name="odmg" 
+                rev="1.0"
+                conf="deintegrationclient->master"/>
+                
+    <dependency org="com.oracle" 
+                name="ojdbc14" 
+                rev="10.2.0.1.0"
+                conf="deintegrationclient->master"/>
+
+    <dependency org="javax.xml" 
+                name="saaj" 
+                rev="1.2"
+                conf="deintegrationclient->master"/> 
+
+    <dependency org="edu.wustl" 
+                name="securitymanager" 
+                rev="1.1.2"
+                conf="deintegrationclient->master"/> 
+                
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2"
+                conf="deintegrationclient->master"/> 
+                
+    <dependency org="org.springframework"
+                name="spring-richclient"
+                rev="1.0"
+                conf="deintegrationclient->master"/>
+                
+      
+    <dependency org="struts"
+                name="struts"
+                rev="1.1"
+                conf="deintegrationclient->master"/> 
+
+                
+    <dependency org="edu.wustl"
+                name="titli-washu"
+                rev="1.0b"
+                conf="deintegrationclient->master"/>                 
+                
+                
+                
+    <dependency org="wsdl4j"
+                name="wsdl4j"
+                rev="1.5.1"
+                conf="deintegrationclient->master"/>  
+
+    <dependency org="apache-xerces"
+                name="xercesImpl"
+                rev="2.7.1"
+                conf="deintegrationclient->master"/>  
+                
+    <dependency org="cps"
+                name="xml-apis"
+                rev="1.2.01"
+                conf="deintegrationclient->master"/>                                
+                              
+                              
+<!-- *********************************************** -->
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="clinportal_cacoreclient->master"/>  
+    
+    <dependency org="javax.activation"
+                name="activation"
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/>
+  
+    <dependency org="aspectj"
+                name="aspectjrt"
+                rev="1.2rc1"
+                conf="clinportal_cacoreclient->master"/>
+                
+    <dependency org="axis"
+                name="axis"
+                rev="1.2"
+                conf="clinportal_cacoreclient->master"/>                
+
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="clinportal_cacoreclient->master"/> 
+                
+    <dependency org="cglib"
+                name="cglib-full"
+                rev="2.0.1"
+                conf="clinportal_cacoreclient->master"/> 
+                
+    <dependency org="clinportal"
+                name="clinportal"
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/>
+
+    <dependency org="clinportal-client"
+                name="clinportal-client"
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/>
+
+    <dependency org="edu.wustl"
+                name="commonpackage"
+                rev="1.0b"
+                conf="clinportal_cacoreclient->master"/>
+
+    <dependency org="javax.mail" 
+                name="mail" 
+                rev="1.2"
+                conf="clinportal_cacoreclient->master"/>
+
+    <dependency org="commons-codec"
+                name="commons-codec"
+                rev="1.3"
+                conf="clinportal_cacoreclient->master"/>     
+                
+    <dependency org="commons-httpclient"
+                name="commons-httpclient"
+                rev="3.0.1"
+                conf="clinportal_cacoreclient->master"/>  
+                
+    <dependency org="commons-discovery"
+                name="commons-discovery"
+                rev="0.2"
+                conf="clinportal_cacoreclient->master"/> 
+
+    <dependency org="commons-logging"
+                name="commons-logging"
+                rev="1.0.3"
+                conf="clinportal_cacoreclient->master"/> 
+
+    <dependency org="org.hibernate"
+                name="hibernate"
+                rev="3.1.3"
+                conf="clinportal_cacoreclient->master"/>
+    
+    <dependency org="cps"
+                name="jaxrpc"
+                rev="1.1"
+                conf="clinportal_cacoreclient->master"/>
+                
+    <dependency org="junit"
+                name="junit"
+                rev="4.1"
+                conf="clinportal_cacoreclient->master"/>
+
+
+    <dependency org="log4j" 
+                name="log4j" 
+                rev="1.2.8"
+                conf="clinportal_cacoreclient->master"/> 
+                
+    <dependency org="odmg" 
+                name="odmg" 
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/>       
+
+    <dependency org="javax.xml" 
+                name="saaj" 
+                rev="1.2"
+                conf="clinportal_cacoreclient->master"/> 
+
+    <dependency org="edu.wustl" 
+                name="securitymanager" 
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/> 
+                
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2"
+                conf="clinportal_cacoreclient->master"/> 
+                
+    <dependency org="org.springframework"
+                name="spring-richclient"
+                rev="1.0"
+                conf="clinportal_cacoreclient->master"/> 
+
+    <dependency org="struts"
+                name="struts"
+                rev="1.1"
+                conf="clinportal_cacoreclient->master"/> 
+
+                
+    <dependency org="wsdl4j"
+                name="wsdl4j"
+                rev="1.5.1"
+                conf="clinportal_cacoreclient->master"/>  
+
+    <dependency org="apache-xerces"
+                name="xercesImpl"
+                rev="2.7.1"
+                conf="clinportal_cacoreclient->master"/>  
+                
+    <dependency org="cps"
+                name="xml-apis"
+                rev="1.2.01"
+                conf="clinportal_cacoreclient->master"/> 
+                              
+                              
+                              
+                              
+                              
+                              
+                              
+    <!-- er not sure what tries to bring this in, but block it because the jar isnt found in repo and we dont need it -->             
+    <exclude org="javax.sql" module="jdbc-stdext" />     
+  </dependencies>
+
+</ivy-module>
