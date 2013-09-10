@@ -98,21 +98,14 @@
     <ivy:retrieve conf="flexjars"
                   pattern="WEB-INF/flex/jars/[artifact]-[revision].[ext]" />
   </target> 
-  
+  <!--
   <target name="ivy-cobertura" depends="ivy-settings">
     <ivy:resolve file="ivy.xml"
                  conf="cobertura" />
     <ivy:retrieve conf="cobertura"
                   pattern="cobertura/[artifact]-[revision].[ext]" />
   </target>
-  
-  <target name="ivy-coberturadeps" depends="ivy-settings">
-    <ivy:resolve file="ivy.xml"
-                 conf="coberturadeps" />
-    <ivy:retrieve conf="coberturadeps"
-                  pattern="cobertura/lib/[artifact]-[revision].[ext]" />
-  </target>  
-  
+  -->
   <target name="ivy-catissuexmi" depends="ivy-settings">
     <ivy:resolve file="ivy.xml"
                  conf="catissuexmi" />
@@ -125,5 +118,19 @@
                  conf="zips" />
     <ivy:retrieve conf="zips"
                   pattern="[artifact]-[revision].[ext]" />
+  </target> 
+  
+  <target name="ivy-cacoreclient-coberturadeps" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="cacoreclient-coberturadeps" />
+    <ivy:retrieve conf="cacoreclient-coberturadeps"
+                  pattern="clinportal_caCORE_Client/cobertura/lib/[artifact]-[revision].[ext]" />
   </target>  
+  
+  <target name="ivy-cacoreclient-cobertura" depends="ivy-settings">
+    <ivy:resolve file="ivy.xml"
+                 conf="cacoreclient-cobertura" />
+    <ivy:retrieve conf="cacoreclient-cobertura"
+                  pattern="clinportal_caCORE_Client/cobertura/[artifact]-[revision].[ext]" />
+  </target>   
 </project>  

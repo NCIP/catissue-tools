@@ -4,30 +4,24 @@
   <configurations>
     <conf name="default" />
 
-    
-    <conf name="client" />
     <conf name="web" />
     <conf name="extra" />
-    
-    <conf name="antcontrib" />   
-    
     <conf name="mainlib"/>
-    
-    
-    <conf name="pmd"/>
-        
-    <conf name="buildreportjars"/>
-    
-        
-    <conf name="flexjars"/>
-    <conf name="cobertura"/>
-    <conf name="coberturadeps"/>     
     <conf name="catissuexmi"/>
     <conf name="clinportalcsm"/>
     <conf name="zips"/>
-    
     <conf name="deintegrationclient"/>
     <conf name="clinportal_cacoreclient"/>
+    <conf name="flexjars"/>
+    <conf name="cacoreclient-cobertura"/>
+    <conf name="cacoreclient-coberturadeps"/> 
+    <conf name="buildreportjars"/>
+        
+    <!-- dubious configurations follow.  these jars were in svn and the ivy spec to get them is here
+         but apparently related to nothing or targets we dont have to care about -->
+    <conf name="pmd"/>
+
+
   </configurations>
 
   <dependencies>
@@ -68,7 +62,7 @@
                 rev="1.0"
                 conf="catissuexmi->master"/>  
                 
-                
+    <!--            
     <dependency org="cobertura"
                 name="cobertura"
                 rev="1.8"
@@ -79,7 +73,8 @@
                 conf="coberturadeps->default">  
       <exclude org="cobertura" module="cobertura"/>
     </dependency>
-                
+        -->
+        
     <dependency org="mxmlc"
                 name="mxmlc"
                 rev="1.0"
@@ -223,7 +218,7 @@
     <dependency org="pmd"
                 name="pmd"
                 rev="3.8"
-                conf="pmd->default; buildreportjars->master"/>
+                conf="pmd->default"/>
     <!-- end pmd -->
     
     <dependency org="catissuesuite"
@@ -392,7 +387,7 @@
     <dependency org="cobertura"
                 name="cobertura"
                 rev="1.8"
-                conf="web->master"/>   
+                conf="web->master; buildreportjars->master"/>   
                 
     <dependency org="gov.nih.nci"
                 name="codegen"
@@ -788,11 +783,6 @@
                 name="cglib-full"
                 rev="2.0.1"
                 conf="deintegrationclient->master"/> 
-                
-    <dependency org="clinportal"
-                name="clinportal"
-                rev="1.0"
-                conf="deintegrationclient->master"/>
 
     <dependency org="clinportal-client"
                 name="clinportal-client"
@@ -942,6 +932,17 @@
                 name="cobertura"
                 rev="1.8"
                 conf="clinportal_cacoreclient->master"/>  
+                
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="cacoreclient-cobertura->master"/>  
+    <dependency org="cobertura"
+                name="cobertura"
+                rev="1.8"
+                conf="cacoreclient-coberturadeps->default">  
+      <exclude org="cobertura" module="cobertura"/>
+    </dependency>                
     
     <dependency org="javax.activation"
                 name="activation"
@@ -967,11 +968,6 @@
                 name="cglib-full"
                 rev="2.0.1"
                 conf="clinportal_cacoreclient->master"/> 
-                
-    <dependency org="clinportal"
-                name="clinportal"
-                rev="1.0"
-                conf="clinportal_cacoreclient->master"/>
 
     <dependency org="clinportal-client"
                 name="clinportal-client"
@@ -1075,12 +1071,7 @@
                 rev="1.2.01"
                 conf="clinportal_cacoreclient->master"/> 
                               
-                              
-                              
-                              
-                              
-                              
-                              
+                                                                                         
     <!-- er not sure what tries to bring this in, but block it because the jar isnt found in repo and we dont need it -->             
     <exclude org="javax.sql" module="jdbc-stdext" />     
   </dependencies>
