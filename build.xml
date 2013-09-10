@@ -2,6 +2,8 @@
 <!-- caGrid 1.2 Data Service Extensions / Styles build file                  -->
 <!-- ======================================================================= -->
 <project name="caGrid-dataExtensions" default="all" basedir=".">
+  <import file="ivy-targets.xml"/>
+  
 	<!-- Environment -->
 	<property environment="env" />
 	<property file="${basedir}/project.properties" />
@@ -109,25 +111,25 @@
 	</target>
 
 	
-	<target name="defineJetcTask">
+	<target name="defineJetcTask" depends="ivy-impl">
 		<!-- using jet for templates -->
 		<taskdef name="jetc" classname="ch.paranor.epla.structure.JETCTask">
 			<classpath>
 				<fileset dir="${ext.lib.dir}">
-					<include name="boot.jar" />
-					<include name="osgi.jar" />
-					<include name="resources.jar" />
-					<include name="runtime.jar" />
-					<include name="codegen.jar" />
-					<include name="jdtcore.jar" />
-					<include name="jetc-task.jar" />
+					<include name="boot*.jar" />
+					<include name="osgi*.jar" />
+					<include name="resources*.jar" />
+					<include name="runtime*.jar" />
+					<include name="codegen*.jar" />
+					<include name="jdtcore*.jar" />
+					<include name="jetc-task*.jar" />
 				</fileset>
 			</classpath>
 		</taskdef>
 	</target>
 
 
-	<target name="defineContribTasks">
+	<target name="defineContribTasks" depends="ivy-lib">
 		<!-- using ant contrib for contidionals, looping, and runtarget -->
 		<taskdef resource="net/sf/antcontrib/antlib.xml">
 			<classpath>
@@ -164,7 +166,7 @@
 
 
 	<!-- compiles the core classes for data service extensions -->
-	<target name="compileCore" depends="init, generateJETClasses">
+	<target name="compileCore" depends="ivy-impl, init, generateJETClasses">
 		<javac srcdir="${core.src.dir}" destdir="${build.core.dest}" debug="${java.debug}" source="${java.source}">
 			<classpath>
 				<path refid="base.classpath" />
@@ -231,7 +233,7 @@
 
 
 	<!-- compiles the test code -->
-	<target name="compileCoreTests" depends="compileCore, compileUi">
+	<target name="compileCoreTests" depends="ivy-test, compileCore, compileUi">
 		<javac srcdir="${test.core.src.dir}" destdir="${test.core.classes.dir}" debug="${java.debug}" source="${java.source}">
 			<classpath refid="test.classpath" />
 		</javac>
@@ -386,7 +388,7 @@
 	</target>
 	
 	
-	<target name="xmiToDomainModel" description="Runs the XMI to Domain Model conversion GUI">
+	<target name="xmiToDomainModel" depends="ivy-lib" description="Runs the XMI to Domain Model conversion GUI">
 		<java classname="gov.nih.nci.cagrid.data.ui.domain.DomainModelFromXmiDialog" fork="true">
 			<jvmarg value="-Xmx512m" />
 			<classpath refid="base.classpath" />
@@ -405,7 +407,7 @@
 	
 
 	<!-- Build and install extensions for introduce -->
-	<target name="installIntroduceExtensions" depends="defineContribTasks" description="Builds and installs the Data Services extensions into Introduce.">
+	<target name="installIntroduceExtensions" depends="ivy-authz, ivy-sdk31, ivy-sdk32, defineContribTasks" description="Builds and installs the Data Services extensions into Introduce.">
 		<mkdir dir="${introduce.extensions.dir}/data" />
 		<mkdir dir="${introduce.extensions.dir}/data/lib" />
 		<mkdir dir="${introduce.extensions.dir}/data/schema/Data" />

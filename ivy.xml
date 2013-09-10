@@ -3,74 +3,1029 @@
 <ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="http://incubator.apache.org/ivy/schemas/ivy.xsd">
 
-  <info organisation="caGrid" module="dataExtensions" revision="${project.version}">
+  <info organisation="caGrid" module="sdkQuery32" revision="${project.version}">
     <license name="caGrid" url="http://www.cagrid.org/wiki/CaGrid:LICENSE-1.2"/>
-    <description>Data Service Introduce Extensions</description>
+    <description>The caCORE SDK 3.2(.1) Query Processor</description>
   </info>
 
   <configurations>
-    <!-- Private Configurations-->
-    <conf name="target_grid" visibility="private"/>
-
-    <conf name="impl" visibility="private" extends="styles"/>
-    <conf name="impl-test" visibility="private"/>
-
-    <conf name="sdk31" visibility="private"/>
-    <conf name="sdk32" visibility="private"/>
-    <conf name="authz" visibility="private"/>
-
-    <!-- Public Configurations-->
-    <conf name="core" visibility="public"/>
-    <conf name="ui" visibility="public"/>
-    <conf name="default" visibility="public" extends="core,ui"/>
-
-    <conf name="style-cacore31" extends="default" visibility="public"/>
-    <conf name="style-cacore32" extends="default" visibility="public"/>
-    <conf name="styles" extends="style-cacore31,style-cacore32" visibility="public"/>
-
-    <conf name="test" visibility="public" extends="styles,impl-test"/>
+    <conf name="authz"/>
+    <conf name="impl"/>    
+    <conf name="test"/>    
+    <conf name="lib"/>
+    <conf name="sdk31"/>
+    <conf name="sdk32"/>    
   </configurations>
 
-
-  <publications>
-    <artifact name="caGrid-${ivy.module}-core" conf="core" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-ui" conf="ui" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-upgrades" conf="core" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-sdkstyle" conf="default" type="jar"/>
-
-    <artifact name="caGrid-${ivy.module}-style-cacore31" conf="style-cacore31" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-style-cacore32" conf="style-cacore32" type="jar"/>
-
-    <artifact name="caGrid-${ivy.module}-tests" conf="test" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-style-tests-cacore31" conf="test" type="jar"/>
-    <artifact name="caGrid-${ivy.module}-style-tests-cacore32" conf="test" type="jar"/>
-  </publications>
-
   <dependencies>
-    <dependency rev="${target.grid}" org="caGrid" name="target_grid" conf="target_grid->urls"/>
+    <dependency org="ant-contrib"
+                name="ant-contrib"
+                rev="1.0b3"
+                conf="lib->master"/> 
 
-    <dependency rev="latest.integration" org="caGrid" name="core"
-      conf="core->default;ui->ui;impl-test->test"/>
-    <dependency rev="latest.integration" org="caGrid" name="introduce"
-      conf="core->extension;impl-test->extension-test"/>
-    <dependency rev="latest.integration" org="caGrid" name="data" conf="core->full,service-schemas;impl-test->test"/>
-    <dependency rev="latest.integration" org="caGrid" name="gme" conf="ui->client"/>
-    <dependency rev="latest.integration" org="caGrid" name="cadsr" conf="core->client;ui->portal"/>
-    <dependency rev="latest.integration" org="caGrid" name="wsEnum" conf="core->default"/>
-    <!-- NOTE: just needs this for a constant, so not using transitive dependency-->
-    <dependency transitive="false" rev="latest.integration" org="caGrid" name="bulkDataTransfer"
-      conf="core->service"/>
-    <dependency rev="latest.integration" org="caGrid" name="metadata" conf="core->data.jars,schemas"/>
-    <dependency rev="latest.integration" org="caGrid" name="metadatautils" conf="core->default"/>
 
-    <dependency rev="latest.integration" org="caGrid" name="sdkQuery" conf="sdk31->default"/>
-    <dependency rev="latest.integration" org="caGrid" name="sdkQuery32" conf="sdk32->default"/>
+    <dependency org="c3p0"
+                name="c3p0"
+                rev="0.8.5.2"
+                conf="authz->master"/>   
+                
+    <dependency org="cagrid" 
+                name="cagrid-core" 
+                rev="1.2"
+                conf="authz->master"/> 
+    <dependency org="mysql" 
+                 name="mysql-connector-java" 
+                 rev="3.0.16-ga"
+                 conf="authz->master" >    
+       <artifact name="mysql-connector-java" 
+                 url="https://ncimvn.nci.nih.gov/nexus/content/groups/public/mysql/mysql-connector-java/3.0.16-ga/mysql-connector-java-3.0.16-ga-bin.jar"/>  
+    </dependency>
+                
+    <dependency org="subject"
+                name="subject"
+                rev="0.2.1"
+                conf="authz->master"/>   
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2.7"
+                conf="authz->master"/>            
+                
+    <dependency org="org.hibernate"
+                name="hibernate"
+                rev="3.1.3"
+                conf="authz->master"/>   
+     
+    <dependency org="net.sourceforge.jtds"
+                name="jtds"
+                rev="1.2"
+                conf="authz->master"/>  
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="authz->master"/>  
+                
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-client"
+                rev="1.2"
+                conf="authz->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-common"
+                rev="1.2"
+                conf="authz->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-service"
+                rev="1.2"
+                conf="authz->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-stubs"
+                rev="1.2"
+                conf="authz->master"/>       
+                
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="authz->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-client"
+                rev="1.2"
+                conf="authz->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-common"
+                rev="1.2"
+                conf="authz->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-stubs"
+                rev="1.2"
+                conf="authz->master"/>       
+                
+                
+    <dependency org="cglib"
+                name="cglib"
+                rev="2.1_3"
+                conf="authz->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-security"
+                rev="1.2"
+                conf="authz->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-common"
+                rev="1.2"
+                conf="authz->master"/>        
+                
+    <dependency org="antlr"
+                name="antlr"
+                rev="2.7.6rc1"
+                conf="authz->master"/>  
+                
+    <dependency org="asm"
+                name="asm"
+                rev="1.5.3"
+                conf="authz->master"/>     
+    <dependency org="cagrid"
+                name="cagrid-authz-common"
+                rev="1.2"
+                conf="authz->master"/> 
+    <dependency org="commons-dbcp"
+                name="commons-dbcp"
+                rev="1.2.1"
+                conf="authz->master"/>  
+    <dependency org="commons-lang"
+                name="commons-lang"
+                rev="1.0.1"
+                conf="authz->master"/>           
+                
+    <dependency org="grouper"
+                name="grouper"
+                rev="1.1"
+                conf="authz->master"/>                  
+                
+    <dependency org="gov.nih.nci.security"
+                name="clm"
+                rev="3.2"
+                conf="authz->master"/>  
+    <dependency org="catissuesuitegridtest"
+                name="csmapi"
+                rev="1.0"
+                conf="authz->master"/>          
+
+    <dependency org="dom4j"
+                name="dom4j"
+                rev="1.6.1"
+                conf="authz->master"/> 
+                
+    <dependency org="ehcache" 
+                name="ehcache" 
+                rev="1.1"
+                conf="authz->master"/>                 
+                
+    <dependency org="javax.transaction"
+                name="jta"
+                rev="1.0.1B"
+                conf="authz->master"/>
+                
+    <!-- ****************************************************************** -->
+    <dependency org="cagrid"
+                name="cagrid-metadata-security"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-common"
+                rev="1.2"
+                conf="impl->master"/>        
+                
+    <dependency org="antlr"
+                name="antlr"
+                rev="2.7.6rc1"
+                conf="impl->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-client"
+                rev="1.2"
+                conf="impl->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-common"
+                rev="1.2"
+                conf="impl->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-service"
+                rev="1.2"
+                conf="impl->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-stubs"
+                rev="1.2"
+                conf="impl->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-cadsr-client"
+                rev="1.2"
+                conf="impl->master"/>                 
+    <dependency org="cagrid"
+                name="cagrid-cadsr-common"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-cadsr-portal"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-cadsr-stubs"
+                rev="1.2"
+                conf="impl->master"/>    
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-client"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-common"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-gridgrouper-stubs"
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-data-common" 
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-cql-cql-1.0" 
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="antlr"
+                name="antlr"
+                rev="2.7.6rc1"
+                conf="impl->master"/>  
+                
+                
+    <dependency org="hibernate"
+                name="hibernate"
+                rev="3.0.2"
+                conf="impl->master"/>            
+                
+    <dependency org="mysql" 
+                 name="mysql-connector-java" 
+                 rev="3.0.16-ga"
+                 conf="impl->master" >    
+       <artifact name="mysql-connector-java" 
+                 url="https://ncimvn.nci.nih.gov/nexus/content/groups/public/mysql/mysql-connector-java/3.0.16-ga/mysql-connector-java-3.0.16-ga-bin.jar"/>  
+    </dependency>            
+                
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="impl->master"/>           
+                
+    <dependency org="cagrid"
+                name="cagrid-metadatautils"
+                rev="1.2"
+                conf="impl->master"/>
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-data"
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-data-utils"
+                rev="1.2"
+                conf="impl->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-data-cql"
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-service"
+                rev="1.2"
+                conf="impl->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-data-tools"
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-validation"
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-stubs"
+                rev="1.2"
+                conf="impl->master"/>                 
+    <dependency org="cagrid" 
+                name="cagrid-core" 
+                rev="1.2"
+                conf="impl->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-core-resources" 
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-grape" 
+                rev="1.2"
+                conf="impl->master"/>  
+                
+ 
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2"
+                conf="impl->master"/>  
+                
+    <dependency org="subject"
+                name="subject"
+                rev="0.2.1"
+                conf="impl->master"/>    
+                
+    <dependency org="grouper"
+                name="grouper"
+                rev="1.1"
+                conf="impl->master"/>  
+                
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="impl->master"/>               
+    <dependency org="com.cedarsoft.commons"
+                name="concurrent"
+                rev="1.3.4nci"
+                conf="impl->master"/>        
+
+                
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-client"
+                rev="1.2"
+                conf="impl->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-stubs"
+                rev="1.2"
+                conf="impl->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-common"
+                rev="1.2"
+                conf="impl->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-service"
+                rev="1.2"
+                conf="impl->master"/>          
+                                         
+                                         
+    <dependency org="cagrid"
+                name="cagrid-introduce-core"
+                rev="1.2"
+                conf="impl->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-introduce-portal"
+                rev="1.2"
+                conf="impl->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-introduce-updater"
+                rev="1.2"
+                conf="impl->master"/>                                          
+    <dependency org="cagrid"
+                name="cagrid-grape-resources"
+                rev="1.2"
+                conf="impl->master"/>         
+    <dependency org="cagrid"
+                name="cagrid-graph"
+                rev="1.2"
+                conf="impl->master"/>     
+    <dependency org="jaxen"
+                name="jaxen"
+                rev="1.1"
+                conf="impl->master"/>
+                
+                                         
+    <dependency org="cagrid"
+                name="cagrid-gaards-ui"
+                rev="1.2"
+                conf="impl->master"/>   
+                
+                
+    <dependency org="cagrid"
+                name="cagrid-globalmodelexchange-stubs"
+                rev="1.2"
+                conf="impl->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-globalmodelexchange"
+                rev="1.2"
+                conf="impl->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum"
+                rev="1.2"
+                conf="impl->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum-stubs"
+                rev="1.2"
+                conf="impl->master"/> 
+                
+    <dependency org="cglib"
+                name="cglib-nodep"
+                rev="2.1_3"
+                conf="impl->master"/>   
+                
+    <dependency org="com.sun.xsom"
+                name="xsom"
+                rev="20060901"
+                conf="impl->master"/>   
+                
+    <dependency org="relaxngDatatype"
+                name="relaxngDatatype"
+                rev="20020414"
+                conf="impl->master"/> 
+    <dependency org="cagriddataextension"
+                name="client"
+                rev="1.0"
+                conf="impl->master"/>  
+    <dependency org="cagriddataextension"
+                name="codegen"
+                rev="1.0"
+                conf="impl->master"/>   
+    <dependency org="gef_modified"
+                name="gef_modified"
+                rev="1.0"
+                conf="impl->master"/>                 
+    <dependency org="mobius"
+                name="mobius_common_client"
+                rev="1.1"
+                conf="impl->master"/>  
+    <dependency org="mobius"
+                name="mobius_gme_client"
+                rev="1.1"
+                conf="impl->master"/>  
+    <dependency org="mobius"
+                name="mobius_common_server"
+                rev="1.1"
+                conf="impl->master"/> 
+    <dependency org="mobius"
+                name="mobius-castor"
+                rev="0.9.4.3"
+                conf="impl->master"/>                 
+    <dependency org="jasciidammit"
+                name="jasciidammit"
+                rev="1.1"
+                conf="impl->master"/>
+    <dependency org="osgi"
+                name="osgi"
+                rev="1.0"
+                conf="impl->master"/>
+    <dependency org="wizard"
+                name="wizard"
+                rev="0.1.12"
+                conf="impl->master"/>                
+    <dependency org="net.java.dev.jgoodies"
+                name="validation"
+                rev="2.0.0"
+                conf="impl->master"/> 
+    <dependency org="jaxmejs"
+                name="jaxmejs"
+                rev="0.5.2"
+                conf="impl->master"/>    
+    <dependency org="jcalendar"
+                name="jcalendar"
+                rev="1.0"
+                conf="impl->master"/>   
+    <dependency org="jdtcore"
+                name="jdtcore"
+                rev="1.0"
+                conf="impl->master"/>                 
+
+    <dependency org="jetc-task"
+                name="jetc-task"
+                rev="1.0"
+                conf="impl->master"/>  
+                
+    <dependency org="jprov"
+                name="jprov-jce"
+                rev="1.2nci"
+                conf="impl->master"/>
+    <dependency org="javax.help"
+                name="javahelp"
+                rev="2.0.02"
+                conf="impl->master"/>              
+
+    <dependency org="org.eclipse"
+                name="runtime"
+                rev="1.0"
+                conf="impl->master"/> 
+    <dependency org="org.eclipse"
+                name="resources"
+                rev="1.0"
+                conf="impl->master"/>
+    <dependency org="globalmodelexchange"
+                name="globalmodelexchange"
+                rev="1.0"
+                conf="impl->master"/>         
+    <dependency org="cagrid"
+                name="cagrid-gridca"
+                rev="1.2"
+                conf="impl->master"/>
+    <!-- ************************************************************************ -->
     
-    <dependency rev="latest.integration" org="caGrid" name="authz" conf="authz->default"/>
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-client"
+                rev="1.2"
+                conf="sdk31->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-stubs"
+                rev="1.2"
+                conf="sdk31->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-common"
+                rev="1.2"
+                conf="sdk31->master"/>  
+    <dependency org="cagrid"
+                name="cagrid-core"
+                rev="1.2"
+                conf="sdk31->master"/>  
+    <dependency org="cagrid" 
+                name="cagrid-cql-cql-1.0" 
+                rev="1.2"
+                conf="sdk31->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-data-common" 
+                rev="1.2"
+                conf="sdk31->master"/>                 
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-client"
+                rev="1.2"
+                conf="sdk31->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-common"
+                rev="1.2"
+                conf="sdk31->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-service"
+                rev="1.2"
+                conf="sdk31->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-stubs"
+                rev="1.2"
+                conf="sdk31->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum"
+                rev="1.2"
+                conf="sdk31->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum-stubs"
+                rev="1.2"
+                conf="sdk31->master"/> 
+                                
+    <dependency org="hibernate"
+                name="hibernate"
+                rev="3.0.2"
+                conf="sdk31->master"/>    
+                
+    <dependency org="jasciidammit"
+                name="jasciidammit"
+                rev="1.1"
+                conf="sdk31->master"/>           
+                
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2"
+                conf="sdk31->master"/>    
+                
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="sdk31->master"/>               
+                
+                
+    <dependency org="cglib"
+                name="cglib-nodep"
+                rev="2.1_3"
+                conf="sdk31->master"/>           
+                
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="sdk31->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-security"
+                rev="1.2"
+                conf="sdk31->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-common"
+                rev="1.2"
+                conf="sdk31->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-metadatautils"
+                rev="1.2"
+                conf="sdk31->master"/>
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-data"
+                rev="1.2"
+                conf="sdk31->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-data-utils"
+                rev="1.2"
+                conf="sdk31->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-data-cql"
+                rev="1.2"
+                conf="sdk31->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-service"
+                rev="1.2"
+                conf="sdk31->master"/>   
 
-    <!-- Extenernal Dependencies -->
-    <dependency rev="1.0" org="wannheden" name="jetc-task" conf="impl->*"/>
-    <dependency rev="2.0.0" org="jgoodies" name="validation" conf="ui->default"/>
+                
+    <dependency org="cagrid"
+                name="cagrid-data-validation"
+                rev="1.2"
+                conf="sdk31->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-stubs"
+                rev="1.2"
+                conf="sdk31->master"/>                
+    <dependency org="cagriddataextension"
+                name="cagrid-sdkquery-core"
+                rev="1.2"
+                conf="sdk31->master"/>        
+    <dependency org="cagriddataextension"
+                name="client"
+                rev="1.0"
+                conf="sdk31->master"/>                            
+                                
+    <!-- ************************************************************************ -->
+    
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-client"
+                rev="1.2"
+                conf="sdk32->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-stubs"
+                rev="1.2"
+                conf="sdk32->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-common"
+                rev="1.2"
+                conf="sdk32->master"/>    
+    <dependency org="cagrid"
+                name="cagrid-core"
+                rev="1.2"
+                conf="sdk32->master"/>  
+    <dependency org="cagrid" 
+                name="cagrid-cql-cql-1.0" 
+                rev="1.2"
+                conf="sdk32->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-data-common" 
+                rev="1.2"
+                conf="sdk32->master"/>                 
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-client"
+                rev="1.2"
+                conf="sdk32->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-common"
+                rev="1.2"
+                conf="sdk32->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-service"
+                rev="1.2"
+                conf="sdk32->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-stubs"
+                rev="1.2"
+                conf="sdk32->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum"
+                rev="1.2"
+                conf="sdk32->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum-stubs"
+                rev="1.2"
+                conf="sdk32->master"/> 
+                                
+    <dependency org="hibernate"
+                name="hibernate"
+                rev="3.0.2"
+                conf="sdk32->master"/>    
+                
+    <dependency org="jasciidammit"
+                name="jasciidammit"
+                rev="1.1"
+                conf="sdk32->master"/>           
+                 
+                
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="sdk32->master"/>               
+                
+                     
+                
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="sdk32->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-security"
+                rev="1.2"
+                conf="sdk32->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-common"
+                rev="1.2"
+                conf="sdk32->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-metadatautils"
+                rev="1.2"
+                conf="sdk32->master"/>
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-data"
+                rev="1.2"
+                conf="sdk32->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-data-utils"
+                rev="1.2"
+                conf="sdk32->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-data-cql"
+                rev="1.2"
+                conf="sdk32->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-service"
+                rev="1.2"
+                conf="sdk32->master"/>   
 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-validation"
+                rev="1.2"
+                conf="sdk32->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-stubs"
+                rev="1.2"
+                conf="sdk32->master"/>                
+    <dependency org="cagrid"
+                name="cagrid-sdkquery32-core"
+                rev="1.2"
+                conf="sdk32->master"/>        
+    <dependency org="cagrid" 
+                name="cagrid-grape" 
+                rev="1.2"
+                conf="sdk32->master"/>  
+    <dependency org="cagrid" 
+                name="cagrid-grape-resources" 
+                rev="1.2"
+                conf="sdk32->master"/>                  
+    <!-- *********************************************************** -->
+    
+    <dependency org="cagrid"
+                name="cagrid-metadata-security"
+                rev="1.2"
+                conf="test->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-metadata-common"
+                rev="1.2"
+                conf="test->master"/>        
+                
+    <dependency org="antlr"
+                name="antlr"
+                rev="2.7.6rc1"
+                conf="test->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-client"
+                rev="1.2"
+                conf="test->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-common"
+                rev="1.2"
+                conf="test->master"/>     
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-service"
+                rev="1.2"
+                conf="test->master"/>  
+                
+    <dependency org="cagrid"
+                name="cagrid-servicesecurityprovider-stubs"
+                rev="1.2"
+                conf="test->master"/>    
+                                  
+    <dependency org="cagrid" 
+                name="cagrid-data-common" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-testing-core" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-testing-system" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+                
+    <dependency org="cagrid" 
+                name="cagrid-cql-cql-1.0" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="antlr"
+                name="antlr"
+                rev="2.7.6rc1"
+                conf="test->master"/>  
+                
+                
+    <dependency org="hibernate"
+                name="hibernate"
+                rev="3.0.2"
+                conf="test->master"/>            
+                           
+                
+    <dependency org="castor"
+                name="castor"
+                rev="0.9.9"
+                conf="test->master"/>           
+                
+    <dependency org="cagrid"
+                name="cagrid-metadatautils"
+                rev="1.2"
+                conf="test->master"/>
+                
+    <dependency org="cagrid"
+                name="cagrid-metadata-data"
+                rev="1.2"
+                conf="test->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-data-utils"
+                rev="1.2"
+                conf="test->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-data-cql"
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-service"
+                rev="1.2"
+                conf="test->master"/>   
+                
+    <dependency org="cagrid"
+                name="cagrid-data-tools"
+                rev="1.2"
+                conf="test->master"/> 
+    <dependency org="cagrid" 
+                name="cagrid-data-tests" 
+                rev="1.2"
+                conf="test->master"/> 
+    <dependency org="cagrid"
+                name="cagrid-data-validation"
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-data-stubs"
+                rev="1.2"
+                conf="test->master"/>                 
+    <dependency org="cagrid" 
+                name="cagrid-core" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-core-tests" 
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid" 
+                name="cagrid-grape" 
+                rev="1.2"
+                conf="test->master"/>  
+                 
+    <dependency org="org.springframework"
+                name="spring"
+                rev="1.2"
+                conf="test->master"/>  
+                               
+    <dependency org="jdom"
+                name="jdom"
+                rev="1.0"
+                conf="test->master"/>               
+                       
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-client"
+                rev="1.2"
+                conf="test->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-stubs"
+                rev="1.2"
+                conf="test->master"/>          
+    <dependency org="cagrid"
+                name="cagrid-bulkdatahandler-common"
+                rev="1.2"
+                conf="test->master"/>          
+
+                                         
+    <dependency org="cagrid"
+                name="cagrid-introduce-core"
+                rev="1.2"
+                conf="test->master"/>   
+                
+                                        
+    <dependency org="cagrid"
+                name="cagrid-introduce-core-tests"
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cagrid"
+                name="cagrid-introduce-portal"
+                rev="1.2"
+                conf="test->master"/>    
+                
+                                        
+    <dependency org="cagrid"
+                name="cagrid-introduce-portal-tests"
+                rev="1.2"
+                conf="test->master"/> 
+                                                         
+    <dependency org="cagrid"
+                name="cagrid-grape-resources"
+                rev="1.2"
+                conf="test->master"/>         
+    <dependency org="cagrid"
+                name="cagrid-graph"
+                rev="1.2"
+                conf="test->master"/>     
+    <dependency org="jaxen"
+                name="jaxen"
+                rev="1.1"
+                conf="test->master"/>
+                                                       
+    <dependency org="cagrid"
+                name="cagrid-wsenum"
+                rev="1.2"
+                conf="test->master"/>    
+                
+    <dependency org="cagrid"
+                name="cagrid-wsenum-stubs"
+                rev="1.2"
+                conf="test->master"/> 
+                
+    <dependency org="cglib"
+                name="cglib-nodep"
+                rev="2.1_3"
+                conf="test->master"/>   
+                
+    <dependency org="com.sun.xsom"
+                name="xsom"
+                rev="20060901"
+                conf="test->master"/>   
+                
+    <dependency org="relaxngDatatype"
+                name="relaxngDatatype"
+                rev="20020414"
+                conf="test->master"/> 
+    <dependency org="cagriddataextension"
+                name="client"
+                rev="1.0"
+                conf="test->master"/>  
+  
+    <dependency org="gef_modified"
+                name="gef_modified"
+                rev="1.0"
+                conf="test->master"/>                 
+                 
+    <dependency org="jasciidammit"
+                name="jasciidammit"
+                rev="1.1"
+                conf="test->master"/>
+
+               
+
+    <dependency org="jaxmejs"
+                name="jaxmejs"
+                rev="0.5.2"
+                conf="test->master"/>    
+    <dependency org="clarkware" 
+                name="jdepend" 
+                rev="2.7"
+                conf="test->default"/> 
   </dependencies>
 </ivy-module>
