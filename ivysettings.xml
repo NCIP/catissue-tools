@@ -2,23 +2,8 @@
   <settings defaultResolver="nci-chain" />
   <caches defaultCacheDir="${user.home}/.ivy2-${ant.project.name}" useOrigin="true"/>
   <resolvers>
-    <chain name="nci-chain">
-
-
-    <ibiblio name="local" m2compatible="true" root="http://localhost:8081/nexus/content/repositories/catissuesuite_gridtest"/>
-    <ibiblio name="local" m2compatible="true" root="http://localhost:8081/nexus/content/repositories/catissue_sandbox"/>
-
-
-      <ibiblio name="local" m2compatible="true" root="http://localhost:8081/nexus/content/repositories/cps2"/>
-
-
-
-
-      <ibiblio name="local" m2compatible="true" root="http://localhost:8081/nexus/content/repositories/cps"/>
-      <ibiblio name="local" m2compatible="true" root="http://localhost:8081/nexus/content/repositories/hudson_scripts"/>
-     
-      <ibiblio name="cbiit" m2compatible="true" root="https://ncimvn.nci.nih.gov/nexus/content/groups/public"/>
-      
+    <chain name="nci-chain">     
+      <ibiblio name="cbiit" m2compatible="true" root="https://ncimvn.nci.nih.gov/nexus/content/groups/public"/>      
     </chain>		
   </resolvers>
 </ivysettings>
