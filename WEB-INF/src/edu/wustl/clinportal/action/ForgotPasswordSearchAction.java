@@ -1,3 +1,13 @@
+/*L
+ *  Copyright Washington University in St. Louis
+ *  Copyright SemanticBits
+ *  Copyright Persistent Systems
+ *  Copyright Krishagni
+ *
+ *  Distributed under the OSI-approved BSD 3-Clause License.
+ *  See http://ncip.github.com/catissue-tools/LICENSE.txt for details.
+ */
+
 /**
  * <p>Title: ForgotPasswordSearchAction Class>
  * <p>Description:	This Class is used to retrieve the password of the user and mail it to his email address.</p>
