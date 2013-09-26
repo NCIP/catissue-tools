@@ -1,6 +1,6 @@
 Welcome to the caTissue Tools Project!
 ==============================================
-The caTissue Tools contain several tools that integrate with the [caTissue] (https://github.com/NCIP/catissue-core).
+The caTissue Tools contain several tools that integrate with the [caTissue] (https://github.com/NCIP/catissue-core) application.
 They are developed using Java and require Apache Ant for building.
 
 The caTissue Tools project distributed under the BSD 3-Clause License.
