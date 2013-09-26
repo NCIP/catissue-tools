@@ -7,7 +7,6 @@ The caTissue Tools project distributed under the BSD 3-Clause License.
 Please see the NOTICE and LICENSE files for details.
 
 You will find more details about the caTissue Tools in the following links:
- * [User Guide] (https://wiki.nci.nih.gov/x/fYD_Ag)
  * [caTissue Documentation Wiki] (https://wiki.nci.nih.gov/x/uJT9AQ)
  * [Code Repository] (https://github.com/NCIP/catissue-advanced-query)
 
